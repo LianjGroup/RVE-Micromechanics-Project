@@ -1,0 +1,247 @@
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      3      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Micromechanics-Project\Pipeline-Array
