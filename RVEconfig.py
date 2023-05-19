@@ -108,6 +108,7 @@ def main_config():
     logTable.field_names = ["Configurations", "User choice"]
     logTable.add_row(["Material", material])
     logTable.add_row(["Number of RVEs", numberOfRVE])
+    logTable.add_row(["Simulation IO", simulationIO])
     printLog(logTable.get_string() + "\n", logPath)
 
     printLog("Generating necessary directories\n", logPath)

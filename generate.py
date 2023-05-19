@@ -20,7 +20,7 @@ def main_optimize(info):
     sim = SIM(info)
     sim.submit_RVE()
 
-    print("Hello World!")
+    print(f"{numberOfRVE} RVE generation completed")
 
 if __name__ == '__main__':
     info = RVEconfig.main_config()

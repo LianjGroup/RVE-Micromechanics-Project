@@ -35,7 +35,7 @@ class SIM:
         for index in range(1, numberOfRVE + 1):
             destinationPath = f"{simPath}/{index}"
             shutil.copytree(templatePath, destinationPath)
-            replace_json(f"{destinationPath}/pipeline.json", f"{projectPath}{destinationPath}/postProc")
+            replace_json(f"{destinationPath}/pipeline.json", f"{projectPath}/{destinationPath}/postProc")
         
         self.run_RVE_generation()
     
@@ -59,7 +59,8 @@ class SIM:
 
         # Wait for the process to complete and capture the output
         stdout, stderr = process.communicate()
-        return_code = process.returncode
+        #return_code = process.returncode
+        return_code = process.wait()
 
         if simulationIO == "yes":
             # Check the return code
@@ -78,25 +79,27 @@ class SIM:
                 print("\nStandard Error:")
                 print(stderr.decode('utf-8'))
 
-        process = subprocess.Popen(f"sbatch-hq --wait --cores=1 --nodes=1 --account=/scratch/project_2007935 --partition=test --time=01:00:00 linux_slurm/array_RVE.txt", shell=True)
+        # process = subprocess.Popen(f"sbatch-hq --cores=1 --nodes=1 --account=project_2007935 --partition=small --time=01:00:00 linux_slurm/array_RVE.txt", shell=True)
 
-        # Wait for the process to complete and capture the output
-        stdout, stderr = process.communicate()
-        return_code = process.returncode
+        # # Wait for the process to complete and capture the output
+        # stdout, stderr = process.communicate()
 
-        if simulationIO == "yes":
-            # Check the return code
-            if return_code == 0:
-                print("RVE generation script executed successfully.")
-            else:
-                print("RVE generation script execution failed with return code:", return_code)
+        # # return_code = process.returncode
+        # return_code = process.wait()
 
-            # Print the stdout if it is not None
-            if isinstance(stdout, bytes):
-                print("\nStandard Output:")
-                print(stdout.decode('utf-8'))
+        # if simulationIO == "yes":
+        #     # Check the return code
+        #     if return_code == 0:
+        #         print("RVE generation script executed successfully.")
+        #     else:
+        #         print("RVE generation script execution failed with return code:", return_code)
 
-            # Print the stdout if it is not None
-            if isinstance(stderr, bytes):
-                print("\nStandard Error:")
-                print(stderr.decode('utf-8'))
+        #     # Print the stdout if it is not None
+        #     if isinstance(stdout, bytes):
+        #         print("\nStandard Output:")
+        #         print(stdout.decode('utf-8'))
+
+        #     # Print the stdout if it is not None
+        #     if isinstance(stderr, bytes):
+        #         print("\nStandard Error:")
+        #         print(stderr.decode('utf-8'))
