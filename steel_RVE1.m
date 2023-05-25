@@ -1,5 +1,6 @@
-%% Import Script for EBSD Data
-%
+%% This script is not working
+%%Import Script for EBSD Data
+% 
 % This script was automatically created by the import wizard. You should
 % run the whoole script or parts of it in order to import your data. There
 % is no problem in making any changes to this script.
