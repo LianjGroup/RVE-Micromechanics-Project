@@ -1,5 +1,7 @@
+%% Use this file second. After RVE has been broken down into its 2D layers, analyse each layer through this code. 
 
-export_name = 'RVE4_layers_data.txt';
+% open a new file that stores the info about avg_shape and avg_size on new lines
+export_name = 'RVE4_layers_data.txt'; % this is where the RVE analysis data will be stored
 fid = fopen(export_name, 'w');
 
 fprintf(fid, 'avg_size \t avg_shape\n'); 
@@ -7,9 +9,7 @@ fprintf(fid, 'avg_size \t avg_shape\n');
 avg_size_array = [];
 avg_shape_array = [];
 
-
-% open a new file that stores the info about avg_shape and avg_size on new
-% lines
+% z is the plane we are analysing
 for z=1:100
     %% Specify Crystal and Specimen Symmetries
 
@@ -122,7 +122,7 @@ for z=1:100
     % %newfit = beta_fit2(GraineqD,Grainasp);
     % newfit2 = beta_fit3(Grainasp);
 
-    %% Store Grain shape and size 
+    %% Store Grain shape and size for each layer
     
     avg_size = mean(GraineqD);
     avg_shape = mean(Grainasp);
@@ -139,6 +139,7 @@ end
 
 fclose(fid);
 
+%% Get the overall mean for all layers
 all_layers_avg_size = mean(avg_size_array)
 all_layers_avg_shape = mean(avg_shape_array)
 
