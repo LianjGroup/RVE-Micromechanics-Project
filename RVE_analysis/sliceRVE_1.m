@@ -1,5 +1,7 @@
-
+%% Use this file first to break down the RVE into its layers. Convert 3D RVE to 2D data.
 % create 100 txt files for 100 layers
+
+% add the RVE filename here
 filename = "steel_RVE5.txt";
 lines = readlines(filename);
 %lines(1:2500)
