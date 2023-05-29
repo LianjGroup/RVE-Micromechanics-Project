@@ -21,7 +21,6 @@ class SIM:
     def submit_RVE(self):
         self.initialize_directories()
         self.write_RVEarrays()
-        time.sleep(180)
         self.run_RVE_generation()
     
     def initialize_directories(self):
@@ -69,7 +68,7 @@ class SIM:
         recordedProperties.to_excel(f"{targetPath}/RVEproperties.xlsx", index=False)
         recordedProperties.to_csv(f"{targetPath}/RVEproperties.csv", index=False)
         
-        time.sleep(180)
+        # time.sleep(180)
 
 
     def write_RVEarrays(self):
@@ -98,8 +97,9 @@ class SIM:
         simPath = self.info["simPath"]
         templatePath = self.info["templatePath"]
         simulationIO = self.info["simulationIO"]
-        
-        print(f"Generation of {numberOfRVE} RVEs starts")
+        RVEgroups = self.info["RVEgroups"]
+
+        print(f"Generation of {numberOfRVE * len(RVEgroups)} RVEs starts")
 
         # Execute the shell script
         process = subprocess.Popen(['bash', 'linux_slurm/sbatch-hq.sh'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -125,7 +125,10 @@ class SIM:
             if isinstance(stderr, bytes):
                 print("\nStandard Error:")
                 print(stderr.decode('utf-8'))
-
+        
+        self.periodCheckFinishedSimulation()
+        
+        
         # process = subprocess.Popen(f"sbatch-hq --cores=1 --nodes=1 --account=project_2007935 --partition=small --time=01:00:00 linux_slurm/array_RVE.txt", shell=True)
 
         # # Wait for the process to complete and capture the output
@@ -150,3 +153,35 @@ class SIM:
         #     if isinstance(stderr, bytes):
         #         print("\nStandard Error:")
         #         print(stderr.decode('utf-8'))
+    
+    def periodCheckFinishedSimulation(self):
+        
+        material = self.info["material"]
+        numberOfRVE = self.info["numberOfRVE"]
+        projectPath = self.info["projectPath"]
+        logPath = self.info["logPath"]
+        #resultPath = self.info["resultPath"]
+        simPath = self.info["simPath"]
+        templatePath = self.info["templatePath"]
+        simulationIO = self.info["simulationIO"]
+        RVEgroups = self.info["RVEgroups"]
+
+        numberOfGroups = len(RVEgroups)
+        
+        print("Waiting for RVE generation to finish")
+        # For each 10 seconds, checking if simulation is finishes by checking directory not empty
+        while True:
+            time.sleep(10)
+            checkAllFinished = []
+            for groupIndex in RVEgroups:
+                for RVEIndex in range(1, numberOfRVE + 1):
+                    # Checking if destinationPath is not empty using all() and os.listdir()
+                    destinationPath = f"{simPath}/{groupIndex}/RVE{RVEIndex}"
+                    if len(os.listdir(f"{destinationPath}/postProc")) != 0:
+                        checkAllFinished.append(True)
+                    else:
+                        checkAllFinished.append(False)
+            if all(checkAllFinished):
+                break
+        
+        print(f"{numberOfRVE * numberOfGroups} RVE generation completed")

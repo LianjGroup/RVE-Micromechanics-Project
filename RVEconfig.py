@@ -147,7 +147,9 @@ def main_config():
 
     logTable.field_names = ["Global Configs", "User choice"]
     logTable.add_row(["Material", material])
-    logTable.add_row(["Number of RVEs", numberOfRVE])
+    logTable.add_row(["Number of group settings", len(RVEgroups)])
+    logTable.add_row(["Number of RVEs each group", numberOfRVE])
+    logTable.add_row(["Total number of RVE sims", len(RVEgroups) * numberOfRVE])
     logTable.add_row(["Simulation IO", simulationIO])
     printLog(logTable.get_string() + "\n", logPath)
 

@@ -17,12 +17,15 @@ def main_optimize(info):
     #resultPath = info['resultPath']
     simPath = info['simPath']
     templatePath = info['templatePath']
-
+    targetPath = info["targetPath"]
+    RVEgroups = info["RVEgroups"]
+    RVEgroupsUnparsed = info["RVEgroupsUnparsed"]
+    properties = info["properties"]
     # Create a SIM object
     sim = SIM(info)
     sim.submit_RVE()
 
-    print(f"{numberOfRVE} RVE generation completed")
+    
 
 if __name__ == '__main__':
     info = RVEconfig.main_config()
