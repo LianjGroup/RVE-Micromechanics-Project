@@ -2,7 +2,9 @@ import os
 import time
 import pandas as pd
 import numpy as np
+from time import sleep
 from prettytable import PrettyTable
+from modules.helper import *
 ###########################################################
 #                                                         #
 #         CRYSTAL PLASTICITY PARAMETER CALIBRATION        #
@@ -23,7 +25,7 @@ def main_config():
 
     globalConfig = pd.read_excel("configs/global_config.xlsx", nrows= 1, engine="openpyxl")
     globalConfig = globalConfig.T.to_dict()[0]
-    print(globalConfig)
+    #print(globalConfig)
     material = globalConfig["material"]
     
     numberOfRVE = globalConfig["numberOfRVE"]
@@ -43,6 +45,26 @@ def main_config():
 
     # The templates path
     templatePath = f"templates/{material}"
+
+    # The target path
+    targetPath = f"targets/{material}"
+
+    ###############################
+    # Group of RVE configurations #
+    ###############################
+
+    RVEgroups = pd.read_excel("configs/RVE_groups.xlsx", engine="openpyxl")
+    
+    # Convert the DataFrame to a Python dictionary based on RVE group
+    RVEgroups = RVEgroups.set_index('Group').to_dict(orient='index')
+
+    for RVEgroup in RVEgroups:
+        RVEgroups[RVEgroup]['Dimensions'] = parseDimensions(RVEgroups[RVEgroup]['Dimensions'])
+        RVEgroups[RVEgroup]['Resolution'] = parseResolution(RVEgroups[RVEgroup]['Resolution'])
+        RVEgroups[RVEgroup]['Origin'] = parseOrigin(RVEgroups[RVEgroup]['Origin'])
+    # Print the dictionary
+    #print(RVEgroups)
+    #sleep(180)
 
     #########################################################
     # Creating necessary directories for the configurations #
@@ -64,10 +86,10 @@ def main_config():
     path = f"log/{material}"
     checkCreate(path)
 
-    # For results 
-    checkCreate("results")
-    path = f"results/{material}"
-    checkCreate(path)
+    # # For results 
+    # checkCreate("results")
+    # path = f"results/{material}"
+    # checkCreate(path)
     
     # For simulations
 
@@ -80,6 +102,11 @@ def main_config():
     path = f"templates/{material}"
     checkCreate(path)
 
+    # For targets
+    checkCreate("targets")
+    path = f"targets/{material}"
+    checkCreate(path)
+
     ###########################
     # Information declaration #
     ###########################
@@ -87,12 +114,14 @@ def main_config():
     info = {
         'projectPath': projectPath,
         'logPath': logPath,
-        'resultPath': resultPath,
+        #'resultPath': resultPath,
         'simPath': simPath,
+        'targetPath': targetPath,
         'templatePath': templatePath,
         'material': material,
         'numberOfRVE': numberOfRVE,
-        'simulationIO': simulationIO
+        'simulationIO': simulationIO,
+        'RVEgroups': RVEgroups
     }
 
   
@@ -105,7 +134,7 @@ def main_config():
     
     logTable = PrettyTable()
 
-    logTable.field_names = ["Configurations", "User choice"]
+    logTable.field_names = ["Global Configs", "User choice"]
     logTable.add_row(["Material", material])
     logTable.add_row(["Number of RVEs", numberOfRVE])
     logTable.add_row(["Simulation IO", simulationIO])

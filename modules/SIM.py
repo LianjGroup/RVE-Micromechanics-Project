@@ -1,57 +1,91 @@
 import os
 import numpy as np
+import pandas as pd
 import random
 import shutil
 import time
 import subprocess
 import copy
-from replaceOutputFile import *
+from modules.helper import *
 import sys
 import selectors
 
 class SIM:
     def __init__(self,info):
         self.info = info
-        self.fileIndex = 1
-        self.path2params = {} # loading/fileIndex -> param
-      
 
     ################
     # Generate RVE #
     ################
 
     def submit_RVE(self):
+        self.initialize_directories()
+        self.write_RVEarrays()
+        time.sleep(180)
+        self.run_RVE_generation()
+    
+    def initialize_directories(self):
         material = self.info["material"]
         numberOfRVE = self.info["numberOfRVE"]
         projectPath = self.info["projectPath"]
         logPath = self.info["logPath"]
-        resultPath = self.info["resultPath"]
+        #resultPath = self.info["resultPath"]
         simPath = self.info["simPath"]
         templatePath = self.info["templatePath"]
+        targetPath = self.info["targetPath"]
+        RVEgroups = self.info["RVEgroups"]
         
-        for fileIndex in os.listdir(simPath):
-            shutil.rmtree(f"{simPath}/{fileIndex}")
 
-        for index in range(1, numberOfRVE + 1):
-            destinationPath = f"{simPath}/{index}"
-            shutil.copytree(templatePath, destinationPath)
-            replace_json(f"{destinationPath}/pipeline.json", f"{projectPath}/{destinationPath}/postProc")
+        RVEproperties_directory = {}
         
-        self.run_RVE_generation()
-    
+        for groupIndex in os.listdir(simPath):
+            shutil.rmtree(f"{simPath}/{groupIndex}")
+        
+        for groupIndex in RVEgroups:
+            for RVEIndex in range(1, numberOfRVE + 1):
+                RVEproperties = RVEgroups[groupIndex]
+                destinationPath = f"{simPath}/{groupIndex}/RVE{RVEIndex}"
+                RVEproperties_directory[f"{projectPath}/{destinationPath}/postProc"] = RVEproperties
+                shutil.copytree(templatePath, destinationPath)
+                replace_outputPath_json(f"{destinationPath}/pipeline.json", f"{projectPath}/{destinationPath}/postProc")
+                replace_RVEproperties_json(f"{destinationPath}/pipeline.json", RVEproperties)
+        
+        #print(RVEproperties_directory)
+        np.save(f"{targetPath}/RVEproperties_directory.npy", RVEproperties_directory)
+        # df = pd.DataFrame.from_dict(RVEproperties_directory, orient='index', columns=['RVEproperties'])
+        # df.index.name = 'path'
+        # # Save the DataFrame as an Excel file
+        # print(df)
+        # df.to_excel(targetPath)
+
+
+    def write_RVEarrays(self):
+        material = self.info["material"]
+        numberOfRVE = self.info["numberOfRVE"]
+        projectPath = self.info["projectPath"]
+        logPath = self.info["logPath"]
+        #resultPath = self.info["resultPath"]
+        simPath = self.info["simPath"]
+        templatePath = self.info["templatePath"]
+        simulationIO = self.info["simulationIO"]
+        RVEgroups = self.info["RVEgroups"]
+
+        with open("linux_slurm/array_RVE.txt", 'w') as filename:
+            for groupIndex in RVEgroups:
+                for RVEIndex in range(1, numberOfRVE + 1):
+                    destinationPath = f"{simPath}/{groupIndex}/RVE{RVEIndex}"
+                    filename.write(f"PipelineRunner -p {projectPath}/{destinationPath}/pipeline.json\n")
+
     def run_RVE_generation(self):
         material = self.info["material"]
         numberOfRVE = self.info["numberOfRVE"]
         projectPath = self.info["projectPath"]
         logPath = self.info["logPath"]
-        resultPath = self.info["resultPath"]
+        #resultPath = self.info["resultPath"]
         simPath = self.info["simPath"]
         templatePath = self.info["templatePath"]
         simulationIO = self.info["simulationIO"]
-
-        with open("linux_slurm/array_RVE.txt", 'w') as filename:
-            for index in range(1, numberOfRVE + 1):
-                filename.write(f"PipelineRunner -p {projectPath}/{simPath}/{index}/pipeline.json\n")
+        
         print(f"Generation of {numberOfRVE} RVEs starts")
 
         # Execute the shell script

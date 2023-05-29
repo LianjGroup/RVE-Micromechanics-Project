@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 from prettytable import PrettyTable
 import RVEconfig
-from SIM import *
+from modules.SIM import *
+from modules.helper import *
 
 def main_optimize(info):
     material = info['material']
@@ -12,7 +13,7 @@ def main_optimize(info):
     simulationIO = info['simulationIO']
     projectPath = info['projectPath']
     logPath = info['logPath']
-    resultPath = info['resultPath']
+    #resultPath = info['resultPath']
     simPath = info['simPath']
     templatePath = info['templatePath']
 

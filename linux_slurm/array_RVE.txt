@@ -1,5 +1,10 @@
-PipelineRunner -p \\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Project/simulations/aluminum/1/pipeline.json
-PipelineRunner -p \\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Project/simulations/aluminum/2/pipeline.json
-PipelineRunner -p \\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Project/simulations/aluminum/3/pipeline.json
-PipelineRunner -p \\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Project/simulations/aluminum/4/pipeline.json
-PipelineRunner -p \\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Project/simulations/aluminum/5/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE1/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE2/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE3/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE4/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE5/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G2/RVE1/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G2/RVE2/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G2/RVE3/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G2/RVE4/pipeline.json
+PipelineRunner -p C:\Users\springnuance\Desktop\RVE-Micromechanics-Project/simulations/aluminum/G2/RVE5/pipeline.json

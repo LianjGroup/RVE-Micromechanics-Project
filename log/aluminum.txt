@@ -254,8 +254,296 @@ The configurations you have chosen:
 +----------------+-------------+
 |    Material    |   aluminum  |
 | Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
 | Simulation IO  |     yes     |
 +----------------+-------------+
 Generating necessary directories
 The path to your main project folder is
-\\home.org.aalto.fi\nguyenb5\data\Desktop\RVE-Project
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+/scratch/project_2007935/dream3d_project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Configurations | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++----------------+-------------+
+| Global Configs | User choice |
++----------------+-------------+
+|    Material    |   aluminum  |
+| Number of RVEs |      5      |
+| Simulation IO  |     yes     |
++----------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
