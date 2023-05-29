@@ -8,7 +8,8 @@ How to use the project code for RVE generation
 4. Create a folder named {material} for the material under "templates" folder and drag the pipeline.json and empty postProc folder into "templates/{material}"
 5. Fill in the material name and the number of RVEs for each group in configs/config.xlsx
 6. Open the configs/RVE_groups.xlsx and fill in the RVE group names and the RVE properties of each group
-   You can choose any name for the group names besides G1, G2, etc
+   You can choose any name for the group names besides G1, G2, etc. 
+   You can add as many groups as you want in the file but make sure there is no empty row between the group rows in the file
 7. run these on PuTTy
    cd <path to RVE-Project>
    module load python-data
