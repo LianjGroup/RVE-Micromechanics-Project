@@ -6,17 +6,17 @@ from time import sleep
 from prettytable import PrettyTable
 from modules.helper import *
 import copy
-###########################################################
-#                                                         #
-#         CRYSTAL PLASTICITY PARAMETER CALIBRATION        #
-#   Tools required: DAMASK and Finnish Supercomputer CSC  #
-#                                                         #
-###########################################################
 
-# -------------------------------------------------------------------
-#   Stage 0: Choose the CP model, the optimization algorithm, number of initial simulations,
-#   the target curve index to fit, project path folder and material name
-# -------------------------------------------------------------------
+############################################################
+#                                                          #
+#          AUTOMATED MASS RVE GENERATION SOFTWARE          #
+#   Tools required: Dream3D and Finnish Supercomputer CSC  #
+#                                                          #
+############################################################
+
+# ------------------------------------#
+#   Stage 0: Recording configurations #
+# ------------------------------------#
 
 def main_config():
 
