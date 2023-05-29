@@ -6,6 +6,7 @@ from prettytable import PrettyTable
 import RVEconfig
 from modules.SIM import *
 from modules.helper import *
+import copy
 
 def main_optimize(info):
     material = info['material']

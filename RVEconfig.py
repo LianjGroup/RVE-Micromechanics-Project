@@ -5,6 +5,7 @@ import numpy as np
 from time import sleep
 from prettytable import PrettyTable
 from modules.helper import *
+import copy
 ###########################################################
 #                                                         #
 #         CRYSTAL PLASTICITY PARAMETER CALIBRATION        #
@@ -54,14 +55,22 @@ def main_config():
     ###############################
 
     RVEgroups = pd.read_excel("configs/RVE_groups.xlsx", engine="openpyxl")
-    
+ 
+    # Properties are column names of the RVE groups
+    properties = list(RVEgroups.columns)
+    #print(properties)
+    #time.sleep(180)
     # Convert the DataFrame to a Python dictionary based on RVE group
     RVEgroups = RVEgroups.set_index('Group').to_dict(orient='index')
-
+    RVEgroupsUnparsed = copy.deepcopy(RVEgroups)
+    
+    #time.sleep(180)
     for RVEgroup in RVEgroups:
         RVEgroups[RVEgroup]['Dimensions'] = parseDimensions(RVEgroups[RVEgroup]['Dimensions'])
         RVEgroups[RVEgroup]['Resolution'] = parseResolution(RVEgroups[RVEgroup]['Resolution'])
         RVEgroups[RVEgroup]['Origin'] = parseOrigin(RVEgroups[RVEgroup]['Origin'])
+
+    
     # Print the dictionary
     #print(RVEgroups)
     #sleep(180)
@@ -121,7 +130,9 @@ def main_config():
         'material': material,
         'numberOfRVE': numberOfRVE,
         'simulationIO': simulationIO,
-        'RVEgroups': RVEgroups
+        'RVEgroupsUnparsed': RVEgroupsUnparsed,
+        'RVEgroups': RVEgroups,
+        'properties': properties
     }
 
   
