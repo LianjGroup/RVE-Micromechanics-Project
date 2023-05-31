@@ -1016,3 +1016,339 @@ The configurations you have chosen:
 Generating necessary directories
 The path to your main project folder is
 C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      5      |
+|  Total number of RVE sims |      10     |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      3      |
+|  Total number of RVE sims |      6      |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      2      |
+| Number of RVEs each group |      3      |
+|  Total number of RVE sims |      6      |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      1      |
+| Number of RVEs each group |      3      |
+|  Total number of RVE sims |      3      |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      1      |
+| Number of RVEs each group |      3      |
+|  Total number of RVE sims |      3      |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      1      |
+| Number of RVEs each group |      3      |
+|  Total number of RVE sims |      3      |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project
+
+Welcome to the RVE generation software
+
+The configurations you have chosen: 
++---------------------------+-------------+
+|       Global Configs      | User choice |
++---------------------------+-------------+
+|          Material         |   aluminum  |
+|  Number of group settings |      1      |
+| Number of RVEs each group |      3      |
+|  Total number of RVE sims |      3      |
+|       Simulation IO       |     yes     |
++---------------------------+-------------+
+Generating necessary directories
+The path to your main project folder is
+C:\Users\springnuance\Desktop\RVE-Micromechanics-Project

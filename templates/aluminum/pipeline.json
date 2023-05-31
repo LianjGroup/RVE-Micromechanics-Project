@@ -262,7 +262,6 @@
         },
         "EnsembleAttributeMatrixName": "CellEnsembleData",
         "EstimateNumberOfFeatures": 1,
-        "EstimatedPrimaryFeatures": "5983",
         "FilterVersion": "6.5.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Initialize Synthetic Volume",

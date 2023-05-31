@@ -64,24 +64,29 @@ def main_config():
     RVEgroups = RVEgroups.set_index('Group').to_dict(orient='index')
     RVEgroupsUnparsed = copy.deepcopy(RVEgroups)
     
-    #time.sleep(180)
-    for RVEgroup in RVEgroups:
-        RVEgroups[RVEgroup]['Dimensions'] = parseDimensions(RVEgroups[RVEgroup]['Dimensions'])
-        RVEgroups[RVEgroup]['Resolution'] = parseResolution(RVEgroups[RVEgroup]['Resolution'])
-        RVEgroups[RVEgroup]['Origin'] = parseOrigin(RVEgroups[RVEgroup]['Origin'])
+    # Delete the details about NumFeatures
+    # for groupIndex in RVEgroupsUnparsed:
+    #     del RVEgroupsUnparsed[groupIndex]['NumFeaturesReference']
+    #     del RVEgroupsUnparsed[groupIndex]['NumFeaturesType']
+    #     del RVEgroupsUnparsed[groupIndex]['NumFeaturesEstimation']
+    #print(RVEgroupsUnparsed)
 
-    
-    # Print the dictionary
     #print(RVEgroups)
-    #sleep(180)
+    #time.sleep(180)
+    for groupIndex in RVEgroups:
+        RVEgroups[groupIndex]['Dimensions'] = parseDimensions(RVEgroups[groupIndex]['Dimensions'])
+        RVEgroups[groupIndex]['Resolution'] = parseResolution(RVEgroups[groupIndex]['Resolution'])
+        RVEgroups[groupIndex]['Origin'] = parseOrigin(RVEgroups[groupIndex]['Origin'])
+
+    # print(RVEgroupsUnparsed)    
+    # # Print the dictionary
+    # print(RVEgroups)
+    # sleep(180)
 
     #########################################################
     # Creating necessary directories for the configurations #
     #########################################################
-    def printLog(message, logPath):
-        with open(logPath, 'a+') as logFile:
-            logFile.writelines(message)
-        print(message)
+
 
     def checkCreate(path):
         if not os.path.exists(path):
@@ -92,7 +97,6 @@ def main_config():
 
     # For log
     checkCreate("log")
-    path = f"log/{material}"
     checkCreate(path)
 
     # # For results 
