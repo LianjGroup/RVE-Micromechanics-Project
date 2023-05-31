@@ -1,4 +1,4 @@
-
+% code for automatic RVE evaluation
 dim = 64; % number of layers in RVE
 mesh = 10; % mesh size in micro meters
 num_RVEs = 15; % number of RVEs that csc code has generated
