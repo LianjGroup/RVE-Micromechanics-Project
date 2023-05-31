@@ -97,15 +97,13 @@ def main_config():
 
     # For log
     checkCreate("log")
-    checkCreate(path)
 
-    # # For results 
-    # checkCreate("results")
-    # path = f"results/{material}"
-    # checkCreate(path)
+    # For results 
+    checkCreate("results")
+    path = f"results/{material}"
+    checkCreate(path)
     
     # For simulations
-
     checkCreate("simulations")
     path = f"simulations/{material}"
     checkCreate(path)
@@ -114,6 +112,7 @@ def main_config():
     checkCreate("templates")
     path = f"templates/{material}"
     checkCreate(path)
+    checkCreate(f"{path}/postProc")
 
     # For targets
     checkCreate("targets")
@@ -127,7 +126,7 @@ def main_config():
     info = {
         'projectPath': projectPath,
         'logPath': logPath,
-        #'resultPath': resultPath,
+        'resultPath': resultPath,
         'simPath': simPath,
         'targetPath': targetPath,
         'templatePath': templatePath,

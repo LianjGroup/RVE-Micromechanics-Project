@@ -93,6 +93,14 @@ def searchForNumFeatures(destinationPath):
     numFeatures = df.iloc[0, 0]
     return numFeatures
 
+def searchForCSV(destinationPath):
+    csv_file = glob.glob(f'{destinationPath}/*.csv')[0]
+    return csv_file
+
+def searchForTXT(destinationPath):
+    csv_file = glob.glob(f'{destinationPath}/*.txt')[0]
+    return csv_file
+
 def printProgress(info):
     numberOfRVE = info['numberOfRVE']
     RVEgroups = info['RVEgroups']

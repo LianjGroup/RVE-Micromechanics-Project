@@ -256,12 +256,12 @@
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "SyntheticVolumeDataContainer",
         "Dimensions": {
-            "x": 40,
-            "y": 40,
-            "z": 40
+            "x": 20,
+            "y": 20,
+            "z": 20
         },
         "EnsembleAttributeMatrixName": "CellEnsembleData",
-        "EstimateNumberOfFeatures": 0,
+        "EstimateNumberOfFeatures": 1,
         "FilterVersion": "6.5.160",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Initialize Synthetic Volume",
@@ -283,11 +283,10 @@
             "z": 0.0
         },
         "Resolution": {
-            "x": 0.3,
-            "y": 0.3,
-            "z": 0.3
-        },
-        "EstimatedPrimaryFeatures": 3057
+            "x": 0.2,
+            "y": 0.2,
+            "z": 0.2
+        }
     },
     "02": {
         "FilterVersion": "6.5.160",
@@ -313,7 +312,7 @@
         "CellPhasesArrayName": "Phases",
         "FeatureGeneration": 0,
         "FeatureIdsArrayName": "FeatureIds",
-        "FeatureInputFile": "C:\\Users\\springnuance\\Desktop\\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE1/postProc",
+        "FeatureInputFile": "/scratch/project_2007935/dream3d_group/simulations/aluminum/G1/RVE1/postProc",
         "FeaturePhasesArrayName": "Phases",
         "FilterVersion": "6.5.160",
         "Filter_Enabled": true,
@@ -507,7 +506,7 @@
         "Filter_Uuid": "{7c58e612-d7d6-5ec7-806b-cce0c1c211a3}",
         "GeometryFileName": "",
         "HomogenizationIndex": 1,
-        "OutputPath": "C:\\Users\\springnuance\\Desktop\\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE1/postProc"
+        "OutputPath": "/scratch/project_2007935/dream3d_group/simulations/aluminum/G1/RVE1/postProc"
     },
     "08": {
         "CellFeatureAttributeMatrixPath": {
@@ -516,7 +515,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "DelimiterChoiceInt": 0,
-        "FeatureDataFile": "C:\\Users\\springnuance\\Desktop\\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE1/postProc/5.csv",
+        "FeatureDataFile": "/scratch/project_2007935/dream3d_group/simulations/aluminum/G1/RVE1/postProc/5.csv",
         "FilterVersion": "1.2.823",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export Feature Data as CSV File",
@@ -546,7 +545,7 @@
         "Filter_Human_Label": "Export Los Alamos FFT File",
         "Filter_Name": "LosAlamosFFTWriter",
         "Filter_Uuid": "{158ebe9e-f772-57e2-ac1b-71ff213cf890}",
-        "OutputFile": "C:\\Users\\springnuance\\Desktop\\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE1/postProc/5.txt"
+        "OutputFile": "/scratch/project_2007935/dream3d_group/simulations/aluminum/G1/RVE1/postProc/5.txt"
     },
     "10": {
         "FilterVersion": "1.2.823",
@@ -554,7 +553,7 @@
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
-        "OutputFile": "C:\\Users\\springnuance\\Desktop\\RVE-Micromechanics-Project/simulations/aluminum/G1/RVE1/postProc/01_CubicSingleEquiaxedOut.dream3d",
+        "OutputFile": "/scratch/project_2007935/dream3d_group/simulations/aluminum/G1/RVE1/postProc/01_CubicSingleEquiaxedOut.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
