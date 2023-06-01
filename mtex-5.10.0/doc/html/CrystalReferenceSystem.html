@@ -1,0 +1,354 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>The Crystal Reference System</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_CrystalReferenceSystem.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>The Crystal Reference System</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Need of a Euclidean reference system</a></li><li><a href="#3">Cubic, tetragona and orthorhombic symmetries</a></li><li><a href="#4">Trigonal and hexagonal materials</a></li><li><a href="#13">Triclinic and monoclinic symmetries</a></li></ul></div><p>Commonly the crystal coordinate system is defined by the crystallographic axes <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$">, <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$">, The length <tt>[a,b,c]</tt> and the angles <tt>[alpha,beta,gamma]</tt> between theses axes needs to be specified when defining a variable of type <a href="crystalSymmetry.crystalSymmetry.html">crystalSymmetry</a>.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'triclinic'</span>,[1,2.2,3.1],[80*degree,85*degree,95*degree])
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  symmetry          : -1           
+  elements          : 2            
+  a, b, c           : 1, 2.2, 3.1  
+  alpha, beta, gamma: 80&deg;, 85&deg;, 95&deg;
+  reference frame   : X||a*, Z||c  
+ 
+</pre><h2 id="2">Need of a Euclidean reference system</h2><p>However, there are many crystal properties, like orientation or tensorial properties, that are described with respect to an Euclidean reference system <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$">, <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$">, <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> as oposed to the crystallographic axes <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, $\vec b$s, <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$">. Most importantly, Euler angles describe orientations as subsequent rotations about the <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$">, <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$"> and <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> axis. Hence, we need to inscribe an Eucledian reference system <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$">, <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$">, <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> into the crystallogaphic reference system <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$">, <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$">.</p><p>Note, that also the allignment of the crystal axes <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$"> and <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> with respect to the atomic lattice, and hence it symmetries, follows different conventions. These are discussed in the section <a href="SymmetryAlignment.html">Alignment of the Crystal Axes</a>.</p><h2 id="3">Cubic, tetragona and orthorhombic symmetries</h2><p>In orthorhombic, tetragonal and cubic crystal symmetry the crystal reference system <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$">, <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> is itsself an Euclidean one and, hence, setting <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$"> parallel to <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$"> parallel to <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$"> and <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> parallel to <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> is a canonical choice.</p><p>As for such symmetries this is also the default in MTEX there is no need to specify the alignment seperately.</p><h2 id="4">Trigonal and hexagonal materials</h2><p>For trigonal and hexagonal materials the z axis is commonly aligned with the <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> axis. As for the <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$"> and <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$"> axes they are either aligned with the <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$"> or <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$"> axes.</p><p>The following command alignes the <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$"> axes to the <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$"> axes and the <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> axes to the <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> axes.</p><pre class="codeinput">cs_x2a = crystalSymmetry(<span class="string">'321'</span>,[1.7,1.7,1.4],<span class="string">'X||a'</span>,<span class="string">'Z||c'</span>);
+
+<span class="comment">% visualize the resuls</span>
+plot(cs_x2a,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+annotate(cs_x2a.aAxis,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'label'</span>,<span class="string">'a'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(cs_x2a.bAxis,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'label'</span>,<span class="string">'b'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(-vector3d.Y,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>,<span class="string">'label'</span>,<span class="string">'-y'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(-vector3d.X,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>,<span class="string">'label'</span>,<span class="string">'-x'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="CrystalReferenceSystem_01.png" alt=""> <p>In contrast the following command alignes the <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$"> axes to the <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$"> axes and the <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> axes to the <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> axes.</p><pre class="codeinput">cs_y2a = crystalSymmetry(<span class="string">'321'</span>,[1.7,1.7,1.4],<span class="string">'y||a'</span>,<span class="string">'Z||c'</span>);
+plot(cs_y2a,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+annotate(cs_y2a.aAxis,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'label'</span>,<span class="string">'a'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(cs_y2a.bAxis,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'label'</span>,<span class="string">'b'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(-vector3d.Y,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>,<span class="string">'label'</span>,<span class="string">'-y'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(-vector3d.X,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>,<span class="string">'label'</span>,<span class="string">'-x'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="CrystalReferenceSystem_02.png" alt=""> <p>The only difference between the above two plots is the position of the <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$"> and <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$"> axes. The reason is that visualizations relative to the crystal reference system, e.g., inverse pole figures, are in MTEX aligned on the screen according to the b-axis.</p><p>This on secreen alignment can be easily modified by</p><pre class="codeinput"><span class="comment">% change on screen alignment</span>
+plota2east
+
+<span class="comment">% redo last plot</span>
+plot(cs_y2a,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+annotate(cs_y2a.aAxis,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'label'</span>,<span class="string">'a'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(cs_y2a.bAxis,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="string">'label'</span>,<span class="string">'b'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(-vector3d.Y,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>,<span class="string">'label'</span>,<span class="string">'-y'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+annotate(-vector3d.X,<span class="string">'MarkerFaceColor'</span>,<span class="string">'green'</span>,<span class="string">'label'</span>,<span class="string">'-x'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+
+<span class="comment">% set old default back</span>
+plotb2east
+</pre><img vspace="50" hspace="5" src="CrystalReferenceSystem_03.png" alt=""> <p>It should be stressed that the alignment between the Eucledean crystal axes <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$">, <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$">, <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> and the crystallographic axes <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$"> and <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$"> is crucial for many computations. The difference between both setups becomes more vsible if we plot crystal shapes in the <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$">, <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$">, <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> coordinate system</p><pre class="codeinput">cS_x2a = crystalShape.quartz(cs_x2a);
+
+close <span class="string">all</span>
+figure(1)
+plot(cS_x2a,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+hold <span class="string">on</span>
+arrow3d(0.5*[xvector,yvector,zvector],<span class="string">'labeled'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CrystalReferenceSystem_04.png" alt=""> <pre class="codeinput">cS_y2a = crystalShape.quartz(cs_y2a);
+
+figure(2)
+plot(cS_y2a,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+hold <span class="string">on</span>
+arrow3d(0.5*[xvector,yvector,zvector],<span class="string">'labeled'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CrystalReferenceSystem_05.png" alt=""> <p>Most important is the difference if Euler angles are used to describe orientation. Lets consider the following two orientations</p><pre class="codeinput">ori_x2a = orientation.byEuler(0,0,0,cs_x2a)
+ori_y2a = orientation.byEuler(0,0,0,cs_y2a)
+</pre><pre class="codeoutput"> 
+ori_x2a = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+     0    0    0
+ 
+ 
+ori_y2a = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+     0    0    0
+ 
+</pre><p>and visualize them in a pole figure.</p><pre class="codeinput">newMtexFigure(<span class="string">'innerPlotSpacing'</span>,20,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+plotPDF(ori_x2a,Miller(1,0,0,cs_x2a),<span class="string">'MarkerSize'</span>,20)
+annotate([xvector,yvector],<span class="string">'label'</span>,{<span class="string">'x'</span>,<span class="string">'y'</span>},<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+nextAxis
+plotPDF(ori_y2a,Miller(1,0,0,cs_y2a),<span class="string">'MarkerSize'</span>,20)
+annotate([xvector,yvector],<span class="string">'label'</span>,{<span class="string">'x'</span>,<span class="string">'y'</span>},<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="CrystalReferenceSystem_06.png" alt=""> <p>We observe that both pole figures are rotated with respect to each other by 30 degree. Indeed computing the misorientation angle between both orientations gives us</p><pre class="codeinput">angle(ori_x2a, ori_y2a) ./ degree
+</pre><pre class="codeoutput"> 
+  The involved symmetries have different reference systems
+  1: 321, X||b*, Y||a, Z||c
+  2: 321, X||a, Y||b*, Z||c*
+  I'm going to transform the data from the first one to the second one
+ 
+ans =
+   30.0000
+</pre><p>In many cases MTEX automatically recognizes different setups and corrects for this. In order to manually transform orientations or tensors from one reference frame into another reference frame one might use the command <a href="orientation.transformReferenceFrame.html">transformReferenceFrame</a>. The following command transfroms the reference frame of orientation <tt>ori_y2a</tt> into the reference frame <tt>cs_x2a</tt></p><pre class="codeinput">ori_x2a.transformReferenceFrame(cs_y2a)
+</pre><pre class="codeoutput"> 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+   270    0    0
+ 
+</pre><h2 id="13">Triclinic and monoclinic symmetries</h2><p>In triclinic and monoclinic symmetries even more different setups are used. As two perpedicular crystal axes are required to align with <img src="CrystalReferenceSystem_eq13422123847831175821.png" alt="$\vec x$">, <img src="CrystalReferenceSystem_eq09332718309043117302.png" alt="$\vec y$"> or <img src="CrystalReferenceSystem_eq15010774110916230066.png" alt="$\vec z$"> one ussually chooses one crystal axis from the direct coordinate system, i.e., <img src="CrystalReferenceSystem_eq09173158404266816216.png" alt="$\vec a$">, <img src="CrystalReferenceSystem_eq17767086885354945154.png" alt="$\vec b$"> or <img src="CrystalReferenceSystem_eq09068133812880319256.png" alt="$\vec c$">, and the second crystal axis from the reciprocal axes <img src="CrystalReferenceSystem_eq18253143195839270679.png" alt="$\vec a^*$">, <img src="CrystalReferenceSystem_eq06767114151619371192.png" alt="$\vec b^*$"> or <img src="CrystalReferenceSystem_eq02762738161364929590.png" alt="$\vec c^*$">. Typical examples for such setups are</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'-1'</span>, [8.290 12.966 7.151], [91.18 116.31 90.14]*degree,<span class="keyword">...</span>
+  <span class="string">'x||a*'</span>,<span class="string">'y||b'</span>, <span class="string">'mineral'</span>,<span class="string">'An0 Albite 2016'</span>)
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  mineral           : An0 Albite 2016        
+  symmetry          : -1                     
+  elements          : 2                      
+  a, b, c           : 8.3, 13, 7.2           
+  alpha, beta, gamma: 91.18&deg;, 116.31&deg;, 90.14&deg;
+  reference frame   : X||a*, Y||b            
+ 
+</pre><p>or</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'-1'</span>, [8.290 12.966 7.151], [91.18 116.31 90.14]*degree,<span class="keyword">...</span>
+  <span class="string">'x||a'</span>,<span class="string">'c||c*'</span>, <span class="string">'mineral'</span>,<span class="string">'An0 Albite 2016'</span>)
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  mineral           : An0 Albite 2016        
+  symmetry          : -1                     
+  elements          : 2                      
+  a, b, c           : 8.3, 13, 7.2           
+  alpha, beta, gamma: 91.18&deg;, 116.31&deg;, 90.14&deg;
+  reference frame   : X||a, Z||c*            
+ 
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% The Crystal Reference System
+%
+%%
+% Commonly the crystal coordinate system is defined by the crystallographic
+% axes $\vec a$, $\vec b$, $\vec c$, The length |[a,b,c]| and the angles
+% |[alpha,beta,gamma]| between theses axes needs to be specified when
+% defining a variable of type <crystalSymmetry.crystalSymmetry.html
+% crystalSymmetry>.
+
+cs = crystalSymmetry('triclinic',[1,2.2,3.1],[80*degree,85*degree,95*degree])
+
+%% Need of a Euclidean reference system
+%
+% However, there are many crystal properties, like orientation or tensorial
+% properties, that are described with respect to an Euclidean reference
+% system $\vec x$, $\vec y$, $\vec z$ as oposed to the crystallographic
+% axes $\vec a$, $\vec b$s, $\vec c$. Most importantly, Euler angles
+% describe orientations as subsequent rotations about the $\vec z$, $\vec
+% x$ and $\vec z$ axis. Hence, we need to inscribe an Eucledian reference
+% system $\vec x$, $\vec y$, $\vec z$ into the crystallogaphic reference
+% system $\vec a$, $\vec b$, $\vec c$.
+%
+% Note, that also the allignment of the crystal axes $\vec a$, $\vec b$ and
+% $\vec c$ with respect to the atomic lattice, and hence it symmetries,
+% follows different conventions. These are discussed in the section
+% <SymmetryAlignment.html Alignment of the Crystal Axes>.
+% 
+%% Cubic, tetragona and orthorhombic symmetries
+%
+% In orthorhombic, tetragonal and cubic crystal symmetry the crystal
+% reference system $\vec a$, $\vec b$, $\vec c$ is itsself an Euclidean one
+% and, hence, setting $\vec x$ parallel to $\vec a$, $\vec y$ parallel to
+% $\vec b$ and $\vec z$ parallel to $\vec c$ is a canonical choice.
+%
+% As for such symmetries this is also the default in MTEX there is no need
+% to specify the alignment seperately.
+%
+%% Trigonal and hexagonal materials
+%
+% For trigonal and hexagonal materials the z axis is commonly aligned with
+% the $\vec c$ axis. As for the $\vec x$ and $\vec y$ axes they are either
+% aligned with the $\vec a$ or $\vec b$ axes.
+% 
+% The following command alignes the $\vec x$ axes to the $\vec a$ axes and
+% the $\vec z$ axes to the $\vec c$ axes.
+
+cs_x2a = crystalSymmetry('321',[1.7,1.7,1.4],'X||a','Z||c');
+
+% visualize the resuls
+plot(cs_x2a,'figSize','small')
+annotate(cs_x2a.aAxis,'MarkerFaceColor','r','label','a','backgroundColor','w')
+annotate(cs_x2a.bAxis,'MarkerFaceColor','r','label','b','backgroundColor','w')
+annotate(-vector3d.Y,'MarkerFaceColor','green','label','-y','backgroundColor','w')
+annotate(-vector3d.X,'MarkerFaceColor','green','label','-x','backgroundColor','w')
+%%
+% In contrast the following command alignes the $\vec y$ axes to the $\vec
+% a$ axes and the $\vec z$ axes to the $\vec c$ axes.
+
+cs_y2a = crystalSymmetry('321',[1.7,1.7,1.4],'y||a','Z||c');
+plot(cs_y2a,'figSize','small')
+annotate(cs_y2a.aAxis,'MarkerFaceColor','r','label','a','backgroundColor','w')
+annotate(cs_y2a.bAxis,'MarkerFaceColor','r','label','b','backgroundColor','w')
+annotate(-vector3d.Y,'MarkerFaceColor','green','label','-y','backgroundColor','w')
+annotate(-vector3d.X,'MarkerFaceColor','green','label','-x','backgroundColor','w')
+
+%%
+% The only difference between the above two plots is the position of the
+% $\vec x$ and $\vec y$ axes. The reason is that visualizations relative to
+% the crystal reference system, e.g., inverse pole figures, are in MTEX
+% aligned on the screen according to the b-axis.
+%
+% This on secreen alignment can be easily modified by
+
+% change on screen alignment
+plota2east
+
+% redo last plot
+plot(cs_y2a,'figSize','small')
+annotate(cs_y2a.aAxis,'MarkerFaceColor','r','label','a','backgroundColor','w')
+annotate(cs_y2a.bAxis,'MarkerFaceColor','r','label','b','backgroundColor','w')
+annotate(-vector3d.Y,'MarkerFaceColor','green','label','-y','backgroundColor','w')
+annotate(-vector3d.X,'MarkerFaceColor','green','label','-x','backgroundColor','w')
+
+% set old default back
+plotb2east
+
+%%
+% It should be stressed that the alignment between the Eucledean crystal
+% axes $\vec x$, $\vec y$, $\vec z$ and the crystallographic axes $\vec a$,
+% $\vec b$ and $\vec c$ is crucial for many computations. The difference
+% between both setups becomes more vsible if we plot crystal shapes in the
+% $\vec x$, $\vec y$, $\vec z$ coordinate system
+
+cS_x2a = crystalShape.quartz(cs_x2a);
+
+close all
+figure(1)
+plot(cS_x2a,'figSize','small')
+hold on
+arrow3d(0.5*[xvector,yvector,zvector],'labeled')
+hold off
+
+%%
+
+cS_y2a = crystalShape.quartz(cs_y2a);
+
+figure(2)
+plot(cS_y2a,'figSize','small')
+hold on
+arrow3d(0.5*[xvector,yvector,zvector],'labeled')
+hold off
+
+
+%%
+% Most important is the difference if Euler angles are used to describe
+% orientation. Lets consider the following two orientations
+
+ori_x2a = orientation.byEuler(0,0,0,cs_x2a)
+ori_y2a = orientation.byEuler(0,0,0,cs_y2a)
+
+%%
+% and visualize them in a pole figure. 
+
+newMtexFigure('innerPlotSpacing',20,'figSize','small')
+plotPDF(ori_x2a,Miller(1,0,0,cs_x2a),'MarkerSize',20)
+annotate([xvector,yvector],'label',{'x','y'},'backgroundColor','w')
+nextAxis
+plotPDF(ori_y2a,Miller(1,0,0,cs_y2a),'MarkerSize',20)
+annotate([xvector,yvector],'label',{'x','y'},'backgroundColor','w')
+
+%%
+% We observe that both pole figures are rotated with respect to each other
+% by 30 degree. Indeed computing the misorientation angle between both
+% orientations gives us
+
+angle(ori_x2a, ori_y2a) ./ degree
+
+%%
+% In many cases MTEX automatically recognizes different setups and corrects
+% for this. In order to manually transform orientations or tensors from one
+% reference frame into another reference frame one might use the command
+% <orientation.transformReferenceFrame.html transformReferenceFrame>. The
+% following command transfroms the reference frame of orientation |ori_y2a|
+% into the reference frame |cs_x2a|
+
+ori_x2a.transformReferenceFrame(cs_y2a)
+
+
+%% Triclinic and monoclinic symmetries
+%
+% In triclinic and monoclinic symmetries even more different setups are
+% used. As two perpedicular crystal axes are required to align with $\vec
+% x$, $\vec y$ or $\vec z$ one ussually chooses one crystal axis from the
+% direct coordinate system, i.e., $\vec a$, $\vec b$ or $\vec c$, and the
+% second crystal axis from the reciprocal axes $\vec a^*$, $\vec b^*$ or
+% $\vec c^*$. Typical examples for such setups are
+
+cs = crystalSymmetry('-1', [8.290 12.966 7.151], [91.18 116.31 90.14]*degree,...
+  'x||a*','y||b', 'mineral','An0 Albite 2016')
+
+%%
+% or
+
+cs = crystalSymmetry('-1', [8.290 12.966 7.151], [91.18 116.31 90.14]*degree,...
+  'x||a','c||c*', 'mineral','An0 Albite 2016')
+
+
+##### SOURCE END #####
+--></body></html>

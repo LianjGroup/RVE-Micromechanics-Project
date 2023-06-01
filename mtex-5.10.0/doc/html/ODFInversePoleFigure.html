@@ -1,0 +1,173 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Inverse Pole Figures</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ODFInversePoleFigure.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Inverse Pole Figures</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Theory</a></li></ul></div><h2 id="1">Theory</h2><p>For an orientation distribution function (ODF) <img src="ODFInversePoleFigure_eq13867786145734749821.png" alt="$f \colon \mathrm{SO}(3) \to R$"> the inverse pole density function <img src="ODFInversePoleFigure_eq06521727502886829735.png" alt="$P_{\vec r}$"> with respect to a fixed specimen direction <img src="ODFInversePoleFigure_eq04409958909805410086.png" alt="$\vec r$"> is spherical function defined as the integral</p><p><img src="ODFInversePoleFigure_eq14155015327305714130.png" alt="$$ P_{\vec r}(\vec h) = \int_{g \vec h = \vec r} f(g) dg $$"></p><p>The pole density function <img src="ODFInversePoleFigure_eq01996755303614070726.png" alt="$P_{\vec r}(\vec h)$"> evaluated at a crystal direction <img src="ODFInversePoleFigure_eq12648436215061388158.png" alt="$\vec h$"> can be interpreted as the volume percentage of crystals with the crystal lattice planes <img src="ODFInversePoleFigure_eq12648436215061388158.png" alt="$\vec h$"> beeing normal to the specimen direction <img src="ODFInversePoleFigure_eq04409958909805410086.png" alt="$\vec r$">.</p><p>In order to illustrate the concept of inverse pole figures at an example lets us first define a model ODF to be plotted later on.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'32'</span>);
+mod1 = orientation.byEuler(90*degree,40*degree,110*degree,<span class="string">'ZYZ'</span>,cs);
+mod2 = orientation.byEuler(50*degree,30*degree,-30*degree,<span class="string">'ZYZ'</span>,cs);
+
+odf = 0.2*unimodalODF(mod1) <span class="keyword">...</span>
+  + 0.3*unimodalODF(mod2) <span class="keyword">...</span>
+  + 0.5*fibreODF(Miller(0,0,1,cs),vector3d(1,0,0),<span class="string">'halfwidth'</span>,10*degree)
+
+<span class="comment">%odf = 0.2*unimodalODF(mod2)</span>
+</pre><pre class="codeoutput"> 
+odf = SO3FunComposition (321 &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 2 orientations
+ 
+  Bunge Euler angles in degree
+  phi1    Phi   phi2 weight
+   180     40     20    0.2
+   140     30    240    0.3
+ 
+  &lt;strong&gt;fibre component&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (0001) || 1,0,0
+  weight: 0.5
+ 
+</pre><p>and lets switch to the LaboTex colormap</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,LaboTeXColorMap);
+
+<span class="comment">% Plotting inverse pole figures is analogously to plotting pole figures</span>
+<span class="comment">% with the only difference that you have to use the command</span>
+<span class="comment">% &lt;SO3Fun.plotIPDF.html plotIPDF&gt; and you to specify specimen directions and</span>
+<span class="comment">% not crystal directions.</span>
+
+plotIPDF(odf,[xvector,zvector])
+</pre><img vspace="50" hspace="5" src="ODFInversePoleFigure_01.png" alt=""> <p>Imposing antipodal symmetry to the inverse pole figures halfes the fundamental region</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'antipodal'</span>)
+</pre><img vspace="50" hspace="5" src="ODFInversePoleFigure_02.png" alt=""> <p>By default MTEX always plots only the fundamental region with respect to the crystal symmetry. In order to plot the complete inverse pole figure you have to use the option <b>complete</b>.</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+</pre><img vspace="50" hspace="5" src="ODFInversePoleFigure_03.png" alt=""> <p>This illustrates also more clearly the effect of the antipodal symmetry</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'complete'</span>,<span class="string">'antipodal'</span>,<span class="string">'upper'</span>)
+</pre><img vspace="50" hspace="5" src="ODFInversePoleFigure_04.png" alt=""> <p>Finally, lets set back the default colormap.</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap);
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Inverse Pole Figures
+%
+%% Theory
+% For an orientation distribution function (ODF) $f \colon \mathrm{SO}(3)
+% \to R$ the inverse pole density function $P_{\vec r}$ with respect to a
+% fixed specimen direction $\vec r$ is spherical function defined as the
+% integral
+%
+% $$ P_{\vec r}(\vec h) = \int_{g \vec h = \vec r} f(g) dg $$
+%
+% The pole density function $P_{\vec r}(\vec h)$ evaluated at a crystal
+% direction $\vec h$ can be interpreted as the volume percentage of
+% crystals with the crystal lattice planes $\vec h$ beeing normal to the
+% specimen direction $\vec r$. 
+% 
+% In order to illustrate the concept of inverse pole figures at an example
+% lets us first define a model ODF to be plotted later on.
+
+cs = crystalSymmetry('32');
+mod1 = orientation.byEuler(90*degree,40*degree,110*degree,'ZYZ',cs);
+mod2 = orientation.byEuler(50*degree,30*degree,-30*degree,'ZYZ',cs);
+
+odf = 0.2*unimodalODF(mod1) ...
+  + 0.3*unimodalODF(mod2) ...
+  + 0.5*fibreODF(Miller(0,0,1,cs),vector3d(1,0,0),'halfwidth',10*degree)
+
+%odf = 0.2*unimodalODF(mod2)
+
+%%
+% and lets switch to the LaboTex colormap
+setMTEXpref('defaultColorMap',LaboTeXColorMap);
+
+% Plotting inverse pole figures is analogously to plotting pole figures
+% with the only difference that you have to use the command
+% <SO3Fun.plotIPDF.html plotIPDF> and you to specify specimen directions and
+% not crystal directions.
+
+plotIPDF(odf,[xvector,zvector])
+
+%%
+% Imposing antipodal symmetry to the inverse pole figures halfes the
+% fundamental region
+
+plotIPDF(odf,[xvector,zvector],'antipodal')
+
+%%
+% By default MTEX always plots only the fundamental region with respect to
+% the crystal symmetry. In order to plot the complete inverse pole figure
+% you have to use the option *complete*.
+
+plotIPDF(odf,[xvector,zvector],'complete','upper')
+
+%%
+% This illustrates also more clearly the effect of the antipodal symmetry
+
+plotIPDF(odf,[xvector,zvector],'complete','antipodal','upper')
+
+%%
+% Finally, lets set back the default colormap.
+
+setMTEXpref('defaultColorMap',WhiteJetColorMap);
+
+##### SOURCE END #####
+--></body></html>

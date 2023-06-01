@@ -1,0 +1,349 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Multivariate SO3Fun</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SO3FunMultivariate.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Multivariate SO3Fun</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Structural conventions of the input and output of multivariate SO3FunHarmonics</a></li><li><a href="#2">Defining a multivariate SO3FunHarmonic</a></li><li><a href="#12">Operations which differ from an univariate SO3FunHarmonic</a></li><li><a href="#19">Visualization of multivariate SO3FunHarmonic</a></li></ul></div><h2 id="1">Structural conventions of the input and output of multivariate SO3FunHarmonics</h2><p>In this part we deal with multivariate functions of the form</p><p><img src="SO3FunMultivariate_eq13735224386349463797.png" alt="$$ f\colon \mathcal{SO}(3) \to R^n. $$"></p><div><ul><li>the structure of the nodes <tt>@rotations</tt> is always interpreted as a column vector</li><li>the node index is the first dimension</li><li>the dimensions of the <tt>SO3FunHarmonic</tt> itself is counted from the second dimension</li></ul></div><p>For example we got four nodes <img src="SO3FunMultivariate_eq03209735570438204390.png" alt="$R_1, R_2, R_3$"> and <img src="SO3FunMultivariate_eq18276011303425253988.png" alt="$R_4$"> and six functions <img src="SO3FunMultivariate_eq13476873715212524128.png" alt="$f_1, f_2, f_3, f_4, f_5$"> and <img src="SO3FunMultivariate_eq12264009218397638007.png" alt="$f_6$">, which we want to store in a 3x2 array, then the following scheme applies to function evaluations:</p><p><img src="SO3FunMultivariate_eq03672164830578390002.png" alt="$$ F(:, :, 1) = \pmatrix{f_1(v_1) &amp; f_2(v_1) &amp; f_3(v_1) \cr&#xA;f_1(v_2) &amp; f_2(v_2) &amp; f_3(v_2) \cr&#xA;f_1(v_3) &amp; f_2(v_3) &amp; f_3(v_3) \cr&#xA;f_1(v_4) &amp; f_2(v_4) &amp; f_3(v_4)} \quad\mathrm{and}\quad&#xA;F(:, :, 2) = \pmatrix{f_4(v_1) &amp; f_5(v_1) &amp; f_6(v_1) \cr&#xA;f_4(v_2) &amp; f_5(v_2) &amp; f_6(v_2) \cr&#xA;f_4(v_3) &amp; f_5(v_3) &amp; f_6(v_3) \cr&#xA;f_4(v_4) &amp; f_5(v_4) &amp; f_6(v_4)}. $$"></p><p>For the intern Fourier-coefficient matrix the first dimension is reserved for the Fourier-coefficients of a single function; the dimensions of the functions itself begins again with the second dimension.</p><p>If <img src="SO3FunMultivariate_eq02705488474410842323.png" alt="$\bf{\hat f}_1, \bf{\hat f}_2, \bf{\hat f}_3, \bf{\hat f}_4, \bf{\hat f}_5$"> and <img src="SO3FunMultivariate_eq16879653091295959915.png" alt="$\bf{\hat f}_6$"> would be the column vectors of the Fourier-coefficients of the functions above, internally they would be stored in <img src="SO3FunMultivariate_eq00898156945388944535.png" alt="$\hat F$"> as follows. <img src="SO3FunMultivariate_eq00996436858838322890.png" alt="$$ \hat F(:, :, 1) = \pmatrix{\bf{\hat f}_1 &amp; \bf{\hat f}_2 &amp; \bf{\hat f}_3} \quad\mathrm{and}\quad \hat F(:, :, 2) = \pmatrix{\bf{\hat f}_4 &amp; \bf{\hat f}_5 &amp; \bf{\hat f}_6}. $$"></p><h2 id="2">Defining a multivariate SO3FunHarmonic</h2><p><b>Definition via function values</b></p><p>At first we need some vertices</p><pre class="codeinput">nodes = equispacedSO3Grid(crystalSymmetry,specimenSymmetry,<span class="string">'points'</span>,1e5);
+nodes = nodes(:);
+</pre><p>Next we define function values for the vertices</p><pre class="codeinput">y = [SO3Fun.dubna(nodes), (nodes.a.*nodes.b).^(1/4)];
+nodes.CS = SO3Fun.dubna.CS;
+</pre><p>Now the actual command to get a (2x1) <tt>SO3F1</tt> of type <img src="SO3FunMultivariate_eq13978084828324961509.png" alt="$~$"> <a href="SO3FunHarmonic.SO3FunHarmonic"><tt>SO3FunHarmonic</tt></a> is</p><pre class="codeinput">SO3F1 = SO3FunHarmonic.approximation(nodes, y)
+</pre><pre class="codeoutput"> 
+SO3F1 = SO3FunHarmonic (Quartz &#8594; xyz)
+  size: 2 x 1
+  bandwidth: 47
+  weight: 0.82
+ 
+</pre><p>It is also possible to interpolate one component by an <a href="SO3FunHarmonic.SO3FunRBF"><tt>SO3FunRBF</tt></a>, that means</p><pre class="codeinput">SO3F2 = SO3FunHarmonic.interpolate(nodes,y(:,1))
+</pre><pre class="codeoutput"> 
+SO3F2 = SO3FunRBF (Quartz &#8594; xyz)
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 0.00012
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 18327 orientations, resolution: 5&deg;
+  weight: 1
+ 
+</pre><p>This is only possible for univariate functions.</p><p><b>Definition via function handle</b></p><p>If we have a function handle for the function we could create a <tt>SO3FunHarmonic</tt> via quadrature. At first let us define a function handle which takes <img src="SO3FunMultivariate_eq13978084828324961509.png" alt="$~$"> <a href="rotation.rotation.html"><tt>rotation</tt></a> as an argument and returns double:</p><pre class="codeinput">f = @(rot) [exp(rot.a+rot.b+rot.c)+50*(rot.b-cos(pi/3)).^3.*(rot.b-cos(pi/3) &gt; 0), rot.a, rot.b, rot.c];
+</pre><p>Now we call the quadrature command to get (4x1) <tt>SO3F3</tt> of type <img src="SO3FunMultivariate_eq13978084828324961509.png" alt="$~$"> <a href="SO3FunHarmonic.SO3FunHarmonic"><tt>SO3FunHarmonic</tt></a></p><pre class="codeinput">SO3F3 = SO3FunHarmonic.quadrature(f, <span class="string">'bandwidth'</span>, 50,SO3F1.CS)
+</pre><pre class="codeoutput"> 
+SO3F3 = SO3FunHarmonic (Quartz &#8594; xyz)
+  isReal: true
+  size: 4 x 1
+  bandwidth: 50
+  weight: 2.1
+ 
+</pre><p><b>Definition via Fourier-coefficients</b></p><p>If we already know the Fourier-coefficients, we can simply hand them in the format above to the constructor of <tt>SO3FunHarmonic</tt>.</p><pre class="codeinput">SO3F4 = SO3FunHarmonic(eye(10))
+</pre><pre class="codeoutput"> 
+SO3F4 = SO3FunHarmonic (xyz &#8594; xyz)
+  size: 10 x 1
+  bandwidth: 1
+  weight: 1
+ 
+</pre><div><ul><li>This command stores the ten first <a href="WignerFunctions.html">Wigner-D functions</a> in <tt>SO3F4</tt></li></ul></div><h2 id="12">Operations which differ from an univariate SO3FunHarmonic</h2><p><b>Some default matrix and vector operations</b></p><p>You can concatenate and refer to functions as Matlab does with vectors and matrices</p><pre class="codeinput">SO3F5 = [SO3F1; SO3F3];
+SO3F5(2:4)
+</pre><pre class="codeoutput"> 
+ans = SO3FunHarmonic (Quartz &#8594; xyz)
+  size: 3 x 1
+  bandwidth: 50
+  weight: 0.236+0.098i
+ 
+</pre><p>You can conjugate the Fourier-coefficients and transpose/ctranspose the multivariate <a href="SO3FunHarmonic.SO3FunHarmonic"><tt>SO3FunHarmonic</tt></a>.</p><pre class="codeinput">conj(SO3F1);
+SO3F1.';
+SO3F1'
+</pre><pre class="codeoutput"> 
+ans = SO3FunHarmonic (Quartz &#8594; xyz)
+  size: 1 x 2
+  bandwidth: 47
+  weight: 0.82
+ 
+</pre><p>Some other operations</p><pre class="codeinput">length(SO3F1)
+size(SO3F3)
+SO3F4 = reshape(SO3F4, 2, [])
+</pre><pre class="codeoutput">ans =
+     2
+ans =
+     4     1
+ 
+SO3F4 = SO3FunHarmonic (xyz &#8594; xyz)
+  size: 2 x 5
+  bandwidth: 1
+  weight: 1
+ 
+</pre><p><b><tt>sum</tt> and <tt>mean</tt></b></p><p>If we do not specify further options to <tt>sum</tt> or <tt>mean</tt> they give we the integral or the mean value back for each function. You could also calculate the conventional sum or the meanvalue over a dimension of a multivariate <tt>SO3FunHarmonic</tt>.</p><pre class="codeinput">sum(SO3F1, 1)
+mean(SO3F4, 2)
+</pre><pre class="codeoutput"> 
+ans = SO3FunHarmonic (Quartz &#8594; xyz)
+  bandwidth: 47
+  weight: 1.051+0.098i
+ 
+ 
+ans = SO3FunHarmonic (xyz &#8594; xyz)
+  antipodal: true
+  isReal: true
+  size: 2 x 1
+  bandwidth: 1
+  weight: 0.2
+ 
+</pre><p><b>min/max</b></p><p>If the <tt>min</tt> or <tt>max</tt> command gets a multivariate <tt>SO3FunHarmonic</tt> the pointwise minimum or maximum is calculated along the first non-singelton dimension if not specified otherwise.</p><p>Therefore the function has to be real valued</p><pre class="codeinput">SO3F4.isReal = 1;
+min(SO3F4)
+</pre><pre class="codeoutput">ans =
+  Columns 1 through 7
+    1.0000   -0.9437   -1.2247   -1.7321   -1.2247   -1.7321   -1.2247
+  Columns 8 through 10
+   -1.7321   -1.2247   -0.9437
+</pre><p><b>Remark on the matrix product</b></p><p>At this point the matrix product is implemented pointwise and not as the usual matrix product.</p><pre class="codeinput">SO3F1.CS=specimenSymmetry;
+
+SO3F1 .* SO3F4
+</pre><pre class="codeoutput"> 
+ans = SO3FunHarmonic (xyz &#8594; xyz)
+  size: 2 x 5
+  bandwidth: 48
+  weight: 0.82
+ 
+</pre><h2 id="19">Visualization of multivariate SO3FunHarmonic</h2><p>Similary to the univariate case we also can look at the Fourier coefficients of multivariate functions.</p><pre class="codeinput">plotSpektra(SO3F3)
+</pre><img vspace="50" hspace="5" src="SO3FunMultivariate_01.png" alt=""> <p>The section plot and the 3d plot are performed only for the first component of a multivariate function</p><pre class="codeinput">plot(SO3F3)
+</pre><pre class="codeoutput">Warning: You try to plot an multivariate function. Plot the
+desired components manually. In the following the first
+component is plotted. 
+</pre><img vspace="50" hspace="5" src="SO3FunMultivariate_02.png" alt=""> <pre class="codeinput">plot3d(SO3F3)
+</pre><pre class="codeoutput">Warning: You try to plot an multivariate function. Plot the
+desired components manually. In the following the first
+component is plotted. 
+</pre><img vspace="50" hspace="5" src="SO3FunMultivariate_03.png" alt=""> <p>while the plot along a specific fibre includes all components.</p><pre class="codeinput">plotFibre(SO3F3,fibre.beta)
+</pre><img vspace="50" hspace="5" src="SO3FunMultivariate_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Multivariate SO3Fun
+%
+%% Structural conventions of the input and output of multivariate SO3FunHarmonics
+%
+% In this part we deal with multivariate functions of the form
+%
+% $$ f\colon \mathcal{SO}(3) \to R^n. $$
+%
+% * the structure of the nodes |@rotations| is always interpreted as a column vector
+% * the node index is the first dimension
+% * the dimensions of the |SO3FunHarmonic| itself is counted from the second dimension
+%
+% For example we got four nodes $R_1, R_2, R_3$ and $R_4$ and six functions 
+% $f_1, f_2, f_3, f_4, f_5$ and $f_6$, which we want to store in a 3x2 array, 
+% then the following scheme applies to function evaluations:
+%
+% $$ F(:, :, 1) = \pmatrix{f_1(v_1) & f_2(v_1) & f_3(v_1) \cr 
+% f_1(v_2) & f_2(v_2) & f_3(v_2) \cr 
+% f_1(v_3) & f_2(v_3) & f_3(v_3) \cr 
+% f_1(v_4) & f_2(v_4) & f_3(v_4)} \quad\mathrm{and}\quad 
+% F(:, :, 2) = \pmatrix{f_4(v_1) & f_5(v_1) & f_6(v_1) \cr 
+% f_4(v_2) & f_5(v_2) & f_6(v_2) \cr 
+% f_4(v_3) & f_5(v_3) & f_6(v_3) \cr 
+% f_4(v_4) & f_5(v_4) & f_6(v_4)}. $$
+%
+% For the intern Fourier-coefficient matrix the first dimension is reserved 
+% for the Fourier-coefficients of a single function; the dimensions of the 
+% functions itself begins again with the second dimension.
+%
+% If $\bf{\hat f}_1, \bf{\hat f}_2, \bf{\hat f}_3, \bf{\hat f}_4, \bf{\hat f}_5$
+% and $\bf{\hat f}_6$ would be the column vectors of the Fourier-coefficients 
+% of the functions above, internally they would be stored in $\hat F$ as follows.
+% $$ \hat F(:, :, 1) = \pmatrix{\bf{\hat f}_1 & \bf{\hat f}_2 & \bf{\hat f}_3} 
+% \quad\mathrm{and}\quad 
+% \hat F(:, :, 2) = \pmatrix{\bf{\hat f}_4 & \bf{\hat f}_5 & \bf{\hat f}_6}. $$
+%
+%% Defining a multivariate SO3FunHarmonic
+%
+%%
+% *Definition via function values*
+%
+% At first we need some vertices
+nodes = equispacedSO3Grid(crystalSymmetry,specimenSymmetry,'points',1e5);
+nodes = nodes(:);
+%%
+% Next we define function values for the vertices
+y = [SO3Fun.dubna(nodes), (nodes.a.*nodes.b).^(1/4)];
+nodes.CS = SO3Fun.dubna.CS;
+%%
+% Now the actual command to get a (2x1) |SO3F1| of type $~$
+% <SO3FunHarmonic.SO3FunHarmonic |SO3FunHarmonic|> is
+SO3F1 = SO3FunHarmonic.approximation(nodes, y)
+
+%%
+% It is also possible to interpolate one component by an
+% <SO3FunHarmonic.SO3FunRBF |SO3FunRBF|>, that means
+SO3F2 = SO3FunHarmonic.interpolate(nodes,y(:,1))
+
+%%
+% This is only possible for univariate functions.
+
+%%
+% *Definition via function handle*
+%
+% If we have a function handle for the function we could create a
+% |SO3FunHarmonic| via quadrature. At first let us define a function handle
+% which takes $~$ <rotation.rotation.html |rotation|> as an argument and returns
+% double:
+
+f = @(rot) [exp(rot.a+rot.b+rot.c)+50*(rot.b-cos(pi/3)).^3.*(rot.b-cos(pi/3) > 0), rot.a, rot.b, rot.c];
+%% 
+% Now we call the quadrature command to get (4x1) |SO3F3| of type $~$
+% <SO3FunHarmonic.SO3FunHarmonic |SO3FunHarmonic|>
+SO3F3 = SO3FunHarmonic.quadrature(f, 'bandwidth', 50,SO3F1.CS)
+
+%%
+% *Definition via Fourier-coefficients*
+%
+% If we already know the Fourier-coefficients, we can simply hand them in 
+% the format above to the constructor of |SO3FunHarmonic|.
+
+SO3F4 = SO3FunHarmonic(eye(10))
+
+%%
+% * This command stores the ten first <WignerFunctions.html Wigner-D functions> in |SO3F4|
+
+
+%% Operations which differ from an univariate SO3FunHarmonic
+%
+%%
+% *Some default matrix and vector operations*
+%
+% You can concatenate and refer to functions as Matlab does with vectors and matrices
+
+SO3F5 = [SO3F1; SO3F3];
+SO3F5(2:4)
+
+%%
+% You can conjugate the Fourier-coefficients and transpose/ctranspose the 
+% multivariate <SO3FunHarmonic.SO3FunHarmonic |SO3FunHarmonic|>.
+
+conj(SO3F1);
+SO3F1.';
+SO3F1'
+
+%%
+% Some other operations
+
+length(SO3F1)
+size(SO3F3)
+SO3F4 = reshape(SO3F4, 2, [])
+
+%%
+% *|sum| and |mean|*
+%
+% If we do not specify further options to |sum| or |mean| they give we the 
+% integral or the mean value back for each function.
+% You could also calculate the conventional sum or the meanvalue over a 
+% dimension of a multivariate |SO3FunHarmonic|.
+
+sum(SO3F1, 1)
+mean(SO3F4, 2)
+
+%%
+% *min/max*
+%
+% If the |min| or |max| command gets a multivariate |SO3FunHarmonic| the 
+% pointwise minimum or maximum is calculated along the first non-singelton 
+% dimension if not specified otherwise.
+% 
+% Therefore the function has to be real valued
+SO3F4.isReal = 1;
+min(SO3F4)
+
+%%
+% *Remark on the matrix product*
+%
+% At this point the matrix product is implemented pointwise and not as 
+% the usual matrix product.
+SO3F1.CS=specimenSymmetry;
+
+SO3F1 .* SO3F4
+
+%% Visualization of multivariate SO3FunHarmonic
+%
+% Similary to the univariate case we also can look at the Fourier
+% coefficients of multivariate functions.
+
+plotSpektra(SO3F3)
+
+%%
+% The section plot and the 3d plot are performed only for the first
+% component of a multivariate function
+
+plot(SO3F3)
+
+%%
+
+plot3d(SO3F3)
+
+%%
+% while the plot along a specific fibre includes all components.
+
+plotFibre(SO3F3,fibre.beta)
+
+
+##### SOURCE END #####
+--></body></html>

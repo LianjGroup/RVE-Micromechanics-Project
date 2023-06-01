@@ -1,0 +1,415 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Merging Grains</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_GrainMerge.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Merging Grains</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Merge grains along boundaries</a></li><li><a href="#4">Grain relationships</a></li><li><a href="#6">Estimate twin area fraction</a></li><li><a href="#9">Setting Up the EBSD Data for the Merged Grains</a></li></ul></div><p>Merging grains may be usefull when reconstructing parent grain structures, i.e., before phase transistion or before twinning. In this section we will use a twinning example for illustration. Lets start by importing some Magenesium data and reconstructing the grain structure:</p><pre class="codeinput"><span class="comment">% load some example data</span>
+mtexdata <span class="string">twins</span> <span class="string">silent</span>
+
+<span class="comment">% segment grains</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,5*degree);
+
+<span class="comment">% remove two pixel grains</span>
+ebsd(grains(grains.grainSize&lt;=2)) = [];
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,5*degree,<span class="string">'removeQuadruplePoints'</span>);
+
+<span class="comment">% smooth them</span>
+grains = grains.smooth(5);
+
+<span class="comment">% visualize the grains</span>
+plot(grains,grains.meanOrientation)
+</pre><img vspace="50" hspace="5" src="GrainMerge_01.png" alt=""> <p>Next we identify all twinning boundaries</p><pre class="codeinput"><span class="comment">% define twinning misorientation</span>
+CS = grains.CS;
+twinning = orientation.map(Miller(0,1,-1,-2,CS),Miller(0,-1,1,-2,CS),<span class="keyword">...</span>
+  Miller(2,-1,-1,0,CS),Miller(2,-1,-1,0,CS));
+
+<span class="comment">% extract all Magnesium Magnesium grain boundaries</span>
+gB = grains.boundary(<span class="string">'Magnesium'</span>,<span class="string">'Magnesium'</span>);
+
+<span class="comment">% and check which of them are twinning boundaries with threshold 5 degree</span>
+isTwinning = angle(gB.misorientation,twinning) &lt; 5*degree;
+twinBoundary = gB(isTwinning)
+
+<span class="comment">% plot the twinning boundaries</span>
+hold <span class="string">on</span>
+plot(twinBoundary,<span class="string">'linecolor'</span>,<span class="string">'w'</span>,<span class="string">'linewidth'</span>,4,<span class="string">'displayName'</span>,<span class="string">'twin boundary'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+twinBoundary = grainBoundary
+ 
+ Segments  length  mineral 1  mineral 2
+     1649  361 &micro;m  Magnesium  Magnesium
+</pre><img vspace="50" hspace="5" src="GrainMerge_02.png" alt=""> <h2 id="3">Merge grains along boundaries</h2><p>The command <a href="grain2d.merge.html">merge</a> will merge grains together that have a commong boundary which is specified as the second argument. In our example we want to merge all grains that have a common twinning boundary so we do</p><pre class="codeinput">[mergedGrains,parentId] = merge(grains,twinBoundary);
+
+<span class="comment">% plot the merged grains</span>
+hold <span class="string">on</span>
+plot(mergedGrains.boundary,<span class="string">'linecolor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2.5,<span class="string">'linestyle'</span>,<span class="string">'-'</span>,<span class="keyword">...</span>
+  <span class="string">'displayName'</span>,<span class="string">'merged grains'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainMerge_03.png" alt=""> <h2 id="4">Grain relationships</h2><p>The second output argument <tt>paraentId</tt> of <a href="grain2d.merge.html">merge</a> is a list with the same size as the child grains which indicates for each child grain into which parent grain it has been merged. The id of the common grain is usually different from the ids of the merged grains and can be found by</p><pre class="codeinput">mergedGrains(16).id
+</pre><pre class="codeoutput">ans =
+    16
+</pre><p>Hence, we can find all childs of grain 16 by</p><pre class="codeinput">childs = grains(parentId == mergedGrains(16).id)
+</pre><pre class="codeoutput"> 
+childs = grain2d
+ 
+ Phase  Grains  Pixels    Mineral  Symmetry  Crystal reference frame
+     1       8    1698  Magnesium     6/mmm       X||a*, Y||b, Z||c*
+ 
+ boundary segments: 442 (103 &micro;m)
+ inner boundary segments: 0 (0 &micro;m)
+ triple points: 25
+ 
+ Id   Phase   Pixels   phi1   Phi   phi2          GOS
+  6       1       40    178    90    236   0.00377516
+ 14       1      254     81    25    187   0.00568015
+ 17       1        4     80    26    189   0.00678618
+ 19       1       38     95   145    186   0.00300486
+ 24       1      774    178    90    235   0.00514728
+ 28       1       45     80    25    188   0.00540737
+ 29       1      293     94   145    185   0.00456581
+ 33       1      250    179    89    235   0.00537567
+ 
+</pre><h2 id="6">Estimate twin area fraction</h2><p>Determining which of the measured grains are orginal grains and which are twins is a tough problem. Here we make a very simple assumption by labeling those areas as twins that make up less than half of the merged (original) parent grain</p><pre class="codeinput"><span class="comment">% extract grain area for faster access</span>
+gArea = grains.area;
+
+<span class="comment">% loop over mergedGrains and determine children that are not twins</span>
+isTwin = true(grains.length,1);
+<span class="keyword">for</span> i = 1:mergedGrains.length
+
+  <span class="comment">% get child ids</span>
+   childId = find(parentId==i);
+
+   <span class="comment">% cluster grains of similar orientations</span>
+   [fId,center] = calcCluster(grains.meanOrientation(childId),<span class="string">'maxAngle'</span>,<span class="keyword">...</span>
+       15*degree,<span class="string">'method'</span>,<span class="string">'hierarchical'</span>,<span class="string">'silent'</span>);
+
+   <span class="comment">% compute area of each cluster</span>
+   clusterArea = accumarray(fId,gArea(childId));
+
+   <span class="comment">% label the grains of largest cluster as original grain</span>
+   [~,fParent] = max(clusterArea);
+   isTwin(childId(fId==fParent)) = false;
+<span class="keyword">end</span>
+
+<span class="comment">% compute the area fraction of twins</span>
+sum(area(grains(isTwin)))/sum(area(grains)) * 100
+
+<span class="comment">% visualize the result</span>
+close <span class="string">all</span>
+plot(grains(~isTwin),<span class="string">'FaceColor'</span>,<span class="string">'darkgray'</span>,<span class="string">'displayName'</span>,<span class="string">'not twin'</span>)
+hold <span class="string">on</span>
+plot(grains(isTwin),<span class="string">'FaceColor'</span>,<span class="string">'red'</span>,<span class="string">'displayName'</span>,<span class="string">'twin'</span>)
+hold <span class="string">on</span>
+plot(mergedGrains.boundary,<span class="string">'linecolor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'linestyle'</span>,<span class="string">'-'</span>,<span class="keyword">...</span>
+  <span class="string">'displayName'</span>,<span class="string">'merged grains'</span>)
+mtexTitle(<span class="string">'twin id'</span>)
+</pre><pre class="codeoutput">ans =
+   16.6212
+</pre><img vspace="50" hspace="5" src="GrainMerge_04.png" alt=""> <p>The <tt>parentId</tt> may also be used to compute properties of the parent grains by averaging over the corresponding child grain properties. This can be done with the Matlab command <a href="mathworks.com/help/matlab/ref/accumarray.html">accumarray</a></p><pre class="codeinput"><span class="comment">% this averages the GOS of the child grains into the parent grains</span>
+mergedGrains.prop.GOS = accumarray(parentId,grains.GOS,size(mergedGrains),@nanmean);
+
+<span class="comment">% visualize the result</span>
+close <span class="string">all</span>
+plot(grains,grains.GOS ./ degree)
+hold <span class="string">on</span>
+plot(mergedGrains.boundary,<span class="string">'lineColor'</span>,<span class="string">'white'</span>,<span class="string">'lineWidth'</span>,2)
+mtexTitle(<span class="string">'original GOS'</span>)
+mtexColorbar
+
+nextAxis
+plot(mergedGrains,mergedGrains.GOS  ./ degree)
+mtexTitle(<span class="string">'merged GOS'</span>)
+mtexColorbar
+caxis([0,1.5])
+</pre><img vspace="50" hspace="5" src="GrainMerge_05.png" alt=""> <p>The above result is a bit unrealistic since the averages are computed between the childs ignoring their relative areas. A better approach is to compute a weighted average by the following lines.</p><pre class="codeinput"><span class="comment">% extract GOS and area</span>
+childGOS = grains.GOS;
+childArea = grains.area;
+
+<span class="comment">% compute the weighted averages</span>
+mergedGrains.prop.GOS = accumarray(parentId,1:length(grains),size(mergedGrains),<span class="keyword">...</span>
+  @(id) nanmeanWeights(childGOS(id),childArea(id)));
+
+nextAxis(2), hold <span class="string">on</span>
+plot(mergedGrains,mergedGrains.GOS  ./ degree)
+setColorRange <span class="string">equal</span>
+mtexColorbar
+caxis([0,1.5])
+</pre><img vspace="50" hspace="5" src="GrainMerge_06.png" alt=""> <h2 id="9">Setting Up the EBSD Data for the Merged Grains</h2><p>Note that the Id's of the merged grains does not fit the grainIds stored in the initial ebsd variable. As a consequence, the following command will not give the right result</p><pre class="codeinput">close <span class="string">all</span>
+plot(mergedGrains(16).boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plot(ebsd(mergedGrains(16)),ebsd(mergedGrains(16)).orientations)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainMerge_07.png" alt=""> <p>In order to update the grainId in the ebsd variable to the merged grains, we proceed as follows.</p><pre class="codeinput"><span class="comment">% copy ebsd data into a new variable to not change the old data</span>
+ebsd_merged = ebsd;
+
+<span class="comment">% update the grainIds to the parentIds</span>
+ebsd_merged(<span class="string">'indexed'</span>).grainId = parentId(grains.id2ind(ebsd(<span class="string">'indexed'</span>).grainId))
+</pre><pre class="codeoutput"> 
+ebsd_merged = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                                 
+     1  22794 (100%)   Magnesium  LightSkyBlue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+</pre><p>Now the variable <tt>ebsd_merged</tt> can be indexed by the merged grains, i.e.</p><pre class="codeinput">plot(ebsd_merged(mergedGrains(16)),ebsd_merged(mergedGrains(16)).orientations)
+hold <span class="string">on</span>
+plot(mergedGrains(16).boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainMerge_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Merging Grains
+%
+%%
+% Merging grains may be usefull when reconstructing parent grain
+% structures, i.e., before phase transistion or before twinning. In this
+% section we will use a twinning example for illustration. Lets start by
+% importing some Magenesium data and reconstructing the grain structure:
+
+% load some example data
+mtexdata twins silent
+
+% segment grains
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd('indexed'),'angle',5*degree);
+
+% remove two pixel grains
+ebsd(grains(grains.grainSize<=2)) = [];
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd('indexed'),'angle',5*degree,'removeQuadruplePoints');
+
+% smooth them
+grains = grains.smooth(5);
+
+% visualize the grains
+plot(grains,grains.meanOrientation)
+
+%%
+% Next we identify all twinning boundaries
+
+% define twinning misorientation
+CS = grains.CS;
+twinning = orientation.map(Miller(0,1,-1,-2,CS),Miller(0,-1,1,-2,CS),...
+  Miller(2,-1,-1,0,CS),Miller(2,-1,-1,0,CS));
+
+% extract all Magnesium Magnesium grain boundaries
+gB = grains.boundary('Magnesium','Magnesium');
+
+% and check which of them are twinning boundaries with threshold 5 degree
+isTwinning = angle(gB.misorientation,twinning) < 5*degree;
+twinBoundary = gB(isTwinning)
+
+% plot the twinning boundaries
+hold on
+plot(twinBoundary,'linecolor','w','linewidth',4,'displayName','twin boundary')
+hold off
+
+%% Merge grains along boundaries
+%
+% The command <grain2d.merge.html merge> will merge grains together that
+% have a commong boundary which is specified as the second argument. In our
+% example we want to merge all grains that have a common twinning boundary
+% so we do
+
+[mergedGrains,parentId] = merge(grains,twinBoundary);
+
+% plot the merged grains
+hold on
+plot(mergedGrains.boundary,'linecolor','k','linewidth',2.5,'linestyle','-',...
+  'displayName','merged grains')
+hold off
+
+%% Grain relationships
+% The second output argument |paraentId| of <grain2d.merge.html merge> is a
+% list with the same size as the child grains which indicates for each
+% child grain into which parent grain it has been merged. The id of the
+% common grain is usually different from the ids of the merged grains and
+% can be found by
+
+mergedGrains(16).id
+
+%%
+% Hence, we can find all childs of grain 16 by 
+
+childs = grains(parentId == mergedGrains(16).id)
+
+%% Estimate twin area fraction
+% Determining which of the measured grains are orginal grains and which are
+% twins is a tough problem. Here we make a very simple assumption by
+% labeling those areas as twins that make up less than half of the merged
+% (original) parent grain
+
+% extract grain area for faster access
+gArea = grains.area;
+
+% loop over mergedGrains and determine children that are not twins
+isTwin = true(grains.length,1);
+for i = 1:mergedGrains.length
+   
+  % get child ids
+   childId = find(parentId==i);
+
+   % cluster grains of similar orientations
+   [fId,center] = calcCluster(grains.meanOrientation(childId),'maxAngle',...
+       15*degree,'method','hierarchical','silent');
+
+   % compute area of each cluster
+   clusterArea = accumarray(fId,gArea(childId));
+   
+   % label the grains of largest cluster as original grain
+   [~,fParent] = max(clusterArea);
+   isTwin(childId(fId==fParent)) = false;
+end
+
+% compute the area fraction of twins
+sum(area(grains(isTwin)))/sum(area(grains)) * 100
+
+% visualize the result
+close all
+plot(grains(~isTwin),'FaceColor','darkgray','displayName','not twin')
+hold on
+plot(grains(isTwin),'FaceColor','red','displayName','twin')
+hold on
+plot(mergedGrains.boundary,'linecolor','k','linewidth',2,'linestyle','-',...
+  'displayName','merged grains')
+mtexTitle('twin id')
+
+%%
+% The |parentId| may also be used to compute properties of the parent
+% grains by averaging over the corresponding child grain properties. This
+% can be done with the Matlab command
+% <mathworks.com/help/matlab/ref/accumarray.html accumarray>
+
+% this averages the GOS of the child grains into the parent grains
+mergedGrains.prop.GOS = accumarray(parentId,grains.GOS,size(mergedGrains),@nanmean);
+
+% visualize the result
+close all
+plot(grains,grains.GOS ./ degree)
+hold on
+plot(mergedGrains.boundary,'lineColor','white','lineWidth',2)
+mtexTitle('original GOS')
+mtexColorbar
+
+nextAxis
+plot(mergedGrains,mergedGrains.GOS  ./ degree)
+mtexTitle('merged GOS')
+mtexColorbar
+caxis([0,1.5])
+
+%%
+% The above result is a bit unrealistic since the averages are computed
+% between the childs ignoring their relative areas. A better approach is to
+% compute a weighted average by the following lines.
+
+% extract GOS and area
+childGOS = grains.GOS;
+childArea = grains.area;
+
+% compute the weighted averages
+mergedGrains.prop.GOS = accumarray(parentId,1:length(grains),size(mergedGrains),...
+  @(id) nanmeanWeights(childGOS(id),childArea(id)));
+
+nextAxis(2), hold on
+plot(mergedGrains,mergedGrains.GOS  ./ degree)
+setColorRange equal
+mtexColorbar
+caxis([0,1.5])
+
+%% Setting Up the EBSD Data for the Merged Grains
+% Note that the Id's of the merged grains does not fit the grainIds
+% stored in the initial ebsd variable. As a consequence, the following
+% command will not give the right result
+
+close all
+plot(mergedGrains(16).boundary,'linewidth',2)
+hold on
+plot(ebsd(mergedGrains(16)),ebsd(mergedGrains(16)).orientations)
+hold off
+
+%%
+% In order to update the grainId in the ebsd variable to the merged grains,
+% we proceed as follows.
+
+% copy ebsd data into a new variable to not change the old data
+ebsd_merged = ebsd;
+
+% update the grainIds to the parentIds
+ebsd_merged('indexed').grainId = parentId(grains.id2ind(ebsd('indexed').grainId))
+
+%%
+% Now the variable |ebsd_merged| can be indexed by the merged grains, i.e.
+
+plot(ebsd_merged(mergedGrains(16)),ebsd_merged(mergedGrains(16)).orientations)
+hold on
+plot(mergedGrains(16).boundary,'linewidth',2)
+hold off
+
+
+##### SOURCE END #####
+--></body></html>

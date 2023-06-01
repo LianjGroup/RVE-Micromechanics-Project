@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>The Piezoelectricity Tensor</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_PiezoElectricity.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>The Piezoelectricity Tensor</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Plotting the magnitude surface</a></li><li><a href="#8">Mean Tensor Calculation</a></li></ul></div><p>In this chapter we discuss how to compute and visualize piezoellectirc properties. At first, let us import some piezoelectric contents for a quartz specimen.</p><pre class="codeinput">CS = crystalSymmetry(<span class="string">'32'</span>, [4.916 4.916 5.4054], <span class="string">'X||a*'</span>, <span class="string">'Z||c'</span>, <span class="string">'mineral'</span>, <span class="string">'Quartz'</span>);
+
+fname = fullfile(mtexDataPath,<span class="string">'tensor'</span>, <span class="string">'Single_RH_quartz_poly.P'</span>);
+
+P = tensor.load(fname,CS,<span class="string">'propertyname'</span>,<span class="string">'piecoelectricity'</span>,<span class="string">'unit'</span>,<span class="string">'C/N'</span>,<span class="string">'DoubleConvention'</span>)
+</pre><pre class="codeoutput"> 
+P = tensor (Quartz)
+  propertyname    : piecoelectricity
+  unit            : C/N             
+  rank            : 3 (3 x 3 x 3)   
+  doubleConvention: true            
+ 
+  tensor in compact matrix form:
+     0     0     0 -0.67     0   4.6
+   2.3  -2.3     0     0  0.67     0
+     0     0     0     0     0     0
+</pre><h2 id="2">Plotting the magnitude surface</h2><p>The default plot of the magnitude, which indicates, in which direction we have the most polarization. By default, we restrict ourselves to the unique region implied by crystal symmetry</p><pre class="codeinput"><span class="comment">% set some colormap well suited for tensor visualisation</span>
+setMTEXpref(<span class="string">'defaultColorMap'</span>,blue2redColorMap);
+
+plot(P)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_01.png" alt=""> <p>but also, we can plot the whole crystal behavior</p><pre class="codeinput">close <span class="string">all</span>
+plot(P,<span class="string">'complete'</span>,<span class="string">'smooth'</span>,<span class="string">'upper'</span>)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_02.png" alt=""> <p>Most often, the polarization is illustrated as surface magnitude</p><pre class="codeinput">close <span class="string">all</span>
+surf(P.directionalMagnitude)
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_03.png" alt=""> <p>Note, that for directions of negative polarization the surface is mapped onto the axis of positive, which then let the surface appear as a double coverage</p><p>Quite a famous example in various standard literature is a section through the surface because it can easily be described as an analytical solution. We just specify the plane normal vector</p><pre class="codeinput">plotSection(P.directionalMagnitude,vector3d.Z)
+xlabel(<span class="string">'x'</span>)
+ylabel(<span class="string">'y'</span>)
+drawNow(gcm)
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_04.png" alt=""> <p>so we are plotting the polarization in the xy-plane, or the yz-plane with</p><pre class="codeinput">plotSection(P.directionalMagnitude,vector3d.X)
+ylabel(<span class="string">'y'</span>)
+zlabel(<span class="string">'z'</span>)
+drawNow(gcm)
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_05.png" alt=""> <h2 id="8">Mean Tensor Calculation</h2><p>Let us import some data, which was originally published by Mainprice, D., Lloyd, G.E. and Casey , M. (1993) Individual orientation measurements in quartz polycrystals: advantages and limitations for texture and petrophysical property determinations. J. of Structural Geology, 15, pp.1169-1187</p><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'orientation'</span>, <span class="string">'Tongue_Quartzite_Bunge_Euler'</span>);
+
+ori = orientation.load(fname,CS, <span class="string">'ColumnNames'</span>, {<span class="string">'Euler 1'</span> <span class="string">'Euler 2'</span> <span class="string">'Euler 3'</span>})
+</pre><pre class="codeoutput"> 
+ori = orientation (Quartz &#8594; xyz)
+  size: 382 x 1
+</pre><p>The figure on p.1184 of the publication</p><pre class="codeinput">Pm = ori.calcTensor(P)
+
+plot(Pm)
+mtexColorbar
+</pre><pre class="codeoutput"> 
+Pm = tensor (xyz)
+  propertyname    : piecoelectricity
+  unit            : C/N             
+  rank            : 3 (3 x 3 x 3)   
+  doubleConvention: true            
+ 
+  tensor in compact matrix form: *10^-2
+ -10.48   34.2 -23.72 -32.75 -64.24 -26.18
+ -18.02  -3.15  21.17  62.42  29.67  44.39
+ -41.35  40.44   0.91  32.48 -23.42   6.47
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_06.png" alt=""> <pre class="codeinput">close <span class="string">all</span>
+plot(Pm)
+mtexColorbar
+
+setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap)
+</pre><img vspace="50" hspace="5" src="PiezoElectricity_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% The Piezoelectricity Tensor
+%
+%% 
+% In this chapter we discuss how to compute and visualize piezoellectirc
+% properties. At first, let us import some piezoelectric contents for a
+% quartz specimen.
+
+CS = crystalSymmetry('32', [4.916 4.916 5.4054], 'X||a*', 'Z||c', 'mineral', 'Quartz');
+
+fname = fullfile(mtexDataPath,'tensor', 'Single_RH_quartz_poly.P');
+
+P = tensor.load(fname,CS,'propertyname','piecoelectricity','unit','C/N','DoubleConvention')
+
+%% Plotting the magnitude surface
+% The default plot of the magnitude, which indicates, in which direction we
+% have the most polarization. By default, we restrict ourselves to the
+% unique region implied by crystal symmetry
+
+% set some colormap well suited for tensor visualisation
+setMTEXpref('defaultColorMap',blue2redColorMap);
+
+plot(P)
+mtexColorbar
+
+%%
+% but also, we can plot the whole crystal behavior
+
+close all
+plot(P,'complete','smooth','upper')
+mtexColorbar
+
+%%
+% Most often, the polarization is illustrated as surface magnitude
+
+close all
+surf(P.directionalMagnitude)
+
+%%
+% Note, that for directions of negative polarization the surface is mapped
+% onto the axis of positive, which then let the surface appear as a double
+% coverage
+
+%%
+% Quite a famous example in various standard literature is a section through
+% the surface because it can easily be described as an analytical
+% solution. We just specify the plane normal vector
+
+plotSection(P.directionalMagnitude,vector3d.Z)
+xlabel('x')
+ylabel('y')
+drawNow(gcm)
+
+%%
+% so we are plotting the polarization in the xy-plane, or the yz-plane with
+
+plotSection(P.directionalMagnitude,vector3d.X)
+ylabel('y')
+zlabel('z')
+drawNow(gcm)
+
+%% Mean Tensor Calculation 
+% Let us import some data, which was originally published by Mainprice, D.,
+% Lloyd, G.E. and Casey , M. (1993) Individual orientation measurements in
+% quartz polycrystals: advantages and limitations for texture and
+% petrophysical property determinations. J. of Structural Geology, 15,
+% pp.1169-1187
+%
+
+fname = fullfile(mtexDataPath,'orientation', 'Tongue_Quartzite_Bunge_Euler');
+
+ori = orientation.load(fname,CS, 'ColumnNames', {'Euler 1' 'Euler 2' 'Euler 3'})
+
+%%
+% The figure on p.1184 of the publication
+
+Pm = ori.calcTensor(P)
+
+plot(Pm)
+mtexColorbar
+
+%%
+%
+
+close all
+plot(Pm)
+mtexColorbar
+
+setMTEXpref('defaultColorMap',WhiteJetColorMap)
+
+##### SOURCE END #####
+--></body></html>

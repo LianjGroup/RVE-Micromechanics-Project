@@ -1,0 +1,340 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>load</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSD__load.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>load</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">View Code</a></li><li><a href="#3">Description</a></li><li><a href="#4">Syntax</a></li><li><a href="#5">Input</a></li><li><a href="#6">Output</a></li><li><a href="#7">Options</a></li><li><a href="#8">Example</a></li><li><a href="#11">See also</a></li></ul></div><p>load ebsd data from file</p><h2 id="2">View Code</h2><h2 id="3">Description</h2><p>EBSD.load is a high level method for importing EBSD data from files. If possible it autodetects the format of the file. Supported formats are listed <a href="supportedInterfaces.html">here</a>. Additionally, EBSD data can be read from column aligned text file or excel spread sheets. In those cases it is neccesary to tell MTEX the column positions of the spatial coordinates, the phase information as well as Euler angles.</p><h2 id="4">Syntax</h2><pre class="language-matlab">ebsd = EBSD.load(<span class="string">'filename.ang'</span>)
+ebsd = EBSD.load(<span class="string">'filename.ctf'</span>)
+ebsd = EBSD.load(<span class="string">'filename.osc'</span>)
+ebsd = EBSD.load(<span class="string">'filename.hf5'</span>)
+</pre><pre class="language-matlab">csList = {<span class="string">'notIndexed'</span>,<span class="keyword">...</span>
+CS = {<span class="string">'notIndexed'</span>,<span class="keyword">...</span>
+       crystalSymmetry(<span class="string">'m-3m'</span>,<span class="string">'mineral'</span>,<span class="string">'Fe'</span>),<span class="keyword">...</span>
+       crystalSymmetry(<span class="string">'m-3m'</span>,<span class="string">'mineral'</span>,<span class="string">'Mg'</span>)};
+ebsd = EBSD.load(fname,<span class="string">'cs'</span>,cs,<span class="string">'ColumnNames'</span>,{<span class="string">'x'</span>,<span class="string">'y'</span>,<span class="string">'Euler1'</span>,<span class="string">'Euler2'</span>,<span class="string">'Euler3'</span>,<span class="string">'phase'</span>})
+</pre><h2 id="5">Input</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>fname</tt>
+         </td>
+         <td>
+            <tt>filename</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>cs</tt>
+         </td>
+         <td>
+            <tt><a href="crystalSymmetry.crystalSymmetry.html">crystalSymmetry</a> or cell array of <a href="crystalSymmetry.crystalSymmetry.html">crystalSymmetry</a></tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="6">Output</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>ebsd</tt>
+         </td>
+         <td>
+            <tt><a href="EBSD.EBSD.html">EBSD</a></tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="7">Options</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>ColumnNames</tt>
+         </td>
+         <td>
+            <tt>names of the colums to be imported, mandatory are euler 1, euler 2, euler 3</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>Columns</tt>
+         </td>
+         <td>
+            <tt>postions of the columns to be imported</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>radians</tt>
+         </td>
+         <td>
+            <tt>treat input in radiand</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>delimiter</tt>
+         </td>
+         <td>
+            <tt>delimiter between numbers</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>header</tt>
+         </td>
+         <td>
+            <tt>number of header lines</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>Bunge</tt>
+         </td>
+         <td>
+            <tt>[phi1 Phi phi2] Euler angle in Bunge convention (default)</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>passive</tt>
+         </td>
+         <td>
+            <tt/>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="8">Example</h2><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'EBSD'</span>,<span class="string">'85_829grad_07_09_06.txt'</span>);
+CS = {<span class="string">'notIndexed'</span>,<span class="keyword">...</span>
+crystalSymmetry(<span class="string">'m-3m'</span>,<span class="string">'mineral'</span>,<span class="string">'Fe'</span>),<span class="keyword">...</span>
+crystalSymmetry(<span class="string">'m-3m'</span>,<span class="string">'mineral'</span>,<span class="string">'Mg'</span>)};
+SS = specimenSymmetry(<span class="string">'triclinic'</span>);
+ebsd = EBSD.load(fname,<span class="string">'CS'</span>,CS,<span class="string">'SS'</span>,SS, <span class="string">'ColumnNames'</span>, <span class="keyword">...</span>
+{<span class="string">'Index'</span> <span class="string">'Phase'</span> <span class="string">'x'</span> <span class="string">'y'</span> <span class="string">'Euler1'</span> <span class="string">'Euler2'</span> <span class="string">'Euler3'</span> <span class="string">'MAD'</span> <span class="string">'BC'</span> <span class="string">'BS'</span><span class="keyword">...</span>
+<span class="string">'Bands'</span> <span class="string">'Error'</span> <span class="string">'ReliabilityIndex'</span>}, <span class="string">'Bunge'</span>)
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0   11411 (19%)  notIndexed                                                 
+     1   48184 (79%)          Fe  LightSkyBlue      m-3m                         
+     2   1180 (1.9%)          Mg  DarkSeaGreen      m-3m                         
+ 
+ Properties: bands, bc, bs, error, index, mad, reliabilityindex, x, y
+ Scan unit : um
+ 
+</pre><h2 id="11">See also</h2><p><a href="EBSDImport.html">EBSDImport</a> <a href="EBSD.EBSD.html">EBSD.EBSD</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% load
+%% 
+% load ebsd data from file
+% 
+%
+%% View Code
+% 
+%% Description
+% 
+% EBSD.load is a high level method for importing EBSD data from files. If
+% possible it autodetects the format of the file. Supported formats are
+% listed <supportedInterfaces.html here>. Additionally, EBSD data can be
+% read from column aligned text file or excel spread sheets. In those cases
+% it is neccesary to tell MTEX the column positions of the spatial
+% coordinates, the phase information as well as Euler angles.
+% 
+%
+%% Syntax
+%   ebsd = EBSD.load('filename.ang')
+%   ebsd = EBSD.load('filename.ctf')
+%   ebsd = EBSD.load('filename.osc')
+%   ebsd = EBSD.load('filename.hf5')
+% 
+%   csList = {'notIndexed',...
+%   CS = {'notIndexed',...
+%          crystalSymmetry('m-3m','mineral','Fe'),...
+%          crystalSymmetry('m-3m','mineral','Mg')};
+%   ebsd = EBSD.load(fname,'cs',cs,'ColumnNames',{'x','y','Euler1','Euler2','Euler3','phase'})
+% 
+
+%% Input
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>fname</tt>
+%          </td>
+%          <td>
+%             <tt>filename</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>cs</tt>
+%          </td>
+%          <td>
+%             <tt><a href="crystalSymmetry.crystalSymmetry.html">crystalSymmetry</a> or cell array of <a href="crystalSymmetry.crystalSymmetry.html">crystalSymmetry</a></tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Output
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>ebsd</tt>
+%          </td>
+%          <td>
+%             <tt><a href="EBSD.EBSD.html">EBSD</a></tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Options
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>ColumnNames</tt>
+%          </td>
+%          <td>
+%             <tt>names of the colums to be imported, mandatory are euler 1, euler 2, euler 3</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>Columns</tt>
+%          </td>
+%          <td>
+%             <tt>postions of the columns to be imported</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>radians</tt>
+%          </td>
+%          <td>
+%             <tt>treat input in radiand</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>delimiter</tt>
+%          </td>
+%          <td>
+%             <tt>delimiter between numbers</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>header</tt>
+%          </td>
+%          <td>
+%             <tt>number of header lines</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>Bunge</tt>
+%          </td>
+%          <td>
+%             <tt>[phi1 Phi phi2] Euler angle in Bunge convention (default)</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>passive</tt>
+%          </td>
+%          <td>
+%             <tt/>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Example
+%% 
+% 
+
+fname = fullfile(mtexDataPath,'EBSD','85_829grad_07_09_06.txt');
+CS = {'notIndexed',...
+crystalSymmetry('m-3m','mineral','Fe'),...
+crystalSymmetry('m-3m','mineral','Mg')};
+SS = specimenSymmetry('triclinic');
+ebsd = EBSD.load(fname,'CS',CS,'SS',SS, 'ColumnNames', ...
+{'Index' 'Phase' 'x' 'y' 'Euler1' 'Euler2' 'Euler3' 'MAD' 'BC' 'BS'...
+'Bands' 'Error' 'ReliabilityIndex'}, 'Bunge')
+
+%% 
+% 
+
+%% See also
+% <EBSDImport.html EBSDImport> <EBSD.EBSD.html EBSD.EBSD>
+%
+##### SOURCE END #####
+--></body></html>

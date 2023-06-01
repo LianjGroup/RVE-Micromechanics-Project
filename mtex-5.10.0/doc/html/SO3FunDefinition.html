@@ -1,0 +1,533 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Definition of an SO3Fun</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SO3FunDefinition.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Definition of an SO3Fun</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Overview on the subclasses of SO3Fun</a></li><li><a href="#3">Generalizations of Rotational Functions</a></li><li><a href="#5">Definition of SO3Fun's</a></li></ul></div><p>In MTEX rotational functions <img src="SO3FunDefinition_eq03847623716271147851.png" alt="$F\colon\mathcal{SO}(3)\to C$"> are described by subclasses of the super class <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt>. Hence we talk about them as <tt>SO3Funs</tt>.</p><h2 id="2">Overview on the subclasses of SO3Fun</h2><p>Internally MTEX represents rotational functions in different ways:</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>by a harmonic series expansion</p>
+         </td>
+         <td>
+               <p>
+                  <a href="SO3FunHarmonicRepresentation.html">SO3FunHarmonic</a>
+               </p>
+         </td>
+         <td>
+               <p>as Bingham distribution</p>
+         </td>
+         <td>
+               <p>
+                  <a href="BinghamODFs.html">SO3FunBingham</a>
+               </p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>as superposition of radial function</p>
+         </td>
+         <td>
+               <p>
+                  <a href="RadialODFs.html">SO3FunRBF</a>
+               </p>
+         </td>
+         <td>
+               <p>as sum of different components</p>
+         </td>
+         <td>
+               <p>
+                  <a href="SO3FunComposition.SO3FunComposition.html">SO3FunComposition</a>
+               </p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>as superposition of fibre elements</p>
+         </td>
+         <td>
+               <p>
+                  <a href="FibreODFs.html">SO3FunCBF</a>
+               </p>
+         </td>
+         <td>
+               <p>explicitely given by a formula</p>
+         </td>
+         <td>
+               <p>
+                  <a href="SO3FunHandle.SO3FunHandle.html">SO3FunHandle</a>
+               </p>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="3">Generalizations of Rotational Functions</h2><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>rotational vector fields</p>
+         </td>
+         <td>
+               <p>
+                  <a href="SO3FunVectorField.html">SO3VectorField</a>
+               </p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>radial rotational functions</p>
+         </td>
+         <td>
+               <p>
+                  <a href="SO3Kernels.html">SO3Kernel</a>
+               </p>
+         </td>
+      </tr>
+   </table>
+</p><p>All representations allow the same operations which are specified for the abstact class <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt>. In particular it is possible to calculate with <img src="SO3FunDefinition_eq09794548257616894378.png" alt="$\mathcal{SO}(3)$"> functions as with ordinary numbers, i.e., you can add, multiply arbitrary functions, take the mean, integrate them or compute gradients, see <a href="SO3FunOperations.html">Operations</a>.</p><h2 id="5">Definition of SO3Fun's</h2><p>Every rotational function has a left and a right symmetry, see <a href="SO3FunSymmetricFunctions.html">symmetric Functions</a>. If we do not specify symmetries by construction then the symmetry group '1' is used as default, i.e. there are no symmetric rotations.</p><p>Moreover <tt>SO3Fun's</tt> have the property <tt>antipodal</tt> which could be used to set the function as antipodal.</p><p><b>Definition of anonymous functions on SO(3)</b></p><p>Functions of class <tt><a href="SO3FunHandle.SO3FunHandle.html">SO3FunHandle</a></tt> are defined by an <a href="https://de.mathworks.com/help/matlab/matlab_prog/anonymous-functions.html">anonymous function</a>.</p><pre class="codeinput">f = @(ori) angle(ori)./degree
+SO3F1 = SO3FunHandle(f)
+
+cs = crystalSymmetry(<span class="string">'cubic'</span>);
+SO3F2 = SO3FunHandle(f,cs)
+</pre><pre class="codeoutput">f =
+  function_handle with value:
+    @(ori)angle(ori)./degree
+ 
+SO3F1 = SO3FunHandle (xyz &#8594; xyz)
+ 
+ 
+SO3F2 = SO3FunHandle (m-3m &#8594; xyz)
+ 
+</pre><p>Now we are able to evaluate this <tt><a href="SO3FunHandle.SO3FunHandle.html">SO3FunHandle</a></tt></p><pre class="codeinput">rot = rotation.rand(2);
+SO3F2.eval(rot)
+</pre><pre class="codeoutput">ans =
+   91.0560
+  147.3463
+</pre><p>And following that, it is easy to describe every <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt> by an <tt><a href="SO3FunHandle.SO3FunHandle.html">SO3FunHandle</a></tt>.</p><pre class="codeinput">SO3FunHandle(@(rot) SO3F1.eval(rot))
+</pre><pre class="codeoutput"> 
+ans = SO3FunHandle (xyz &#8594; xyz)
+ 
+</pre><p><b>Definition of Harmonic Series on SO(3)</b></p><p>The class <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt> described rotational functions by there harmonic series. MTEX is very fast by computing with this <tt>SO3FunHarmonic's</tt>. Hence sometimes it might be a good idea to expand any <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt> in its harmonic series. Therefore only the command <a href="SO3FunHarmonic.SO3FunHarmonic">SO3FunHarmonic</a> is needed. But note that this approximation may lead to inaccuracies.</p><pre class="codeinput">SO3F3 = SO3FunHarmonic(SO3F2)
+</pre><pre class="codeoutput"> 
+SO3F3 = SO3FunHarmonic (m-3m &#8594; xyz)
+  isReal: true
+  bandwidth: 64
+  weight: 41
+ 
+</pre><p>Moreover if MTEX computes with an <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt> and any <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt> it is also expanded to an <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt>. You can prevent that by transformation to a <tt><a href="SO3FunHandle.SO3FunHandle.html">SO3FunHandle</a></tt> like before.</p><p>Generally <tt>SO3FunHarmonic's</tt> are defined by there Fourier coefficient vector.</p><pre class="codeinput">fhat = rand(1e4,1);
+SO3F4 = SO3FunHarmonic(fhat,cs)
+</pre><pre class="codeoutput"> 
+SO3F4 = SO3FunHarmonic (m-3m &#8594; xyz)
+  bandwidth: 19
+  weight: 0.83
+ 
+</pre><p>The <tt>bandwith</tt> decribes the maximal harmonic degree of the harmonic series expansion.</p><p>By the property <tt>isReal</tt> we are able to change between real and complex valued <tt>SO3FunHarmonic's</tt>. Note that creation of an real vealued SO3FunHarmonic changes the Fourier coefficient vector. So it is not possible to reconstruct the previous function. But computing with real valued functions is much faster.</p><pre class="codeinput">SO3F4.eval(rot)
+
+SO3F4.isReal = 1
+SO3F4.eval(rot)
+</pre><pre class="codeoutput">ans =
+  -3.1800 - 1.4551i
+   0.9834 - 1.8346i
+ 
+SO3F4 = SO3FunHarmonic (m-3m &#8594; xyz)
+  isReal: true
+  bandwidth: 19
+  weight: 0.83
+ 
+ans =
+   -3.1800
+    0.9834
+</pre><p>For further information on the Fourier coefficients, the bandwidth and other properties , see <a href="SO3FunHarmonicRepresentation.html">Harmonic Representation of Rotational Functions</a>.</p><p><b>Definition of Radial Basis Functions</b></p><p>Radial Basis functions are of class <tt><a href="SO3FunRBF.SO3FunRBF.html">SO3FunRBF</a></tt>. They are defined by a kernel function <tt><a href="SO3Kernel.SO3Kernel.html">SO3Kernel</a></tt> which is cenetered on <tt>orientations</tt> with some weights.</p><pre class="codeinput">ori = orientation.rand(1e3,cs);
+w = ones(1e3,1);
+psi = SO3DeLaValleePoussinKernel
+SO3F5 = SO3FunRBF(ori,psi,w,1.2)
+</pre><pre class="codeoutput"> 
+psi = SO3DeLaValleePoussinKernel
+  bandwidth: 25
+  halfwidth: 10&deg;
+ 
+ 
+SO3F5 = SO3FunRBF (m-3m &#8594; xyz)
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 1.2
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 1000 orientations
+</pre><p>For further information on them, see <a href="RadialODFs.html">SO3FunRBF</a>.</p><p><b>Definition of fibre elements</b></p><p>They are described by the class <tt><a href="SO3FunCBF.SO3FunCBF.html">SO3FunCBF</a></tt>. We construct them by a fibre on SO(3) together with some halfwidth.</p><pre class="codeinput">f = fibre.beta(cs)
+SO3F6 = SO3FunCBF(f,<span class="string">'halfwidth'</span>,10*degree)
+</pre><pre class="codeoutput"> 
+f = fibre (m-3m &#8594; xyz)
+ 
+  h || r: (-6-12-11) || (1,-1,-4)
+ o1 &#8594; o2: (0&deg;,35.3&deg;,45&deg;) &#8594; (270&deg;,62.8&deg;,45&deg;)
+ 
+SO3F6 = SO3FunCBF (m-3m &#8594; xyz)
+ 
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (-6-12-11) || 1,-1,-4
+  weight: 1
+ 
+</pre><p>For further information, see <a href="FibreODFs.html">SO3FunCBF</a>.</p><p><b>Definition of Bingham distributions</b></p><p>Bingham distribution functions are described by the class <tt><a href="SO3FunBingham.SO3FunBingham.html">SO3FunBingham</a></tt>. One can construct them by</p><pre class="codeinput">kappa = [100 90 80 0];
+U = eye(4);
+SO3F7 = BinghamODF(kappa,U,cs)
+</pre><pre class="codeoutput"> 
+SO3F7 = SO3FunBingham (m-3m &#8594; xyz)
+ 
+  kappa: 100 90 80 0
+  weight: 1
+ 
+</pre><p>For further information, see <a href="BinghamODFs.html">SO3FunBingham</a>.</p><p><b>Sum of different subclasses of SO3Fun</b></p><p>By adding some subclasses of <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt> we can save the sum by storing the single components itself.</p><pre class="codeinput">SO3F2 + SO3FunComposition(SO3F4) + SO3F5 + SO3F6 + SO3F7
+</pre><pre class="codeoutput"> 
+ans = SO3FunComposition (m-3m &#8594; xyz)
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 1.2
+ 
+  &lt;strong&gt;harmonic component&lt;/strong&gt;
+  bandwidth: 19
+  weight: 0.83
+ 
+  &lt;strong&gt;function handle component&lt;/strong&gt;
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 1000 orientations
+  &lt;strong&gt;fibre component&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (-6-12-11) || 1,-1,-4
+  weight: 1
+ 
+  &lt;strong&gt;bingham component&lt;/strong&gt;
+  kappa: 100 90 80 0
+  weight: 1
+ 
+</pre><p>Note that the sum of any <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt> with an <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt> yields an <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt>. Hence you need to add an <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt> in exactly that way. Otherwise the sum is expanded to an <tt><a href="SO3FunHarmonic.SO3FunHarmonic.html">SO3FunHarmonic</a></tt> in every summation step.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Definition of an SO3Fun
+% 
+%%
+% In MTEX rotational functions $F\colon\mathcal{SO}(3)\to C$ are 
+% described by subclasses of the super class |<SO3Fun.SO3Fun.html SO3Fun>|. Hence we talk about
+% them as |SO3Funs|.
+%
+%% Overview on the subclasses of SO3Fun
+%
+% Internally MTEX represents rotational functions in different ways:
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>by a harmonic series expansion</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="SO3FunHarmonicRepresentation.html">SO3FunHarmonic</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>as Bingham distribution</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="BinghamODFs.html">SO3FunBingham</a>
+%                </p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>as superposition of radial function</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="RadialODFs.html">SO3FunRBF</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>as sum of different components</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="SO3FunComposition.SO3FunComposition.html">SO3FunComposition</a>
+%                </p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>as superposition of fibre elements</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="FibreODFs.html">SO3FunCBF</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>explicitely given by a formula</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="SO3FunHandle.SO3FunHandle.html">SO3FunHandle</a>
+%                </p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+%% Generalizations of Rotational Functions
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>rotational vector fields</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="SO3FunVectorField.html">SO3VectorField</a>
+%                </p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>radial rotational functions</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="SO3Kernels.html">SO3Kernel</a>
+%                </p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+%
+%% 
+% All representations allow the same operations which are specified for
+% the abstact class |<SO3Fun.SO3Fun.html SO3Fun>|. In particular it is possible
+% to calculate with $\mathcal{SO}(3)$ functions as with ordinary numbers, 
+% i.e., you can add, multiply arbitrary functions, take the mean, 
+% integrate them or compute gradients, see <SO3FunOperations.html Operations>.
+%
+%% Definition of SO3Fun's
+% Every rotational function has a left and a right symmetry, see
+% <SO3FunSymmetricFunctions.html symmetric Functions>.
+% If we do not specify symmetries by construction then the symmetry group 
+% '1' is used as default, i.e. there are no symmetric rotations.
+%
+% Moreover |SO3Fun's| have the property |antipodal| which could be used to
+% set the function as antipodal.
+%
+%%
+%
+% *Definition of anonymous functions on SO(3)*
+%
+% Functions of class |<SO3FunHandle.SO3FunHandle.html SO3FunHandle>| are defined by an
+% <https://de.mathworks.com/help/matlab/matlab_prog/anonymous-functions.html
+% anonymous function>.
+% 
+
+f = @(ori) angle(ori)./degree
+SO3F1 = SO3FunHandle(f)
+
+cs = crystalSymmetry('cubic');
+SO3F2 = SO3FunHandle(f,cs)
+
+%%
+% Now we are able to evaluate this |<SO3FunHandle.SO3FunHandle.html SO3FunHandle>|
+%
+
+rot = rotation.rand(2);
+SO3F2.eval(rot)
+
+%%
+% And following that, it is easy to describe every |<SO3Fun.SO3Fun.html SO3Fun>| by an
+% |<SO3FunHandle.SO3FunHandle.html SO3FunHandle>|.
+%
+
+SO3FunHandle(@(rot) SO3F1.eval(rot))
+
+%%
+%
+% *Definition of Harmonic Series on SO(3)*
+%
+% The class |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>| described rotational functions by there 
+% harmonic series. MTEX is very fast by computing with this
+% |SO3FunHarmonic's|. Hence sometimes it might be a good idea to expand any
+% |<SO3Fun.SO3Fun.html SO3Fun>| in its harmonic series. Therefore only the command 
+% <SO3FunHarmonic.SO3FunHarmonic SO3FunHarmonic> is needed.
+% But note that this approximation may lead to inaccuracies.
+%
+
+SO3F3 = SO3FunHarmonic(SO3F2)
+
+%%
+% Moreover if MTEX computes with an |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>| and any |<SO3Fun.SO3Fun.html SO3Fun>| it
+% is also expanded to an |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>|. You can prevent that by 
+% transformation to a |<SO3FunHandle.SO3FunHandle.html SO3FunHandle>| like before.
+%
+%%
+% Generally |SO3FunHarmonic's| are defined by there Fourier coefficient 
+% vector.
+%
+
+fhat = rand(1e4,1);
+SO3F4 = SO3FunHarmonic(fhat,cs)
+
+%%
+% The |bandwith| decribes the maximal harmonic degree of the harmonic series
+% expansion.
+%
+% By the property |isReal| we are able to change between real and complex
+% valued |SO3FunHarmonic's|.
+% Note that creation of an real vealued SO3FunHarmonic changes the Fourier
+% coefficient vector. So it is not possible to reconstruct the previous
+% function. But computing with real valued functions is much faster.
+%
+
+SO3F4.eval(rot)
+
+SO3F4.isReal = 1
+SO3F4.eval(rot)
+
+
+%% 
+% For further information on the Fourier coefficients, the bandwidth and
+% other properties , see 
+% <SO3FunHarmonicRepresentation.html Harmonic Representation of Rotational Functions>.
+%
+%%
+%
+% *Definition of Radial Basis Functions*
+%
+% Radial Basis functions are of class |<SO3FunRBF.SO3FunRBF.html SO3FunRBF>|. They are defined by
+% a kernel function |<SO3Kernel.SO3Kernel.html SO3Kernel>| which is cenetered on |orientations| with
+% some weights.
+%
+
+ori = orientation.rand(1e3,cs);
+w = ones(1e3,1);
+psi = SO3DeLaValleePoussinKernel
+SO3F5 = SO3FunRBF(ori,psi,w,1.2)
+
+
+%%
+% For further information on them, see <RadialODFs.html SO3FunRBF>.
+%
+%%
+%
+% *Definition of fibre elements*
+%
+% They are described by the class |<SO3FunCBF.SO3FunCBF.html SO3FunCBF>|.
+% We construct them by a fibre on SO(3) together with some halfwidth.
+%
+
+f = fibre.beta(cs)
+SO3F6 = SO3FunCBF(f,'halfwidth',10*degree)
+
+%%
+% For further information, see <FibreODFs.html SO3FunCBF>.
+
+%%
+%
+% *Definition of Bingham distributions*
+%
+% Bingham distribution functions are described by the class 
+% |<SO3FunBingham.SO3FunBingham.html SO3FunBingham>|. One can construct them by
+%
+
+kappa = [100 90 80 0];
+U = eye(4);
+SO3F7 = BinghamODF(kappa,U,cs)
+
+%%
+% For further information, see <BinghamODFs.html SO3FunBingham>.
+%
+%%
+%
+% *Sum of different subclasses of SO3Fun*
+%
+% By adding some subclasses of |<SO3Fun.SO3Fun.html SO3Fun>| we can save the sum by storing the
+% single components itself.
+%
+
+SO3F2 + SO3FunComposition(SO3F4) + SO3F5 + SO3F6 + SO3F7
+
+%%
+% Note that the sum of any |<SO3Fun.SO3Fun.html SO3Fun>| with an |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>| yields an
+% |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>|. Hence you need to add an |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>| in exactly 
+% that way. Otherwise the sum is expanded to an |<SO3FunHarmonic.SO3FunHarmonic.html SO3FunHarmonic>| in every
+% summation step.
+
+
+
+##### SOURCE END #####
+--></body></html>

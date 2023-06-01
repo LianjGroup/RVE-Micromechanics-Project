@@ -1,0 +1,636 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Import Pole Figure Data</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_PoleFigureImport.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Import Pole Figure Data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Importing pole figure data using the import wizard</a></li><li><a href="#5">Supported Data Formats</a></li><li><a href="#6">The Import Script</a></li><li><a href="#9">Writing your own interface</a></li></ul></div><p>Importing pole figure data in MTEX means to create a <a href="PoleFigure.PoleFigure.html">PoleFigure</a> object from data files containing diffraction data. Once such an object has been created the data can be <a href="PoleFigureCorrection.html">analyzed and processed</a> in many ways. Furthermore, such a PoleFigure object is the starting point for <a href="PoleFigure2ODF.html">PoleFigure to ODF estimation</a>.</p><h2 id="2">Importing pole figure data using the import wizard</h2><p>The <a href="import_wizard.html">import wizard</a> can be started either by typing into the command line</p><pre class="codeinput">import_wizard
+</pre><img vspace="50" hspace="5" src="PoleFigureImport_01.png" alt=""> <p>or by using the start menu item <b>Start/Toolboxes/MTEX/Import Wizard</b>. Pole figure data can be also imported via the <a href="matlab:filebrowser">file browser</a> by choosing <b>Import Data</b> from the context menu of the selected file if its file extension was previously registered with the <a href="matlab:opentoline(fullfile(mtex_path,'mtex_settings.m'),25,1)"><tt>mtex_settings.m</tt></a></p><p>The import wizard guides through the correct setup of:</p><div><ul><li><a href="CrystalSymmetries.html">crystal symmetries</a> associated with phases</li><li>specimen symmetry and plotting conventions</li><li><a href="Miller.Miller.html">Miller indices</a> of pole figures.</li></ul></div><p>In the end, the imported wizard creates a workspace variable or generates a m-file loading the data automatically. Furthermore appending a template script allows radip data processing.</p><h2 id="5">Supported Data Formats</h2><p>The import wizard currently supports following pole figure formats:</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_ana.html">.ana*</a>
+               </p>
+         </td>
+         <td>
+               <p>EMSE ASCII pole figure format</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_dubna.html">.cns*</a>
+               </p>
+         </td>
+         <td>
+               <p>Dubna ASCII pole figure format, regular grid</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_dubna.html">.cnv*</a>
+               </p>
+         </td>
+         <td>
+               <p>Dubna ASCII pole figure format, experimental grid</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_geesthacht.html">.dat*</a>
+               </p>
+         </td>
+         <td>
+               <p>Geesthacht ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_popla.html">.epf*, .gpf*</a>
+               </p>
+         </td>
+         <td>
+               <p>Popla ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_labotex.html">.epf*, .ppf*, .pow </a>
+               </p>
+         </td>
+         <td>
+               <p>LaboTEX ASCII pole figure format</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_aachen_exp.html">.exp*</a>
+               </p>
+         </td>
+         <td>
+               <p>Aachen ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_ibm.html">.ibm*</a>
+               </p>
+         </td>
+         <td>
+               <p>IBM ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_juelich.html">.jul*</a>
+               </p>
+         </td>
+         <td>
+               <p>Juelich ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_nja.html">.nja*</a>
+               </p>
+         </td>
+         <td>
+               <p>Seifert ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_out1.html">.out*</a>
+               </p>
+         </td>
+         <td>
+               <p>Graz ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_plf.html">.plf*</a>
+               </p>
+         </td>
+         <td>
+               <p>Queens Univ. ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_siemens.html">.ptx, <b>.rpf</b>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>Siemens ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_philips.html">.txt*</a>
+               </p>
+         </td>
+         <td>
+               <p>Philips ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_beartex.html">.xpe, <b>.xpf</b>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>BearTex ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_slc.html">.slc*</a>
+               </p>
+         </td>
+         <td>
+               <p>SLC ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_uxd.html">.uxd*</a>
+               </p>
+         </td>
+         <td>
+               <p>Bruker UXD ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_xrd.html">.xrd, <b>.ras</b>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>Bruker XRD ASCII pole figure format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_xrdml.html">.xrdml*</a>
+               </p>
+         </td>
+         <td>
+               <p>PANalytical XML data format.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadPoleFigure_aachen.html">.**</a>
+               </p>
+         </td>
+         <td>
+               <p>Aachen ASCII pole figure format.</p>
+         </td>
+      </tr>
+   </table>
+</p><p>See <a href="PoleFigure.load.html">PoleFigure.load</a> for further information or follow the hyperlinks of the table above for an example.</p><p>If the interface is not automatically recognized, but the data has the form of an ASCII list:</p><pre>polar_1 azimuthal_1 intensity_1
+polar_2 azimuthal_2 intensity_2
+polar_3 azimuthal_3 intensity_3
+.       .           .
+.       .           .
+.       .           .
+polar_n azimuthal_n intensity_n</pre><p>an additional tool asks you to associate the columns with the corresponding property. See also <a href="loadPoleFigure_generic.html">loadPoleFigure_generic</a>, which provides an easy way to import diffraction data from such an ASCII list. The list may contain an arbitrary number of header lines, columns or comments and the actual order of the columns may be specified by options.</p><p>If you have any comments, remarks or request on interfaces please contact us.</p><h2 id="6">The Import Script</h2><p>Diffraction data stored in one of the formats above can also be imported using the command <a href="PoleFigure.load.html">PoleFigure.load</a>. It automatically detects the data format and imports the data. In dependency of the data format, it might be necessary to specify the Miller indices and the structure coefficients. The general syntax is</p><p>An import script generated by the <tt>import wizard</tt> has the following form:</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'32'</span>,[1.4,1.4,1.5]); <span class="comment">% crystal symmetry</span>
+
+<span class="comment">% location of the data files</span>
+fnames = {<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(10-10)_amp.cnv'</span>),<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(10-11)(01-11)_amp.cnv'</span>)};
+
+<span class="comment">% crystal directions</span>
+h = {Miller(1,0,-1,0,cs),[Miller(0,1,-1,1,cs),Miller(1,0,-1,1,cs)]};
+
+<span class="comment">% structure coefficients</span>
+c = {1,[0.52 ,1.23]};
+
+<span class="comment">% load data</span>
+pf = PoleFigure.load(fnames,h,cs,<span class="string">'superposition'</span>,c)
+</pre><pre class="codeoutput"> 
+pf = PoleFigure (xyz)
+  crystal symmetry : 321, X||a*, Y||b, Z||c*
+ 
+  h = (10-10), r = 72 x 19 points
+  h = (01-11)(10-11), r = 72 x 19 points
+</pre><p>Once such a import script for pole figure data has been created, it can be easily modified and extend, e.g.:</p><pre class="codeinput"><span class="comment">% plot the data</span>
+plot(pf)
+</pre><img vspace="50" hspace="5" src="PoleFigureImport_02.png" alt=""> <h2 id="9">Writing your own interface</h2><p>MTEX also provides a way to import data from formats currently not supported directly. Therefore you can to use all standard MATLAB input and output commands to read the pole figure information, e.g. intensities, specimen directions, crystal directions directly from the data files. Then you have to call the constructor <a href="PoleFigure.PoleFigure.html">PoleFigure</a> with these data to generate a PoleFigure object.</p><p>Once you have written an interface that reads data from certain data files and generates a PoleFigure object you can integrate this method into MTEX by copying it into the folder <tt>MTEX/qta/interfaces</tt>. Then it will be automatically called by the methods <a href="PoleFigure.load.html">PoleFigure.load</a> and import_wizard. Examples how to write such an interface can be found in the directory <tt>MTEX/qta/interfaces</tt>.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Import Pole Figure Data
+%
+%%
+% Importing pole figure data in MTEX means to create a
+% <PoleFigure.PoleFigure.html PoleFigure> object from data files containing
+% diffraction data. Once such an object has been created the data can be
+% <PoleFigureCorrection.html analyzed and processed> in many ways.
+% Furthermore, such a PoleFigure object is the starting point for
+% <PoleFigure2ODF.html PoleFigure to ODF estimation>.
+%
+%% Importing pole figure data using the import wizard
+%
+% The <import_wizard.html import wizard> can be started either by typing
+% into the command line
+
+import_wizard
+
+%%
+% or by using the start menu item *Start/Toolboxes/MTEX/Import Wizard*.
+% Pole figure data can be also imported via the <matlab:filebrowser file
+% browser> by choosing *Import Data* from the context menu of the selected
+% file if its file extension was previously registered with the
+% <matlab:opentoline(fullfile(mtex_path,'mtex_settings.m'),25,1)
+% |mtex_settings.m|>
+%
+%%
+% The import wizard guides through the correct setup of:
+%
+% * <CrystalSymmetries.html crystal symmetries> associated with phases 
+% * specimen symmetry and plotting conventions
+% * <Miller.Miller.html Miller indices> of pole figures.
+% 
+% In the end, the imported wizard creates a workspace variable or generates
+% a m-file loading the data automatically. Furthermore appending a template
+% script allows radip data processing.
+%
+%% Supported Data Formats
+%
+% The import wizard currently supports following pole figure formats:
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_ana.html">.ana*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>EMSE ASCII pole figure format</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_dubna.html">.cns*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Dubna ASCII pole figure format, regular grid</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_dubna.html">.cnv*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Dubna ASCII pole figure format, experimental grid</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_geesthacht.html">.dat*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Geesthacht ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_popla.html">.epf*, .gpf*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Popla ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_labotex.html">.epf*, .ppf*, .pow </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>LaboTEX ASCII pole figure format</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_aachen_exp.html">.exp*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Aachen ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_ibm.html">.ibm*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>IBM ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_juelich.html">.jul*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Juelich ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_nja.html">.nja*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Seifert ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_out1.html">.out*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Graz ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_plf.html">.plf*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Queens Univ. ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_siemens.html">.ptx, <b>.rpf</b>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Siemens ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_philips.html">.txt*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Philips ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_beartex.html">.xpe, <b>.xpf</b>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>BearTex ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_slc.html">.slc*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>SLC ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_uxd.html">.uxd*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Bruker UXD ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_xrd.html">.xrd, <b>.ras</b>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Bruker XRD ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_xrdml.html">.xrdml*</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>PANalytical XML data format.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadPoleFigure_aachen.html">.**</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Aachen ASCII pole figure format.</p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+% See <PoleFigure.load.html PoleFigure.load> for further information or follow
+% the hyperlinks of the table above for an example.
+%
+% If the interface is not automatically recognized, but the data has the
+% form of an ASCII list:
+%  
+%  polar_1 azimuthal_1 intensity_1
+%  polar_2 azimuthal_2 intensity_2
+%  polar_3 azimuthal_3 intensity_3
+%  .       .           .
+%  .       .           .
+%  .       .           .
+%  polar_n azimuthal_n intensity_n
+%
+% an additional tool asks you to associate the columns with the
+% corresponding property. See also <loadPoleFigure_generic.html
+% loadPoleFigure_generic>, which provides an easy way to import diffraction
+% data from such an ASCII list. The list may contain an arbitrary number of
+% header lines, columns or comments and the actual order of the columns may
+% be specified by options.
+%
+% If you have any comments, remarks or request on interfaces please contact
+% us.
+%
+%% The Import Script
+%
+% Diffraction data stored in one of the formats above can also be imported
+% using the command <PoleFigure.load.html PoleFigure.load>. It automatically
+% detects the data format and imports the data. In dependency of the data
+% format, it might be necessary to specify the Miller indices and the
+% structure coefficients. The general syntax is
+%
+%%
+% An import script generated by the |import wizard| has the following form:
+
+cs = crystalSymmetry('32',[1.4,1.4,1.5]); % crystal symmetry
+
+% location of the data files
+fnames = {...
+  fullfile(mtexDataPath,'PoleFigure','dubna','Q(10-10)_amp.cnv'),...
+  fullfile(mtexDataPath,'PoleFigure','dubna','Q(10-11)(01-11)_amp.cnv')};
+
+% crystal directions
+h = {Miller(1,0,-1,0,cs),[Miller(0,1,-1,1,cs),Miller(1,0,-1,1,cs)]};
+
+% structure coefficients
+c = {1,[0.52 ,1.23]};
+
+% load data
+pf = PoleFigure.load(fnames,h,cs,'superposition',c)
+
+%%
+% Once such a import script for pole figure data has been created, it can
+% be easily modified and extend, e.g.:
+
+% plot the data
+plot(pf)
+
+%% Writing your own interface
+%
+% MTEX also provides a way to import data from formats currently not
+% supported directly. Therefore you can to use all standard MATLAB input
+% and output commands to read the pole figure information, e.g. intensities,
+% specimen directions, crystal directions directly from the data files.
+% Then you have to call the constructor
+% <PoleFigure.PoleFigure.html PoleFigure> with these data to generate
+% a PoleFigure object.
+%
+% Once you have written an interface that reads data from certain data
+% files and generates a PoleFigure object you can integrate this method
+% into MTEX by copying it into the folder |MTEX/qta/interfaces|. Then it
+% will be automatically called by the methods <PoleFigure.load.html
+% PoleFigure.load> and import_wizard. Examples how to write such an
+% interface can be found in the directory |MTEX/qta/interfaces|.
+%
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Line Profiles</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSDProfile.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Line Profiles</h1><!--introduction--><!--/introduction--><p>When analyzing texture gradients it is sometime helpful to look at the EBSD data rstricted to a single line and plot profiles of certain properties along this line. In order to illustarte this at an example let us import some EBSD data, reconstruct grains and select the grain with the largest GOS (grain orientation spread) for further analysis.</p><pre class="codeinput">close <span class="string">all</span>
+mtexdata <span class="string">forsterite</span>
+plotx2east
+
+<span class="comment">% reconstruct grains</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% find the grain with maximum grain orientation spread</span>
+[~,id] = max(grains.GOS);
+grain_selected = grains(id)
+
+<span class="comment">% plot the grain with its orientations</span>
+close <span class="string">all</span>
+plot(grain_selected.boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plot(ebsd(grain_selected),ebsd(grain_selected).orientations)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0   58485 (24%)  notIndexed                                                 
+     1  152345 (62%)  Forsterite  LightSkyBlue       mmm                         
+     2   26058 (11%)   Enstatite  DarkSeaGreen       mmm                         
+     3   9064 (3.7%)    Diopside     Goldenrod     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+ 
+grain_selected = grain2d
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1       1    2614  Forsterite       mmm                         
+ 
+ boundary segments: 458 (20261 &micro;m)
+ inner boundary segments: 48 (2152 &micro;m)
+ triple points: 28
+ 
+   Id   Phase   Pixels   phi1   Phi   phi2         GOS
+ 1856       1     2614    153   109    246   0.0850248
+ 
+</pre><img vspace="50" hspace="5" src="EBSDProfile_01.png" alt=""> <p>Next we specify a line segment through the grain</p><pre class="codeinput"><span class="comment">% line segment</span>
+lineSec =  [18826   6438; 18089 10599];
+
+<span class="comment">% draw the line into the plot</span>
+line(lineSec(:,1),lineSec(:,2),<span class="string">'linewidth'</span>,2)
+</pre><img vspace="50" hspace="5" src="EBSDProfile_02.png" alt=""> <p>The command <a href="EBSD.spatialProfile.html">spatialProfile</a> restricts the EBSD data to this line</p><pre class="codeinput">ebsd_line = spatialProfile(ebsd(grain_selected),lineSec)
+</pre><pre class="codeoutput"> 
+ebsd_line = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     1    116 (100%)  Forsterite  LightSkyBlue       mmm                         
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+</pre><p>Next, we plot the misorientation angle to the first point of the line as well as the orientation gradient</p><pre class="codeinput">close <span class="string">all</span> <span class="comment">% close previous plots</span>
+
+<span class="comment">% misorientation angle to the first orientation on the line</span>
+plot(ebsd_line.y,<span class="keyword">...</span>
+  angle(ebsd_line(1).orientations,ebsd_line.orientations)/degree)
+
+<span class="comment">% misorientation gradient</span>
+hold <span class="string">all</span>
+plot(0.5*(ebsd_line.y(1:end-1)+ebsd_line.y(2:end)),<span class="keyword">...</span>
+  angle(ebsd_line(1:end-1).orientations,ebsd_line(2:end).orientations)/degree)
+hold <span class="string">off</span>
+
+xlabel(<span class="string">'y'</span>); ylabel(<span class="string">'misorientation angle in degree'</span>)
+
+legend(<span class="string">'to reference orientation'</span>,<span class="string">'orientation gradient'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDProfile_03.png" alt=""> <p>We can also plot the orientations along this line into inverse pole figures and colorize them according to their y-coordinate</p><pre class="codeinput">close
+plotIPDF(ebsd_line.orientations,[xvector,yvector,zvector],<span class="keyword">...</span>
+  <span class="string">'property'</span>,ebsd_line.y,<span class="string">'markersize'</span>,20,<span class="string">'antipodal'</span>)
+
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="EBSDProfile_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Line Profiles 
+%
+%%
+% When analyzing texture gradients it is sometime helpful to look at
+% the EBSD data rstricted to a single line and plot profiles of certain
+% properties along this line. In order to illustarte this at an example let
+% us import some EBSD data, reconstruct grains and select the grain with
+% the largest GOS (grain orientation spread) for further analysis.
+
+close all
+mtexdata forsterite
+plotx2east
+
+% reconstruct grains
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd('indexed'));
+
+% find the grain with maximum grain orientation spread
+[~,id] = max(grains.GOS);
+grain_selected = grains(id)
+
+% plot the grain with its orientations
+close all
+plot(grain_selected.boundary,'linewidth',2)
+hold on
+plot(ebsd(grain_selected),ebsd(grain_selected).orientations)
+hold off
+
+%%
+% Next we specify a line segment through the grain
+
+% line segment
+lineSec =  [18826   6438; 18089 10599];
+
+% draw the line into the plot
+line(lineSec(:,1),lineSec(:,2),'linewidth',2)
+
+%%
+% The command <EBSD.spatialProfile.html spatialProfile> restricts the EBSD
+% data to this line
+
+ebsd_line = spatialProfile(ebsd(grain_selected),lineSec)
+
+%% 
+% Next, we plot the misorientation angle to the first point of the line
+% as well as the orientation gradient
+
+close all % close previous plots
+
+% misorientation angle to the first orientation on the line
+plot(ebsd_line.y,...
+  angle(ebsd_line(1).orientations,ebsd_line.orientations)/degree)
+
+% misorientation gradient
+hold all
+plot(0.5*(ebsd_line.y(1:end-1)+ebsd_line.y(2:end)),...
+  angle(ebsd_line(1:end-1).orientations,ebsd_line(2:end).orientations)/degree)
+hold off
+
+xlabel('y'); ylabel('misorientation angle in degree')
+
+legend('to reference orientation','orientation gradient')
+
+%%
+% We can also plot the orientations along this line into inverse pole
+% figures and colorize them according to their y-coordinate
+
+close
+plotIPDF(ebsd_line.orientations,[xvector,yvector,zvector],...
+  'property',ebsd_line.y,'markersize',20,'antipodal')
+
+mtexColorbar
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,159 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Plotting Spherical Functions</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_S2FunPlotting.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Plotting Spherical Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Smooth Plot</a></li><li><a href="#4">Contour Plot</a></li><li><a href="#5">Filled Contour Plot</a></li><li><a href="#6">3D Plot</a></li><li><a href="#7">Surface Plot</a></li><li><a href="#8">Section Plot</a></li><li><a href="#9">Spectral Plot</a></li></ul></div><p>In this chapter various ways of plotting spherical functions are explained. We start by defining some example functions.</p><pre class="codeinput"><span class="comment">% the smiley</span>
+sF1 = S2Fun.smiley;
+
+<span class="comment">% some osilatory function</span>
+f = @(v) 0.1*(v.theta+sin(8*v.x).*sin(8*v.y));
+sF2 = S2FunHarmonic.quadrature(f, <span class="string">'bandwidth'</span>, 150);
+</pre><h2 id="2">Smooth Plot</h2><p>The default <a href="S2Fun.plot.html"><tt>plot</tt></a> command generates a colored plot without contours</p><pre class="codeinput">plot(sF1)
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_01.png" alt=""> <div><ul><li><tt>plot(sF1)</tt> is the same as <tt>pcolor(sF1)</tt></li></ul></div><h2 id="4">Contour Plot</h2><p>nonfilled contour plot plots only the contour lines</p><pre class="codeinput">contour(sF1, <span class="string">'LineWidth'</span>, 2);
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_02.png" alt=""> <h2 id="5">Filled Contour Plot</h2><p>filled contour plot plots the contour lines</p><pre class="codeinput">contourf(sF1, <span class="string">'LineWidth'</span>, 2);
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_03.png" alt=""> <h2 id="6">3D Plot</h2><p>3D plot of a sphere colored accordingly to the function values.</p><pre class="codeinput">plot3d(sF1);
+set(gca,<span class="string">'CameraUpVector'</span>,[0 10 0])
+set(gca,<span class="string">'CameraPosition'</span>,[-9 0 10])
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_04.png" alt=""> <h2 id="7">Surface Plot</h2><p>3D plot where the radius of the sphere is transformed according to the function values</p><pre class="codeinput">surf(sF1)
+axis <span class="string">off</span>
+set(gca,<span class="string">'CameraUpVector'</span>,[0 1 0])
+set(gca,<span class="string">'CameraPosition'</span>,[-9 0 10])
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_05.png" alt=""> <h2 id="8">Section Plot</h2><p>Plot the intersection of the surf plot with a plane defined by a normal vector <tt>v</tt></p><pre class="codeinput">plotSection(sF2, zvector,<span class="string">'color'</span>,<span class="string">'interp'</span>,<span class="string">'linewidth'</span>,10)
+colormap <span class="string">spring</span>
+mtexTitle(<span class="string">'Flowerpower!'</span>)
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_06.png" alt=""> <h2 id="9">Spectral Plot</h2><p>plotting the Fourier coefficients</p><pre class="codeinput">close <span class="string">all</span>
+plotSpektra(sF1,<span class="string">'FontSize'</span>,15,<span class="string">'linewidth'</span>,2);
+xlim([0,40])
+</pre><img vspace="50" hspace="5" src="S2FunPlotting_07.png" alt=""> <p>The more specific plot options are covered in the respective classes.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Plotting Spherical Functions
+%
+%%
+% In this chapter various ways of plotting spherical functions are
+% explained. We start by defining some example functions.
+
+% the smiley
+sF1 = S2Fun.smiley;
+
+% some osilatory function
+f = @(v) 0.1*(v.theta+sin(8*v.x).*sin(8*v.y));
+sF2 = S2FunHarmonic.quadrature(f, 'bandwidth', 150);
+
+%% Smooth Plot
+% The default <S2Fun.plot.html |plot|> command generates a colored plot
+% without contours
+
+plot(sF1)
+
+%%
+% * |plot(sF1)| is the same as |pcolor(sF1)|
+
+%% Contour Plot
+% nonfilled contour plot plots only the contour lines
+contour(sF1, 'LineWidth', 2);
+
+%% Filled Contour Plot
+% filled contour plot plots the contour lines
+contourf(sF1, 'LineWidth', 2);
+
+%% 3D Plot
+% 3D plot of a sphere colored accordingly to the function values.
+plot3d(sF1);
+set(gca,'CameraUpVector',[0 10 0])
+set(gca,'CameraPosition',[-9 0 10])
+
+%% Surface Plot
+% 3D plot where the radius of the sphere is transformed according to the
+% function values
+
+surf(sF1)
+axis off
+set(gca,'CameraUpVector',[0 1 0])
+set(gca,'CameraPosition',[-9 0 10])
+
+
+%% Section Plot
+% Plot the intersection of the surf plot with a plane defined by a normal
+% vector |v|
+
+plotSection(sF2, zvector,'color','interp','linewidth',10)
+colormap spring
+mtexTitle('Flowerpower!')
+
+%% Spectral Plot
+% plotting the Fourier coefficients
+
+close all
+plotSpektra(sF1,'FontSize',15,'linewidth',2);
+xlim([0,40])
+
+%%
+% The more specific plot options are covered in the respective classes.
+
+##### SOURCE END #####
+--></body></html>

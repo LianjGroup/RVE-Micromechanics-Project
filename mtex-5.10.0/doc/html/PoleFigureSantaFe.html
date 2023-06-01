@@ -1,0 +1,216 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>The SantaFe example</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_PoleFigureSantaFe.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>The SantaFe example</h1><!--introduction--><p>Simulate a set of pole figures for the SantaFe standard ODF, estimate an ODF and compare it to the inital SantaFe ODF.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Simulate pole figures</a></li><li><a href="#2">ODF Estimation with Ghost Correction</a></li><li><a href="#3">ODF Estimation without Ghost Correction</a></li><li><a href="#4">Error analysis</a></li><li><a href="#5">Plot estimated pole figures</a></li><li><a href="#6">Plot estimated ODF (Ghost Corrected)</a></li><li><a href="#7">Plot odf</a></li><li><a href="#8">Plot Fourier Coefficients</a></li></ul></div><h2 id="1">Simulate pole figures</h2><pre class="codeinput">CS = crystalSymmetry(<span class="string">'m-3m'</span>);
+
+<span class="comment">% crystal directions</span>
+h = [Miller(1,0,0,CS),Miller(1,1,0,CS),Miller(1,1,1,CS),Miller(2,1,1,CS)];
+
+<span class="comment">% specimen directions</span>
+r = equispacedS2Grid(<span class="string">'resolution'</span>,5*degree,<span class="string">'antipodal'</span>);
+
+<span class="comment">% pole figures</span>
+pf = calcPoleFigure(SantaFe,h,r);
+
+<span class="comment">% add some noise</span>
+pf = noisepf(pf,100);
+
+<span class="comment">% plot them</span>
+plot(pf,<span class="string">'MarkerSize'</span>,5)
+mtexColorMap <span class="string">LaboTeX</span>
+</pre><img vspace="50" hspace="5" src="PoleFigureSantaFe_01.png" alt=""> <h2 id="2">ODF Estimation with Ghost Correction</h2><pre class="codeinput">rec = calcODF(pf)
+</pre><pre class="codeoutput"> 
+rec = SO3FunRBF (m-3m &#8594; xyz (222))
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 0.58
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 1232 orientations, resolution: 5&deg;
+  weight: 0.42
+ 
+</pre><h2 id="3">ODF Estimation without Ghost Correction</h2><pre class="codeinput">rec2 = calcODF(pf,<span class="string">'NoGhostCorrection'</span>)
+</pre><pre class="codeoutput"> 
+rec2 = SO3FunRBF (m-3m &#8594; xyz (222))
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 1232 orientations, resolution: 5&deg;
+  weight: 1
+ 
+</pre><h2 id="4">Error analysis</h2><pre class="codeinput"><span class="comment">% calculate RP error</span>
+calcError(rec,SantaFe)
+
+<span class="comment">% difference plot between meassured and recalculated pole figures</span>
+plotDiff(pf,rec)
+</pre><pre class="codeoutput">ans =
+    0.0483
+</pre><img vspace="50" hspace="5" src="PoleFigureSantaFe_02.png" alt=""> <h2 id="5">Plot estimated pole figures</h2><pre class="codeinput">plotPDF(rec,pf.h,<span class="string">'antipodal'</span>)
+</pre><img vspace="50" hspace="5" src="PoleFigureSantaFe_03.png" alt=""> <h2 id="6">Plot estimated ODF (Ghost Corrected)</h2><pre class="codeinput">plot(rec,<span class="string">'sections'</span>,18,<span class="string">'resolution'</span>,5*degree,<span class="keyword">...</span>
+  <span class="string">'contourf'</span>,<span class="string">'FontSize'</span>,10,<span class="string">'silent'</span>,<span class="string">'figSize'</span>,<span class="string">'large'</span>,<span class="string">'minmax'</span>)
+mtexColorMap <span class="string">white2black</span>
+</pre><img vspace="50" hspace="5" src="PoleFigureSantaFe_04.png" alt=""> <h2 id="7">Plot odf</h2><pre class="codeinput">plot(SantaFe,<span class="string">'sections'</span>,18,<span class="string">'contourf'</span>,<span class="string">'FontSize'</span>,10,<span class="string">'silent'</span>,<span class="keyword">...</span>
+  <span class="string">'figSize'</span>,<span class="string">'large'</span>,<span class="string">'minmax'</span>)
+mtexColorMap <span class="string">white2black</span>
+</pre><img vspace="50" hspace="5" src="PoleFigureSantaFe_05.png" alt=""> <h2 id="8">Plot Fourier Coefficients</h2><pre class="codeinput">close <span class="string">all</span>;
+<span class="comment">% true ODF</span>
+plotSpektra(SantaFe,<span class="string">'bandwidth'</span>,32,<span class="string">'linewidth'</span>,2)
+<span class="comment">% keep plot for adding the next plots</span>
+hold <span class="string">all</span>
+
+<span class="comment">% With ghost correction:</span>
+plotSpektra(rec,<span class="string">'bandwidth'</span>,32,<span class="string">'linewidth'</span>,2)
+
+<span class="comment">% Without ghost correction:</span>
+plotSpektra(rec2,<span class="string">'bandwidth'</span>,32,<span class="string">'linewidth'</span>,2)
+
+legend({<span class="string">'true ODF'</span>,<span class="string">'with ghost correction'</span>,<span class="string">'without ghost correction'</span>})
+<span class="comment">% next plot command overwrites plot</span>
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="PoleFigureSantaFe_06.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% The SantaFe example
+%
+% Simulate a set of pole figures for the SantaFe standard ODF, estimate
+% an ODF and compare it to the inital SantaFe ODF.
+%
+%% Simulate pole figures
+
+CS = crystalSymmetry('m-3m');
+
+% crystal directions
+h = [Miller(1,0,0,CS),Miller(1,1,0,CS),Miller(1,1,1,CS),Miller(2,1,1,CS)];
+
+% specimen directions
+r = equispacedS2Grid('resolution',5*degree,'antipodal');
+
+% pole figures
+pf = calcPoleFigure(SantaFe,h,r);
+
+% add some noise
+pf = noisepf(pf,100);
+
+% plot them
+plot(pf,'MarkerSize',5)
+mtexColorMap LaboTeX
+
+%% ODF Estimation with Ghost Correction
+rec = calcODF(pf)
+
+%% ODF Estimation without Ghost Correction
+
+rec2 = calcODF(pf,'NoGhostCorrection')
+
+%% Error analysis
+
+% calculate RP error
+calcError(rec,SantaFe)
+
+% difference plot between meassured and recalculated pole figures
+plotDiff(pf,rec)
+ 
+%% Plot estimated pole figures
+
+plotPDF(rec,pf.h,'antipodal')
+
+%% Plot estimated ODF (Ghost Corrected)
+
+plot(rec,'sections',18,'resolution',5*degree,...
+  'contourf','FontSize',10,'silent','figSize','large','minmax')
+mtexColorMap white2black
+
+
+%% Plot odf
+
+plot(SantaFe,'sections',18,'contourf','FontSize',10,'silent',...
+  'figSize','large','minmax')
+mtexColorMap white2black
+   
+%% Plot Fourier Coefficients
+
+%%
+close all;
+% true ODF
+plotSpektra(SantaFe,'bandwidth',32,'linewidth',2)
+% keep plot for adding the next plots
+hold all
+
+% With ghost correction:
+plotSpektra(rec,'bandwidth',32,'linewidth',2)
+
+% Without ghost correction:
+plotSpektra(rec2,'bandwidth',32,'linewidth',2)
+
+legend({'true ODF','with ghost correction','without ghost correction'})
+% next plot command overwrites plot
+hold off
+
+##### SOURCE END #####
+--></body></html>

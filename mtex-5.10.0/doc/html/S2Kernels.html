@@ -1,0 +1,317 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Spherical Kernel Functions</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_S2Kernels.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Spherical Kernel Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#4">Legendre coefficients</a></li><li><a href="#5">Applications</a></li><li><a href="#6">The de La Vallee Poussin Kernel</a></li><li><a href="#8">The Dirichlet Kernel</a></li><li><a href="#10">The Bump kernel</a></li></ul></div><p>A spherical kernel <img src="S2Kernels_eq03702555302202684472.png" alt="$\psi$"> is a spherical function that depends only on the angle towards the north pole <img src="S2Kernels_eq14451312071612959685.png" alt="$e_3$">,</p><pre class="codeinput">psi = S2DeLaValleePoussinKernel(<span class="string">'halfwidth'</span>,10*degree)
+
+surf(psi,<span class="string">'resolution'</span>,2*degree,<span class="string">'EdgeColor'</span>,<span class="string">'none'</span>)
+hold <span class="string">on</span>
+arrow3d(2*zvector,<span class="string">'labeled'</span>)
+hold <span class="string">off</span>
+axis <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+psi = S2DeLaValleePoussinKernel
+  bandwidth: 25
+  halfwidth: 10&deg;
+ 
+</pre><img vspace="50" hspace="5" src="S2Kernels_01.png" alt=""> <p>The dependency of the angle becomes more when plot along meridian</p><pre class="codeinput">plot(psi,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+</pre><img vspace="50" hspace="5" src="S2Kernels_02.png" alt=""> <p>Examples of spherical kernel functions are</p><div><ul><li>the de la Vallee Poussin kernel @S2DeLaValleePoussinKernel</li><li>the Schulz defocusing kernel @SchulzDefocusingKernel</li><li>the Dirichlet kernel @S2DirichletKernel</li><li>the Bump kernel @S2BumpKernel</li><li>the Abel Poussin kernel @S2AbelPoussinKernel.html de &gt;</li><li>the <a href="S2AbelPoussinKernel.html">vom Mises kernel</a></li></ul></div><h2 id="4">Legendre coefficients</h2><p>Every spherical kernel function <img src="S2Kernels_eq03702555302202684472.png" alt="$\psi$"> can be associated with a function <img src="S2Kernels_eq11997015626790303985.png" alt="$\Psi \colon [-1,1] \to R$"> defined on the interval <img src="S2Kernels_eq07679206296171425280.png" alt="$[-1,1]$"> by <img src="S2Kernels_eq04506758595717879826.png" alt="$\psi(v) = \Psi(v \cdot e_3)$">. It turn out to be usefull to <img src="S2Kernels_eq13218462907216897621.png" alt="$\Psi$"> approximate <img src="S2Kernels_eq13218462907216897621.png" alt="$\Psi$"> by a expansion into Legendre polynomials <img src="S2Kernels_eq07029549279585565113.png" alt="$P_n$"> of degree <img src="S2Kernels_eq17555110721583917243.png" alt="$n$">, i.e.,</p><p><img src="S2Kernels_eq05678897656028776191.png" alt="$$ \psi(t) = \sum\limits_{n=0}^{\infty} \hat\psi_n \, \mathcal P_{n}(t) $$"></p><p>These Legendre coefficients are stored as the field <tt>psi.A</tt> and can be easily visualized using the command <a href="S2Kernel.plotSpectra.html"><tt>plotSpectra</tt></a>.</p><pre class="codeinput">plotSpektra(psi)
+</pre><img vspace="50" hspace="5" src="S2Kernels_03.png" alt=""> <h2 id="5">Applications</h2><p>Spherical kernel functions have different applications in MTEX. Those include</p><div><ul><li>kernel density estimation of directional data using the command <a href="vector3d.calcDensity.html"><tt>calcDensity</tt></a></li><li>defocusing correction of XRD data</li><li>etimation of the habit plane normal distribution using the command <a href="calcGBND.html"><tt>calcGBND</tt></a></li><li>definition of fibe ODFs using the command <a href="fibreODF.html"><tt>fibreODF</tt></a></li></ul></div><h2 id="6">The de La Vallee Poussin Kernel</h2><p>The <a href="S2Kernels.S2DeLaValleePoussinKernel.html">spherical de la Vallee Poussin kernel</a> is defined by</p><p><img src="S2Kernels_eq11866094408693614591.png" alt="$$ K(t) = (1+\kappa)\,(\frac{1+t}{2})^{\kappa}$$"></p><p>for <img src="S2Kernels_eq00756379911743885914.png" alt="$t\in[0,1]$">. The de la Vallee Poussin kernel additionaly has the unique property that for a given halfwidth it can be described exactly by a finite number of Fourier coefficients. This kernel is recommended for Texture analysis as it is always positive and there is no truncation error in Fourier space.</p><p>Hence we can define the de la Vallee Poussin kernel <img src="S2Kernels_eq00526401088067381914.png" alt="$\psi_{\kappa}$"> depending on a parameter <img src="S2Kernels_eq01414888190012388162.png" alt="$\kappa \in N \setminus \{0\}$"> by its finite Legendre polynomial expansion</p><p><img src="S2Kernels_eq00784718230639868818.png" alt="$$ \psi_{\kappa}(t) = \sum\limits_{n=0}^{L} a_n(\kappa) \mathcal P_{n}(t).$$"></p><p>We obtain the Legendre coefficients <img src="S2Kernels_eq04556208174608928311.png" alt="$a_n(\kappa)$"> by <img src="S2Kernels_eq02295659295071091666.png" alt="$a_0=1$">, <img src="S2Kernels_eq18411541927084392458.png" alt="$a_1=\frac{\kappa}{2+\kappa}$"> and the three term recurence relation</p><p><img src="S2Kernels_eq05807397899686666540.png" alt="$$ (\kappa+l+2) a_{l+1} = -(2l+1)\,a_l + (\kappa-l+1)\,a_{l-1}.$$"></p><p>Lets construct two of them.</p><pre class="codeinput">psi1 = S2DeLaValleePoussinKernel(<span class="string">'halfwidth'</span>,15*degree)
+psi2 = S2DeLaValleePoussinKernel(<span class="string">'halfwidth'</span>,20*degree)
+
+plot(psi1,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+hold <span class="string">on</span>
+plot(psi2,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+hold <span class="string">off</span>
+legend(<span class="string">'halfwidth = 15&deg;'</span>,<span class="string">'halfwidth = 20&deg;'</span>)
+</pre><pre class="codeoutput"> 
+psi1 = S2DeLaValleePoussinKernel
+  bandwidth: 17
+  halfwidth: 15&deg;
+ 
+ 
+psi2 = S2DeLaValleePoussinKernel
+  bandwidth: 13
+  halfwidth: 20&deg;
+ 
+</pre><img vspace="50" hspace="5" src="S2Kernels_04.png" alt=""> <p>Here the parameter <img src="S2Kernels_eq15898738225830852514.png" alt="$\kappa$"> is <img src="S2Kernels_eq03286473861578666877.png" alt="$40.34$"> for function <img src="S2Kernels_eq17700988613471814733.png" alt="$\psi_1$"> and <img src="S2Kernels_eq12130584065348784236.png" alt="$22.64$"> in function <img src="S2Kernels_eq16536013070075290289.png" alt="$\psi_2$">.</p><p>We also take a look at the Legendre coefficients</p><pre class="codeinput">plotSpektra(psi1,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plotSpektra(psi2,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+legend(<span class="string">'halfwidth = 15&deg;'</span>,<span class="string">'halfwidth = 20&deg;'</span>)
+</pre><img vspace="50" hspace="5" src="S2Kernels_05.png" alt=""> <h2 id="8">The Dirichlet Kernel</h2><p>The <a href="S2Kernels.S2DirichletKernel.html">spherical Dirichlet or Christoffel-Darboux kernel</a> is recommended for calculating physical properties as the Legendre coefficients always have a value of one up to the specified bandwidth:</p><p><img src="S2Kernels_eq11097913409245482603.png" alt="$$ \psi_N(t) = \sum\limits_{n=0}^N (2n+1) \, \mathcal P_{n}(t).$$"></p><p>Lets construct two of them.</p><pre class="codeinput">psi1 = S2DirichletKernel(10)
+psi2 = S2DirichletKernel(5)
+
+plot(psi1,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+hold <span class="string">on</span>
+plot(psi2,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+hold <span class="string">off</span>
+legend(<span class="string">'bandwidth = 5'</span>,<span class="string">'bandwidth = 10'</span>)
+</pre><pre class="codeoutput"> 
+psi1 = S2DirichletKernel
+  bandwidth: 10
+  halfwidth: 180&deg;
+ 
+ 
+psi2 = S2DirichletKernel
+  bandwidth: 5
+  halfwidth: 180&deg;
+ 
+</pre><img vspace="50" hspace="5" src="S2Kernels_06.png" alt=""> <p>By looking at the Legendre coefficients we see, that they are exactly 1.</p><pre class="codeinput">plotSpektra(psi1,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plotSpektra(psi2,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+legend(<span class="string">'bandwidth = 5'</span>,<span class="string">'bandwidth = 10'</span>)
+</pre><img vspace="50" hspace="5" src="S2Kernels_07.png" alt=""> <h2 id="10">The Bump kernel</h2><p>The <a href="S2Kernels.S2BumpKernel.html">spherical bump kernel</a> is a radial symmetric kernel function depending on the halfwidth <img src="S2Kernels_eq11420634138597008936.png" alt="$r\in (0,pi)$">. The function value is 0, if the angle is greater then the halfwidth <img src="S2Kernels_eq03659017738081218615.png" alt="$r$">. Otherwise it is 1.</p><p>The main problem of the bump kernel is that we need lots of legendre coefficients to describe it. That possibly can result in high runtimes.</p><pre class="codeinput">psi1 = S2BumpKernel(30*degree)
+psi2 = S2BumpKernel(50*degree)
+
+plot(psi1,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+hold <span class="string">on</span>
+plot(psi2,<span class="string">'linewidth'</span>,2,<span class="string">'symmetric'</span>)
+hold <span class="string">off</span>
+legend(<span class="string">'halfwidth = 30&deg;'</span>,<span class="string">'halwidth = 40&deg;'</span>)
+</pre><pre class="codeoutput"> 
+psi1 = S2BumpKernel
+  bandwidth: 2000
+  halfwidth: 30&deg;
+ 
+ 
+psi2 = S2BumpKernel
+  bandwidth: 2000
+  halfwidth: 50&deg;
+ 
+</pre><img vspace="50" hspace="5" src="S2Kernels_08.png" alt=""> <p>We also take a look at the Fourier coefficients</p><pre class="codeinput">plotSpektra(psi1,<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plotSpektra(psi2,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+legend(<span class="string">'\kappa = 0.2'</span>,<span class="string">'\kappa = 0.3'</span>)
+</pre><img vspace="50" hspace="5" src="S2Kernels_09.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Spherical Kernel Functions
+%
+%%
+% A spherical kernel $\psi$ is a spherical function that depends only on
+% the angle towards the north pole $e_3$, 
+
+psi = S2DeLaValleePoussinKernel('halfwidth',10*degree)
+
+surf(psi,'resolution',2*degree,'EdgeColor','none')
+hold on
+arrow3d(2*zvector,'labeled')
+hold off
+axis off
+
+%% 
+% The dependency of the angle becomes more when plot along meridian
+
+plot(psi,'linewidth',2,'symmetric')
+
+%%
+% Examples of spherical kernel functions are
+%
+% * the de la Vallee Poussin kernel @S2DeLaValleePoussinKernel
+% * the Schulz defocusing kernel @SchulzDefocusingKernel
+% * the Dirichlet kernel @S2DirichletKernel
+% * the Bump kernel @S2BumpKernel
+% * the Abel Poussin kernel @S2AbelPoussinKernel.html de >
+% * the <S2AbelPoussinKernel.html vom Mises kernel>
+%
+%% Legendre coefficients
+% 
+% Every spherical kernel function $\psi$ can be associated with a function
+% $\Psi \colon [-1,1] \to R$ defined on the interval $[-1,1]$ by
+% $\psi(v) = \Psi(v \cdot e_3)$. It turn out to be usefull to $\Psi$
+% approximate $\Psi$ by a expansion into Legendre polynomials $P_n$ of
+% degree $n$, i.e.,
+% 
+% $$ \psi(t) = \sum\limits_{n=0}^{\infty} \hat\psi_n \, \mathcal P_{n}(t) $$
+%
+% These Legendre coefficients are stored as the field |psi.A| and can be
+% easily visualized using the command <S2Kernel.plotSpectra.html
+% |plotSpectra|>.
+
+plotSpektra(psi)
+
+%% Applications
+%
+% Spherical kernel functions have different applications in MTEX. Those
+% include
+%
+% * kernel density estimation of directional data using the command
+% <vector3d.calcDensity.html |calcDensity|>
+% * defocusing correction of XRD data
+% * etimation of the habit plane normal distribution using the command
+% <calcGBND.html |calcGBND|>
+% * definition of fibe ODFs using the command <fibreODF.html |fibreODF|>
+%
+%
+%% The de La Vallee Poussin Kernel
+% The <S2Kernels.S2DeLaValleePoussinKernel.html spherical de la Vallee Poussin kernel>
+% is defined by 
+% 
+% $$ K(t) = (1+\kappa)\,(\frac{1+t}{2})^{\kappa}$$ 
+% 
+% for $t\in[0,1]$. The de la Vallee Poussin kernel additionaly has the 
+% unique property that for a given halfwidth it can be described exactly 
+% by a finite number of Fourier coefficients. This kernel is recommended
+% for Texture analysis as it is always positive and there is no truncation 
+% error in Fourier space.
+%
+% Hence we can define the de la Vallee Poussin kernel $\psi_{\kappa}$ 
+% depending on a parameter $\kappa \in N \setminus \{0\}$ by its 
+% finite Legendre polynomial expansion
+%
+% $$ \psi_{\kappa}(t) = \sum\limits_{n=0}^{L} a_n(\kappa) \mathcal P_{n}(t).$$
+%
+% We obtain the Legendre coefficients $a_n(\kappa)$ by $a_0=1$, 
+% $a_1=\frac{\kappa}{2+\kappa}$ and the three term recurence relation
+%
+% $$ (\kappa+l+2) a_{l+1} = -(2l+1)\,a_l + (\kappa-l+1)\,a_{l-1}.$$
+%
+% Lets construct two of them.
+
+psi1 = S2DeLaValleePoussinKernel('halfwidth',15*degree)
+psi2 = S2DeLaValleePoussinKernel('halfwidth',20*degree)
+
+plot(psi1,'linewidth',2,'symmetric')
+hold on
+plot(psi2,'linewidth',2,'symmetric')
+hold off
+legend('halfwidth = 15°','halfwidth = 20°')
+
+%%
+% Here the parameter $\kappa$ is $40.34$ for function $\psi_1$ and $22.64$ 
+% in function $\psi_2$.
+%
+% We also take a look at the Legendre coefficients
+
+plotSpektra(psi1,'linewidth',2)
+hold on
+plotSpektra(psi2,'linewidth',2)
+hold off
+legend('halfwidth = 15°','halfwidth = 20°')
+
+%% The Dirichlet Kernel
+% The <S2Kernels.S2DirichletKernel.html spherical Dirichlet or
+% Christoffel-Darboux kernel> is recommended for calculating physical
+% properties as the Legendre coefficients always have a value of one up to
+% the specified bandwidth:
+%
+% $$ \psi_N(t) = \sum\limits_{n=0}^N (2n+1) \, \mathcal P_{n}(t).$$
+%
+% Lets construct two of them.
+
+psi1 = S2DirichletKernel(10)
+psi2 = S2DirichletKernel(5)
+
+plot(psi1,'linewidth',2,'symmetric')
+hold on
+plot(psi2,'linewidth',2,'symmetric')
+hold off
+legend('bandwidth = 5','bandwidth = 10')
+
+%%
+% By looking at the Legendre coefficients we see, that they are exactly 1.
+
+plotSpektra(psi1,'linewidth',2)
+hold on
+plotSpektra(psi2,'linewidth',2)
+hold off
+legend('bandwidth = 5','bandwidth = 10')
+
+%% The Bump kernel
+% The <S2Kernels.S2BumpKernel.html spherical bump kernel> is a radial
+% symmetric kernel function depending on the halfwidth $r\in (0,pi)$. The
+% function value is 0, if the angle is greater then the halfwidth $r$.
+% Otherwise it is 1.
+%
+% The main problem of the bump kernel is that we need lots of legendre
+% coefficients to describe it. That possibly can result in high runtimes.
+%
+
+psi1 = S2BumpKernel(30*degree)
+psi2 = S2BumpKernel(50*degree)
+
+plot(psi1,'linewidth',2,'symmetric')
+hold on
+plot(psi2,'linewidth',2,'symmetric')
+hold off
+legend('halfwidth = 30°','halwidth = 40°')
+
+%%
+% We also take a look at the Fourier coefficients
+
+plotSpektra(psi1,'linewidth',2)
+hold on
+plotSpektra(psi2,'linewidth',2)
+hold off
+legend('\kappa = 0.2','\kappa = 0.3')
+
+
+##### SOURCE END #####
+--></body></html>

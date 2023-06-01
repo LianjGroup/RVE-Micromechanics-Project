@@ -1,0 +1,563 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Martensite Variants</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_MartensiteVariants.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Martensite Variants</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#8">Estimating the parent to child orientation relationship</a></li><li><a href="#11">Classification of child variants by variant Ids</a></li><li><a href="#13">Classification of child variants by crystallographic packet Ids</a></li><li><a href="#16">Classification of child variants by Bain group Ids</a></li></ul></div><p>In this section we discuss the austenite (fcc) to ferrite (bcc) phase transformation on the example of an EBSD data set collected on a plessitic microstructure of the Emsland iron meteorite. Plessite is the greek description for filling iron and occurs as remaining volumes between the already transformed kamacite (bcc in meteorites) rims. Plessite regions are commonly surrounded by a very thin taenite (fcc) ribbons. The filling iron contains as major phases again bcc and fcc, where the orientation of fcc practically always indicates the orientation of the formerly huge fcc grain in the planetary body which can easily reach the dimension of meters.</p><pre class="codeinput">plotx2east
+
+<span class="comment">% import the ebsd data</span>
+mtexdata <span class="string">emsland</span>
+
+<span class="comment">% extract crystal symmetries</span>
+cs_bcc = ebsd(<span class="string">'Fe'</span>).CS;
+cs_aus = ebsd(<span class="string">'Aus'</span>).CS;
+
+<span class="comment">% recover grains</span>
+ebsd = ebsd(<span class="string">'indexed'</span>);
+
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd,<span class="string">'angle'</span>,5*degree);
+ebsd(grains(grains.grainSize&lt;=2)) = [];
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd,<span class="string">'angle'</span>,5*degree);
+
+grains = smooth(grains,4);
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations       Mineral         Color  Symmetry  Crystal reference frame
+     0  18393 (6.8%)    notIndexed                                                 
+     1  215769 (80%)  Ferrite, bcc  LightSkyBlue      m-3m                         
+     2   35838 (13%)     Austenite  DarkSeaGreen      m-3m                         
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p>The following lines plot bcc according to the crystallographic description of the selected reference direction (IPF coloring), whereas austeniteis displayed as phase in blue.</p><pre class="codeinput">plot(ebsd(<span class="string">'Fe'</span>),ebsd(<span class="string">'Fe'</span>).orientations)
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'lineWidth'</span>,2,<span class="string">'lineColor'</span>,<span class="string">'gray'</span>)
+plot(grains(<span class="string">'Aus'</span>),<span class="string">'FaceColor'</span>,<span class="string">'blue'</span>,<span class="string">'edgeColor'</span>,<span class="string">'b'</span>,<span class="string">'lineWidth'</span>,1,<span class="string">'DisplayName'</span>,<span class="string">'Austenite'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_01.png" alt=""> <p>As expected, we recognize very small remaining fcc grains. This high-temperatur phase is stabilized by the increasing nickel content during transformation. The low-temperature bcc phase can solve in maximum only 6\% nickel so that fcc has to assimilate the excess nickel. Size and amount of fcc is therefore and indication of the overall nickel content. Considering only the parent fcc phase and plotting the orientations into an axis angle plot</p><pre class="codeinput">plot(ebsd(<span class="string">'Aus'</span>).orientations,<span class="string">'axisAngle'</span>)
+</pre><pre class="codeoutput">plot 2000 random orientations out of 30123 given orientations
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_02.png" alt=""> <p>we recognize the uniform orientation of all fcc grains. Deviations are assumed to be the result of deformations during high-speed collisions in asteroitic belt. We can get this parent grain orientation by taking the <a href="orientation.mean.html"><tt>mean</tt></a> and compute the fit by the command <a href="orientation.std.html"><tt>std</tt></a></p><pre class="codeinput">parenOri = mean(ebsd(<span class="string">'Aus'</span>).orientations)
+
+fit = std(ebsd(<span class="string">'Aus'</span>).orientations) ./ degree
+</pre><pre class="codeoutput"> 
+parenOri = orientation (Austenite &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  266.299 163.622 245.519
+ 
+fit =
+    1.2738
+</pre><p>Next we display the bcc orientations (blue dots) in pole figures, and additionally we plot on top of them the parent taenite orientation (red dots).</p><pre class="codeinput">childOri = grains(<span class="string">'Fe'</span>).meanOrientation;
+
+h_bcc = Miller({1,0,0},{1,1,0},{1,1,1},cs_bcc);
+h_fcc = Miller({1,0,0},{1,1,0},{1,1,1},cs_aus);
+
+plotPDF(childOri,h_bcc,<span class="string">'MarkerSize'</span>,5,<span class="string">'MarkerFaceAlpha'</span>,0.05,<span class="string">'MarkerEdgeAlpha'</span>,0.1,<span class="string">'points'</span>,500);
+
+nextAxis(1)
+hold <span class="string">on</span>
+plot(parenOri * h_fcc(1).symmetrise ,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>)
+xlabel(<span class="string">'$(100)$'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+
+nextAxis(2)
+plot(parenOri * h_fcc(3).symmetrise ,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>)
+xlabel(<span class="string">'$(111)$'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+
+nextAxis(3)
+plot(parenOri * h_fcc(2).symmetrise ,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>)
+xlabel(<span class="string">'$(110)$'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+hold <span class="string">off</span>
+
+drawNow(gcm)
+</pre><pre class="codeoutput">  I'm plotting 500 random orientations out of 3886 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_03.png" alt=""> <p>The partial coincidence of bcc and fcc poles suggests an existing of a crystallographic orientation relationship between both phases. The Kurdjumov-Sachs (KS) orientation relationship model assumes a transition of one of the {111}-fcc into one of the {110}-bcc planes. Moreover, within these planes one of the <a href="110">110</a> directions of fcc is assumed to remain parallel to one of the <a href="111">111</a> directions of the formed bcc. Since for cubic crystals identically indexed (hkl) and [uvw] generate the same directions, the derived pole figures can be used for both, the evaluation of directions as well as lattice plane normals.</p><p>Although we could alternatively use the MTEX command <tt>orientation.KurdjumovSachs(cs_aus,cs_bcc)</tt>, let us define the orientation relationship explicitely:</p><pre class="codeinput">KS = orientation.map(Miller(1,1,1,cs_aus),Miller(0,1,1,cs_bcc),<span class="keyword">...</span>
+      Miller(-1,0,1,cs_aus),Miller(-1,-1,1,cs_bcc))
+
+plotPDF(variants(KS,parenOri),<span class="string">'add2all'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2)
+</pre><pre class="codeoutput"> 
+KS = misorientation (Austenite &#8594; Ferrite, bcc)
+ 
+ (111) || (011)   [10-1] || [11-1]
+ 
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_04.png" alt=""> <p>In order to quantify the match between the Kurdjumov-Sachs model and the actual orientation relationship in the specific plessitic area, we can compute as simplest indicator the mean angular deviation between all parent-to-child misorientaitons and the KS model</p><pre class="codeinput"><span class="comment">% Each parent-to-child misorientations can be calculated by</span>
+mori = inv(childOri) * parenOri;
+
+<span class="comment">% whereas the mean angular deviation (output in degree) can be computed by the command</span>
+mean(angle(mori, KS)) ./ degree
+
+<span class="comment">%fit = sqrt(mean(min(angle_outer(childOri,variants(KS,parenOri)),[],2).^2))./degree</span>
+</pre><pre class="codeoutput">ans =
+    3.9200
+</pre><h2 id="8">Estimating the parent to child orientation relationship</h2><p>We may have asked ourselfs whether there is an orientation relationship that better matches the measured misorientations than proposed by the KS model. A canocial candidate would be the <a href="orientation.mean.html"><tt>mean</tt></a> of all misorientations.</p><pre class="codeinput"><span class="comment">% The mean of all measured parent-to-child misorientations</span>
+p2cMean = mean(mori,<span class="string">'robust'</span>)
+
+plotPDF(childOri,h_bcc,<span class="string">'MarkerSize'</span>,5,<span class="string">'MarkerFaceAlpha'</span>,0.05,<span class="string">'MarkerEdgeAlpha'</span>,0.1,<span class="string">'points'</span>,500);
+hold <span class="string">on</span>
+plotPDF(variants(p2cMean,parenOri),<span class="string">'add2all'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+
+<span class="comment">% mean angular deviation in degree</span>
+mean(angle(mori, p2cMean)) ./ degree
+</pre><pre class="codeoutput"> 
+p2cMean = misorientation (Austenite &#8594; Ferrite, bcc)
+ 
+  Bunge Euler angles in degree
+  phi1     Phi    phi2
+   289 8.12002  27.014
+ 
+  I'm plotting 500 random orientations out of 3886 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+ans =
+    2.4805
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_05.png" alt=""> <p>Here we have made use of our comfortable situation to know the parent orientation. If the parent orientation is unknown we may still estimate the parent to child orientation relationship soleley from the child to child misorientations by the algorithm by Tuomo Nyyss&ouml;nen and implemented in the function <a href="calcParent2Child.html"><tt>calcParent2Child</tt></a>. This iterative algorithms needs as a starting point some orientation relation ship no too far from the actual one. Here we use the Nishiyama Wassermann orientation relation ship.</p><pre class="codeinput"><span class="comment">% define Nishiyama Wassermann</span>
+NW = orientation.NishiyamaWassermann(cs_aus,cs_bcc)
+
+<span class="comment">% extract all child to child misorientations</span>
+grainPairs = neighbors(grains(<span class="string">'Fe'</span>));
+ori = grains(grainPairs).meanOrientation;
+
+<span class="comment">% estimate a parent to child orientation relationship</span>
+p2cIter = calcParent2Child(ori,NW)
+
+<span class="comment">% the mean angular deviation</span>
+mean(angle(mori,p2cIter)) ./degree
+</pre><pre class="codeoutput"> 
+NW = misorientation (Austenite &#8594; Ferrite, bcc)
+ 
+ (111) || (011)   [1-10] || [-100]
+ 
+ 
+p2cIter = misorientation (Austenite &#8594; Ferrite, bcc)
+ 
+  Bunge Euler angles in degree
+    phi1     Phi    phi2
+  182.91 98.2853 44.2426
+ 
+ans =
+    3.1645
+</pre><p>We observe that the parent to child orientation relationship computed solely from the child to child misorientations fits the actual orientation relationship equaly well.</p><h2 id="11">Classification of child variants by variant Ids</h2><p>Once we have determined parent orientations and a parent to child orientation relationship, we may proceed further by classifying the child orientations into different variants.</p><p>A variant refers to a specific orientation or crystallographic arrangement of the child martensite phase within the context of the original parent orientation. Depending on the operative orientation relationship and parent-child crystal symmetries, a single parent phase orientation results in multiple child phase orientations (i.e.- variants). The variant Id is a convinient way to label or identify a specific variant within the child martensitic microstructure.</p><p>Child variant Ids are computed by the command <a href="calcVariantId.html"><tt>calcVariantId</tt></a>.</p><pre class="codeinput"><span class="comment">% compute for each child orientation a variantId</span>
+[variantId, packetId, bainId] = calcVariantId(parenOri,childOri,p2cIter,<span class="string">'morito'</span>);
+
+<span class="comment">% colorize the orientations according to the variantID</span>
+color = ind2color(variantId,<span class="string">'ordered'</span>);
+plotPDF(childOri,color,h_bcc,<span class="string">'MarkerSize'</span>,5);
+</pre><pre class="codeoutput">  I'm plotting 208 random orientations out of 3886 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_06.png" alt=""> <p>While it is very hard to distinguish the different variants in the pole figure plots it becomes more clear in an axis angle plot</p><pre class="codeinput">plot(childOri,color,<span class="string">'axisAngle'</span>)
+</pre><pre class="codeoutput">plot 2000 random orientations out of 3886 given orientations
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_07.png" alt=""> <h2 id="13">Classification of child variants by crystallographic packet Ids</h2><p>A more important classification is the seperation of the variants into their various crystallographic packets.</p><p>A crystallographic packet Id is used to identify a packet of variants with the same habit plane (i.e. - the interfacial plane between the parent and child crystal lattices along which the atomic rearrangements occur during martensitic transformation).</p><p>Within a crystallographic packet, the individual variants are related to each other through specific symmetries. The crystallographic packet Id is a means of identifying and distinguishing a specific packet of variants that share the same habit plane and exhibit related crystallographic orientations.</p><pre class="codeinput">color = ind2color(packetId);
+plotPDF(childOri,color,h_bcc,<span class="string">'MarkerSize'</span>,5,<span class="string">'points'</span>,1000);
+
+nextAxis(1)
+hold <span class="string">on</span>
+opt = {<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,3};
+plot(parenOri * h_fcc(1).symmetrise ,opt{:})
+xlabel(<span class="string">'$(100)$'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+
+nextAxis(2)
+plot(parenOri * h_fcc(3).symmetrise ,opt{:})
+xlabel(<span class="string">'$(111)$'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+
+nextAxis(3)
+plot(parenOri * h_fcc(2).symmetrise ,opt{:})
+xlabel(<span class="string">'$(110)$'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+hold <span class="string">off</span>
+
+drawNow(gcm)
+</pre><pre class="codeoutput">  I'm plotting 1000 random orientations out of 3886 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_08.png" alt=""> <p>As we can see from the above pole figures the red, blue, orange and green orientations are distinguished by which of the symmetrically equivalent (111) austenite axes is aligned to the (110) martensite axis.</p><p>We may also use the packet Id color to distinguish different martensite packets in the EBSD map.</p><pre class="codeinput">plot(grains(<span class="string">'Fe'</span>),color)
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_09.png" alt=""> <h2 id="16">Classification of child variants by Bain group Ids</h2><p>Another important classification is the seperation of the variants into their various Bain groups.</p><p>The concept of Bain groups is based on the Bain notation.The latter provides a concise system of representing the transformation path and the geometric correspondence between the crystal structures of the parent austenite and child martensite phases. Each Bain group is labeled with a unique Bain group Id, which represents a distinct combination of orientation relationships between parent and child phases. Bain group Ids serve as a convenient identifier to categorize, classify and differentiate the various transformation paths that may occur during martensitic transformation based on their crystallographic characteristics.</p><pre class="codeinput">color = ind2color(bainId);
+plotPDF(childOri,color,h_bcc,<span class="string">'MarkerSize'</span>,5,<span class="string">'points'</span>,1000);
+
+nextAxis(1)
+hold <span class="string">on</span>
+opt = {<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,3};
+plot(parenOri * h_fcc(1).symmetrise ,opt{:})
+xlabel(<span class="string">'\((100)\)'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+
+nextAxis(2)
+plot(parenOri * h_fcc(3).symmetrise ,opt{:})
+xlabel(<span class="string">'\((111)\)'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+
+nextAxis(3)
+plot(parenOri * h_fcc(2).symmetrise ,opt{:})
+xlabel(<span class="string">'\((110)\)'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+hold <span class="string">off</span>
+
+drawNow(gcm)
+</pre><pre class="codeoutput">  I'm plotting 1000 random orientations out of 3886 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_10.png" alt=""> <p>As we can see from the above pole figures the red, blue, and orange orientations are distinguished by which of the symmetrically equivalent (100) austenite axes is aligned to the (100) martensite axis.</p><p>Similarly, we may also use the Bain group Id color to distinguish different martensite Bain groups in the EBSD map.</p><pre class="codeinput">plot(grains(<span class="string">'Fe'</span>),color)
+</pre><img vspace="50" hspace="5" src="MartensiteVariants_11.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Martensite Variants
+%
+%%
+% In this section we discuss the austenite (fcc) to ferrite (bcc) phase
+% transformation on the example of an EBSD data set collected on a
+% plessitic microstructure of the Emsland iron meteorite. Plessite is the
+% greek description for filling iron and occurs as remaining volumes
+% between the already transformed kamacite (bcc in meteorites) rims.
+% Plessite regions are commonly surrounded by a very thin taenite (fcc)
+% ribbons. The filling iron contains as major phases again bcc and fcc,
+% where the orientation of fcc practically always indicates the orientation
+% of the formerly huge fcc grain in the planetary body which can easily
+% reach the dimension of meters.
+
+plotx2east
+
+% import the ebsd data
+mtexdata emsland
+
+% extract crystal symmetries
+cs_bcc = ebsd('Fe').CS;
+cs_aus = ebsd('Aus').CS;
+
+% recover grains
+ebsd = ebsd('indexed');
+
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd,'angle',5*degree);
+ebsd(grains(grains.grainSize<=2)) = [];
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd,'angle',5*degree);
+
+grains = smooth(grains,4);
+
+%%
+% The following lines plot bcc according to the crystallographic
+% description of the selected reference direction (IPF coloring), whereas
+% austeniteis displayed as phase in blue.
+
+plot(ebsd('Fe'),ebsd('Fe').orientations)
+hold on
+plot(grains.boundary,'lineWidth',2,'lineColor','gray')
+plot(grains('Aus'),'FaceColor','blue','edgeColor','b','lineWidth',1,'DisplayName','Austenite')
+hold off
+
+%%
+% As expected, we recognize very small remaining fcc grains. This
+% high-temperatur phase is stabilized by the increasing nickel content
+% during transformation. The low-temperature bcc phase can solve in maximum
+% only 6\% nickel so that fcc has to assimilate the excess nickel. Size and
+% amount of fcc is therefore and indication of the overall nickel content.
+% Considering only the parent fcc phase and plotting the orientations into
+% an axis angle plot
+
+plot(ebsd('Aus').orientations,'axisAngle')
+
+%%
+% we recognize the uniform orientation of all fcc grains. Deviations are
+% assumed to be the result of deformations during high-speed collisions in
+% asteroitic belt. We can get this parent grain orientation by taking the
+% <orientation.mean.html |mean|> and compute the fit by the command
+% <orientation.std.html |std|>
+
+parenOri = mean(ebsd('Aus').orientations)
+
+fit = std(ebsd('Aus').orientations) ./ degree
+
+%%
+% Next we display the bcc orientations (blue dots) in pole figures, and
+% additionally we plot on top of them the parent taenite orientation (red
+% dots).
+
+childOri = grains('Fe').meanOrientation;
+
+h_bcc = Miller({1,0,0},{1,1,0},{1,1,1},cs_bcc);
+h_fcc = Miller({1,0,0},{1,1,0},{1,1,1},cs_aus);
+
+plotPDF(childOri,h_bcc,'MarkerSize',5,'MarkerFaceAlpha',0.05,'MarkerEdgeAlpha',0.1,'points',500);
+
+nextAxis(1)
+hold on
+plot(parenOri * h_fcc(1).symmetrise ,'MarkerFaceColor','r')
+xlabel('$(100)$','Color','red','Interpreter','latex')
+
+nextAxis(2)
+plot(parenOri * h_fcc(3).symmetrise ,'MarkerFaceColor','r')
+xlabel('$(111)$','Color','red','Interpreter','latex')
+
+nextAxis(3)
+plot(parenOri * h_fcc(2).symmetrise ,'MarkerFaceColor','r')
+xlabel('$(110)$','Color','red','Interpreter','latex')
+hold off
+
+drawNow(gcm)
+
+%%
+% The partial coincidence of bcc and fcc poles suggests an existing of a
+% crystallographic orientation relationship between both phases. The
+% Kurdjumov-Sachs (KS) orientation relationship model assumes a transition
+% of one of the {111}-fcc into one of the {110}-bcc planes. Moreover,
+% within these planes one of the <110> directions of fcc is assumed to
+% remain parallel to one of the <111> directions of the formed bcc. Since
+% for cubic crystals identically indexed (hkl) and [uvw] generate the same
+% directions, the derived pole figures can be used for both, the evaluation
+% of directions as well as lattice plane normals.
+%
+% Although we could alternatively use the MTEX command
+% |orientation.KurdjumovSachs(cs_aus,cs_bcc)|, let us define the
+% orientation relationship explicitely:
+
+KS = orientation.map(Miller(1,1,1,cs_aus),Miller(0,1,1,cs_bcc),...
+      Miller(-1,0,1,cs_aus),Miller(-1,-1,1,cs_bcc))
+
+plotPDF(variants(KS,parenOri),'add2all','MarkerFaceColor','none','MarkerEdgeColor','k','linewidth',2)
+
+%%
+% In order to quantify the match between the Kurdjumov-Sachs model and the
+% actual orientation relationship in the specific plessitic area, we can
+% compute as simplest indicator the mean angular deviation between all
+% parent-to-child misorientaitons and the KS model
+
+% Each parent-to-child misorientations can be calculated by
+mori = inv(childOri) * parenOri;
+
+% whereas the mean angular deviation (output in degree) can be computed by the command
+mean(angle(mori, KS)) ./ degree
+
+%fit = sqrt(mean(min(angle_outer(childOri,variants(KS,parenOri)),[],2).^2))./degree
+
+
+%% Estimating the parent to child orientation relationship
+%
+% We may have asked ourselfs whether there is an orientation relationship
+% that better matches the measured misorientations than proposed by the KS
+% model. A canocial candidate would be the <orientation.mean.html |mean|>
+% of all misorientations.
+
+% The mean of all measured parent-to-child misorientations
+p2cMean = mean(mori,'robust')
+
+plotPDF(childOri,h_bcc,'MarkerSize',5,'MarkerFaceAlpha',0.05,'MarkerEdgeAlpha',0.1,'points',500);
+hold on
+plotPDF(variants(p2cMean,parenOri),'add2all','MarkerFaceColor','none','MarkerEdgeColor','k','linewidth',2)
+hold off
+
+% mean angular deviation in degree
+mean(angle(mori, p2cMean)) ./ degree
+
+%%
+% Here we have made use of our comfortable situation to know the parent
+% orientation. If the parent orientation is unknown we may still estimate
+% the parent to child orientation relationship soleley from the child to
+% child misorientations by the algorithm by Tuomo Nyyssönen and implemented
+% in the function <calcParent2Child.html |calcParent2Child|>. This
+% iterative algorithms needs as a starting point some orientation relation
+% ship no too far from the actual one. Here we use the Nishiyama Wassermann
+% orientation relation ship.
+
+% define Nishiyama Wassermann
+NW = orientation.NishiyamaWassermann(cs_aus,cs_bcc)
+
+% extract all child to child misorientations 
+grainPairs = neighbors(grains('Fe'));
+ori = grains(grainPairs).meanOrientation;
+
+% estimate a parent to child orientation relationship
+p2cIter = calcParent2Child(ori,NW)
+
+% the mean angular deviation
+mean(angle(mori,p2cIter)) ./degree
+
+%%
+% We observe that the parent to child orientation relationship computed
+% solely from the child to child misorientations fits the actual
+% orientation relationship equaly well. 
+%
+%% Classification of child variants by variant Ids
+%
+% Once we have determined parent orientations and a parent to child
+% orientation relationship, we may proceed further by classifying the child
+% orientations into different variants.
+%
+% A variant refers to a specific orientation or crystallographic arrangement of 
+% the child martensite phase within the context of the original parent orientation.
+% Depending on the operative orientation relationship and parent-child crystal 
+% symmetries, a single parent phase orientation results in multiple child phase 
+% orientations (i.e.- variants). The variant Id is a convinient way to label or 
+% identify a specific variant within the child martensitic microstructure.
+%
+% Child variant Ids are computed by the command
+% <calcVariantId.html |calcVariantId|>.
+
+% compute for each child orientation a variantId
+[variantId, packetId, bainId] = calcVariantId(parenOri,childOri,p2cIter,'morito');
+
+% colorize the orientations according to the variantID
+color = ind2color(variantId,'ordered');
+plotPDF(childOri,color,h_bcc,'MarkerSize',5);
+
+%%
+% While it is very hard to distinguish the different variants in the pole
+% figure plots it becomes more clear in an axis angle plot
+
+plot(childOri,color,'axisAngle')
+
+
+%% Classification of child variants by crystallographic packet Ids
+%
+% A more important classification is the seperation of the
+% variants into their various crystallographic packets. 
+%
+% A crystallographic packet Id is used to identify a packet of variants
+% with the same habit plane (i.e. - the interfacial plane between the
+% parent and child crystal lattices along which the atomic rearrangements
+% occur during martensitic transformation).
+%
+% Within a crystallographic packet, the individual variants are related to
+% each other through specific symmetries. The crystallographic packet Id is
+% a means of identifying and distinguishing a specific packet of variants
+% that share the same habit plane and exhibit related crystallographic
+% orientations.
+
+color = ind2color(packetId);
+plotPDF(childOri,color,h_bcc,'MarkerSize',5,'points',1000);
+
+nextAxis(1)
+hold on
+opt = {'MarkerFaceColor','none','MarkerEdgeColor','k','linewidth',3};
+plot(parenOri * h_fcc(1).symmetrise ,opt{:})
+xlabel('$(100)$','Color','red','Interpreter','latex')
+
+nextAxis(2)
+plot(parenOri * h_fcc(3).symmetrise ,opt{:})
+xlabel('$(111)$','Color','red','Interpreter','latex')
+
+nextAxis(3)
+plot(parenOri * h_fcc(2).symmetrise ,opt{:})
+xlabel('$(110)$','Color','red','Interpreter','latex')
+hold off
+
+drawNow(gcm)
+
+%%
+% As we can see from the above pole figures the red, blue, orange and green
+% orientations are distinguished by which of the symmetrically equivalent
+% (111) austenite axes is aligned to the (110) martensite axis.
+%%
+% We may also use the packet Id color to distinguish different martensite
+% packets in the EBSD map.
+
+plot(grains('Fe'),color)
+
+
+%% Classification of child variants by Bain group Ids
+%
+% Another important classification is the seperation of the
+% variants into their various Bain groups. 
+%
+% The concept of Bain groups is based on the Bain notation.The latter provides 
+% a concise system of representing the transformation path and the geometric
+% correspondence between the crystal structures of the parent austenite and 
+% child martensite phases. Each Bain group is labeled with a unique Bain 
+% group Id, which represents a distinct combination of orientation relationships 
+% between parent and child phases. 
+% Bain group Ids serve as a convenient identifier to categorize, classify and 
+% differentiate the various transformation paths that may occur during martensitic 
+% transformation based on their crystallographic characteristics.
+
+color = ind2color(bainId);
+plotPDF(childOri,color,h_bcc,'MarkerSize',5,'points',1000);
+
+nextAxis(1)
+hold on
+opt = {'MarkerFaceColor','none','MarkerEdgeColor','k','linewidth',3};
+plot(parenOri * h_fcc(1).symmetrise ,opt{:})
+xlabel('\((100)\)','Color','red','Interpreter','latex')
+
+nextAxis(2)
+plot(parenOri * h_fcc(3).symmetrise ,opt{:})
+xlabel('\((111)\)','Color','red','Interpreter','latex')
+
+nextAxis(3)
+plot(parenOri * h_fcc(2).symmetrise ,opt{:})
+xlabel('\((110)\)','Color','red','Interpreter','latex')
+hold off
+
+drawNow(gcm)
+
+%%
+% As we can see from the above pole figures the red, blue, and orange
+% orientations are distinguished by which of the symmetrically equivalent
+% (100) austenite axes is aligned to the (100) martensite axis.
+%%
+% Similarly, we may also use the Bain group Id color to distinguish different 
+% martensite Bain groups in the EBSD map.
+
+plot(grains('Fe'),color)
+##### SOURCE END #####
+--></body></html>

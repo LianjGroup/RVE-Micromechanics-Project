@@ -1,0 +1,235 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ODF Tutorial</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ODFTutorial.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ODF Tutorial</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Theory</a></li><li><a href="#2">Computing an ODF from Individual Orientations</a></li><li><a href="#5">Computing an ODF from Pole Figure Data</a></li><li><a href="#8">ODF Modelling</a></li></ul></div><h2 id="1">Theory</h2><p>The orientation distribution function (ODF) is a function on the orientation space that associates to each orientation <img src="ODFTutorial_eq08202502916237421757.png" alt="$g$"> the volume percentage of crystals in a polycrystaline specimen that are in this specific orientation, i.e.,</p><p><img src="ODFTutorial_eq02691280572551729251.png" alt="$$\mathrm{odf}(g) = \frac{1}{V} \frac{\mathrm{d}V(g)}{\mathrm{d}g}.$$"></p><p>In MTEX an entirely random texure will have an ODF constant to one. In other word the values of ODFs in MTEX can be interpreted as multiples of the random distribution (mrd).</p><h2 id="2">Computing an ODF from Individual Orientations</h2><p>Individual orientations data may be obtained by experimental by EBSD, ACOM or 3d X-ray imaging; or from simulations, like VPSC. In the following we consider an EBSD map of an Titanium alloy.</p><pre class="codeinput"><span class="comment">% import the titanium data</span>
+mtexdata <span class="string">titanium</span>
+
+<span class="comment">% plot an orientation map</span>
+plot(ebsd, ebsd.orientations)
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations           Mineral         Color  Symmetry  Crystal reference frame
+     0   8100 (100%)  Titanium (Alpha)  LightSkyBlue       622       X||a, Y||b*, Z||c*
+ 
+ Properties: ci, grainid, iq, sem_signal, x, y
+ Scan unit : um
+ 
+</pre><img vspace="50" hspace="5" src="ODFTutorial_01.png" alt=""> <p>Computing an ODF from individual orientations is done by <a href="DensityEstimation.html">kernel density estimation</a> using the command <a href="orientation.calcDensity.html"><tt>calcDensity</tt></a>.</p><pre class="codeinput"><span class="comment">% extract the orientations</span>
+ori = ebsd.orientations;
+
+<span class="comment">% compute the ODF</span>
+odf = calcDensity(ori)
+</pre><pre class="codeoutput"> 
+odf = SO3FunHarmonic (Titanium (Alpha) &#8594; xyz)
+  isReal: true
+  bandwidth: 25
+  weight: 1
+ 
+</pre><p>There many different ways to visualize ODF: <a href="EulerAngleSections.html">Euler</a> or <a href="SigmaSections.html">sigma sections</a>, <a href="ODFPlot.html">thee dimensional plots</a>, <a href="ODFPoleFigure.html">pole figures</a> and <a href="ODFInversePoleFigure.html">inverse pole figures</a>. The most common but not recommended way are sections with respect to the third Euler angle <img src="ODFTutorial_eq12543762679087300560.png" alt="$\varphi_2$"></p><pre class="codeinput">plot(odf)
+</pre><img vspace="50" hspace="5" src="ODFTutorial_02.png" alt=""> <h2 id="5">Computing an ODF from Pole Figure Data</h2><p>Pole figure data arises when textured materials are measured via x-ray, neutron or syncrotron radiation. Generaly, for <img src="ODFTutorial_eq14814361333581038663.png" alt="$3$"> to <img src="ODFTutorial_eq02972430389434143677.png" alt="$10$"> diffraction planes specified by Miller indices <img src="ODFTutorial_eq08175481538644970617.png" alt="$(hk\ell)$"> diffraction intensities are measured at a spherical grid of specimen directions. In the example below each dot corresponds to one diffraction intensity at the plane indicated at the top of the spherical plots measured from the direction corresponding to the pixel position.</p><pre class="codeinput"><span class="comment">% import pole figure data</span>
+mtexdata <span class="string">ptx</span>
+
+<span class="comment">% plot the data</span>
+plot(pf)
+mtexColorbar
+</pre><pre class="codeoutput"> 
+pf = PoleFigure (xyz)
+  crystal symmetry : mmm
+ 
+  h = (104), r = 72 x 17 points
+  h = (110), r = 72 x 17 points
+  h = (202), r = 72 x 17 points
+</pre><img vspace="50" hspace="5" src="ODFTutorial_03.png" alt=""> <p>The <a href="PoleFigure2ODF.html">reconstuction</a> of an ODF from pole figure data requires the solution of an ill posed inverse problem. This mean the reconstruction problem has in general <a href="PoleFigure2ODFAmbiguity.html">not a unique solution</a>, but there are several ODFs that correspond to the same set of pole figure data. MTEX applies <a href="PoleFigure2ODFGhostCorrection.html">some heuristics</a> to identify among all solutions the physically most reasonable.</p><pre class="codeinput"><span class="comment">% compute an ODF with default settings</span>
+odf = calcODF(pf)
+</pre><pre class="codeoutput"> 
+odf = SO3FunRBF (mmm &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 29772 orientations, resolution: 5&deg;
+  weight: 1
+ 
+</pre><p>Once an ODF is reconstructed we can check how well its pole figures fit the measured pole figures</p><pre class="codeinput"><span class="comment">% plot the recalculated pole figures</span>
+plotPDF(odf,pf.h)
+</pre><img vspace="50" hspace="5" src="ODFTutorial_04.png" alt=""> <h2 id="8">ODF Modelling</h2><p>Besides from experimental data MTEX allows also the definition of model ODFS of different type. These include <a href="RadialODFs.html#2">unimodal ODFs</a>, <a href="FibreODFs.html">fibre ODF</a>, <a href="BinghamODFs.html">Bingham Distributed ODFs</a> and any <a href="ODFModeling.html">combination of such ODFs</a>.</p><pre class="codeinput"><span class="comment">% define a fibre symmetric ODF</span>
+odf = fibreODF(fibre.gamma(odf.CS))
+
+<span class="comment">% plot it in sigma sections</span>
+plot(odf,<span class="string">'sigma'</span>)
+</pre><pre class="codeoutput"> 
+odf = SO3FunCBF (mmm &#8594; xyz)
+ 
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (111) || 0,0,1
+  weight: 1
+ 
+</pre><img vspace="50" hspace="5" src="ODFTutorial_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ODF Tutorial
+%
+%% Theory
+%
+% The orientation distribution function (ODF) is a function on the
+% orientation space that associates to each orientation $g$ the volume
+% percentage of crystals in a polycrystaline specimen that are in this
+% specific orientation, i.e.,
+%
+% $$\mathrm{odf}(g) = \frac{1}{V} \frac{\mathrm{d}V(g)}{\mathrm{d}g}.$$
+%
+% In MTEX an entirely random texure will have an ODF constant to one. In
+% other word the values of ODFs in MTEX can be interpreted as multiples of
+% the random distribution (mrd). 
+%
+%% Computing an ODF from Individual Orientations
+%
+% Individual orientations data may be obtained by experimental by EBSD,
+% ACOM or 3d X-ray imaging; or from simulations, like VPSC. In the
+% following we consider an EBSD map of an Titanium alloy.
+
+% import the titanium data
+mtexdata titanium
+
+% plot an orientation map
+plot(ebsd, ebsd.orientations)
+
+%%
+% Computing an ODF from individual orientations is done by
+% <DensityEstimation.html kernel density estimation> using the command
+% <orientation.calcDensity.html |calcDensity|>.
+
+% extract the orientations
+ori = ebsd.orientations;
+
+% compute the ODF
+odf = calcDensity(ori)
+
+%%
+% There many different ways to visualize ODF: <EulerAngleSections.html
+% Euler> or <SigmaSections.html sigma sections>, <ODFPlot.html thee
+% dimensional plots>, <ODFPoleFigure.html pole figures> and
+% <ODFInversePoleFigure.html inverse pole figures>. The most common but not
+% recommended way are sections with respect to the third Euler angle
+% $\varphi_2$
+
+plot(odf)
+
+%% Computing an ODF from Pole Figure Data
+%
+% Pole figure data arises when textured materials are measured via x-ray,
+% neutron or syncrotron radiation. Generaly, for $3$ to $10$ diffraction
+% planes specified by Miller indices $(hk\ell)$ diffraction intensities are
+% measured at a spherical grid of specimen directions. In the example below
+% each dot corresponds to one diffraction intensity at the plane indicated
+% at the top of the spherical plots measured from the direction
+% corresponding to the pixel position.
+
+% import pole figure data
+mtexdata ptx
+
+% plot the data
+plot(pf)
+mtexColorbar
+
+%%
+% The <PoleFigure2ODF.html reconstuction> of an ODF from pole figure data
+% requires the solution of an ill posed inverse problem. This mean the
+% reconstruction problem has in general <PoleFigure2ODFAmbiguity.html not a
+% unique solution>, but there are several ODFs that correspond to the same
+% set of pole figure data. MTEX applies <PoleFigure2ODFGhostCorrection.html
+% some heuristics> to identify among all solutions the physically most
+% reasonable.
+
+% compute an ODF with default settings
+odf = calcODF(pf)
+
+%%
+% Once an ODF is reconstructed we can check how well its pole figures fit
+% the measured pole figures
+
+% plot the recalculated pole figures 
+plotPDF(odf,pf.h)
+
+
+%% ODF Modelling
+%
+% Besides from experimental data MTEX allows also the definition of model
+% ODFS of different type. These include <RadialODFs.html#2 unimodal ODFs>,
+% <FibreODFs.html fibre ODF>, <BinghamODFs.html Bingham Distributed ODFs>
+% and any <ODFModeling.html combination of such ODFs>.
+
+% define a fibre symmetric ODF
+odf = fibreODF(fibre.gamma(odf.CS))
+
+% plot it in sigma sections
+plot(odf,'sigma')
+
+
+##### SOURCE END #####
+--></body></html>

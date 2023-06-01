@@ -1,0 +1,474 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>mtexFigure</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_mtexFigure__mtexFigure.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>mtexFigure</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">View Code</a></li><li><a href="#3">Description</a></li><li><a href="#4">Syntax</a></li><li><a href="#5">Class Properties</a></li><li><a href="#6">Dependent Class Properties</a></li><li><a href="#7">See also</a></li></ul></div><p>a class to handles figures equaly sized axes with the following features</p><div><ul><li>nicely resize axes</li><li>global or individual colorbars *</li></ul></div><h2 id="2">View Code</h2><h2 id="3">Description</h2><p>The calculation of the layout is initiated by the command <a href="mtexFigure.drawNow.html">drawNow</a>. This involves calls to the following functions:</p><pre>drawNow
+  |  |
+  V  |
+calcTightInset -&gt; compute width of boundary around each axis
+     |
+     V
+updateLayout
+     |
+     V
+calcPartition -&gt; compute partition (nrows, ncols)
+     |
+     V
+calcAxesSize  -&gt; compute axes size</pre><p>A mtexFigure may have the following children</p><div><ul><li><a href="mapPlot.html">mapPlot</a> -&gt; micronbar</li><li><a href="sphericalPlot.html">sphericalPlot</a> (stored in appdata of axes handle)</li><li>pfPlot [CS,SS,h]</li><li>ipdfPlot [CS]</li><li>MillerPlot [r,SS]</li></ul></div><h2 id="4">Syntax</h2><pre class="language-matlab">newMTEXFigure
+</pre><h2 id="5">Class Properties</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>parent</tt>
+         </td>
+         <td>
+            <tt>handle of the parent figure</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>children</tt>
+         </td>
+         <td>
+            <tt>handles to all axes</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>cBarAxis</tt>
+         </td>
+         <td>
+            <tt>handles to all colorbar axes</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>innerPlotSpacing</tt>
+         </td>
+         <td>
+            <tt/>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>keepAspectRatio</tt>
+         </td>
+         <td>
+            <tt/>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>nrows = 1</tt>
+         </td>
+         <td>
+            <tt>number of rows</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>ncols = 1</tt>
+         </td>
+         <td>
+            <tt>number of columns</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>axisWidth</tt>
+         </td>
+         <td>
+            <tt>width of an individual axis</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>axisHeight</tt>
+         </td>
+         <td>
+            <tt>height of an individual axis</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>cbx = 0</tt>
+         </td>
+         <td>
+            <tt>colorbar width</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>cby = 0</tt>
+         </td>
+         <td>
+            <tt>colorbar height</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>tightInset</tt>
+         </td>
+         <td>
+            <tt>is added to axisSize</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>figTightInset</tt>
+         </td>
+         <td>
+            <tt>is added to figSize</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>layoutMode</tt>
+         </td>
+         <td>
+            <tt>'auto' or 'user'</tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="6">Dependent Class Properties</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>currentAxes</tt>
+         </td>
+         <td>
+            <tt>handle of the current axis</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>currentId</tt>
+         </td>
+         <td>
+            <tt>id of te current axis</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>axesWidth</tt>
+         </td>
+         <td>
+            <tt/>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>axesHeight</tt>
+         </td>
+         <td>
+            <tt/>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>outerPlotSpacing</tt>
+         </td>
+         <td>
+            <tt/>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>dataCursorMenu</tt>
+         </td>
+         <td>
+            <tt>handle of the data cursor context menu</tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="7">See also</h2><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% mtexFigure
+%% 
+% 
+% a class to handles figures equaly sized axes with the following features
+% 
+% * nicely resize axes
+% * global or individual colorbars
+% *
+% 
+%
+%% View Code
+% 
+%% Description
+% 
+% The calculation of the layout is initiated by the command
+% <mtexFigure.drawNow.html drawNow>. This involves calls to the following
+% functions:
+% 
+%  drawNow
+%    |  |
+%    V  |
+%  calcTightInset -> compute width of boundary around each axis
+%       |
+%       V
+%  updateLayout
+%       |
+%       V
+%  calcPartition -> compute partition (nrows, ncols)
+%       |
+%       V
+%  calcAxesSize  -> compute axes size
+% 
+% A mtexFigure may have the following children
+% 
+% * <mapPlot.html mapPlot> -> micronbar
+% * <sphericalPlot.html sphericalPlot> (stored in appdata of axes handle)
+% * pfPlot [CS,SS,h]
+% * ipdfPlot [CS]
+% * MillerPlot [r,SS]
+% 
+%
+%% Syntax
+%   newMTEXFigure
+% 
+% 
+
+%% Class Properties
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>parent</tt>
+%          </td>
+%          <td>
+%             <tt>handle of the parent figure</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>children</tt>
+%          </td>
+%          <td>
+%             <tt>handles to all axes</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>cBarAxis</tt>
+%          </td>
+%          <td>
+%             <tt>handles to all colorbar axes</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>innerPlotSpacing</tt>
+%          </td>
+%          <td>
+%             <tt/>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>keepAspectRatio</tt>
+%          </td>
+%          <td>
+%             <tt/>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>nrows = 1</tt>
+%          </td>
+%          <td>
+%             <tt>number of rows</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>ncols = 1</tt>
+%          </td>
+%          <td>
+%             <tt>number of columns</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>axisWidth</tt>
+%          </td>
+%          <td>
+%             <tt>width of an individual axis</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>axisHeight</tt>
+%          </td>
+%          <td>
+%             <tt>height of an individual axis</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>cbx = 0</tt>
+%          </td>
+%          <td>
+%             <tt>colorbar width</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>cby = 0</tt>
+%          </td>
+%          <td>
+%             <tt>colorbar height</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>tightInset</tt>
+%          </td>
+%          <td>
+%             <tt>is added to axisSize</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>figTightInset</tt>
+%          </td>
+%          <td>
+%             <tt>is added to figSize</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>layoutMode</tt>
+%          </td>
+%          <td>
+%             <tt>'auto' or 'user'</tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Dependent Class Properties
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>currentAxes</tt>
+%          </td>
+%          <td>
+%             <tt>handle of the current axis</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>currentId</tt>
+%          </td>
+%          <td>
+%             <tt>id of te current axis</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>axesWidth</tt>
+%          </td>
+%          <td>
+%             <tt/>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>axesHeight</tt>
+%          </td>
+%          <td>
+%             <tt/>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>outerPlotSpacing</tt>
+%          </td>
+%          <td>
+%             <tt/>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>dataCursorMenu</tt>
+%          </td>
+%          <td>
+%             <tt>handle of the data cursor context menu</tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% See also
+%
+##### SOURCE END #####
+--></body></html>

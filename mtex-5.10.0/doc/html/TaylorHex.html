@@ -1,0 +1,292 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Texture evolution in rolled magnesium during uniaxial tension</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_TaylorHex.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Texture evolution in rolled magnesium during uniaxial tension</h1><!--introduction--><p>This examples models the texture evolution of rolled magnesium under unixaxial tension using the Taylor model. The undeformed material is assumed to have a basal fibre texture perpendicular to tension direction. Then tension experiment has been performed twice: at room temperature and at 250 degree Celcius. The strain at fracture was approx. 30 percent and 70 percent, respectively.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Setting up hexagonal crystal symmetry</a></li><li><a href="#2">Setting up the basal fibre texture</a></li><li><a href="#3">Plot polefigures of generated initial state without strains</a></li><li><a href="#4">Setting up the slip systems</a></li><li><a href="#6">Defining strain tensors</a></li><li><a href="#7">Calculate texture evolution</a></li><li><a href="#10">Statistics on activated slip systems</a></li></ul></div><h2 id="1">Setting up hexagonal crystal symmetry</h2><p>First we need to set up hexagonal crystal symmetry.</p><pre class="codeinput">cs = crystalSymmetry.load(<span class="string">'Mg-Magnesium.cif'</span>)
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  mineral        : Mg                
+  symmetry       : 6/mmm             
+  elements       : 24                
+  a, b, c        : 3.2, 3.2, 5.2     
+  reference frame: X||a*, Y||b, Z||c*
+ 
+</pre><h2 id="2">Setting up the basal fibre texture</h2><p>Second, we set up the initial fibre texture which has the c-axis perpendicular to the (x,y)-sheet plane and the a-axes are randomized. This is typical for rolled Mg-sheet</p><pre class="codeinput">odf = fibreODF(cs.cAxis, vector3d.Z);
+</pre><h2 id="3">Plot polefigures of generated initial state without strains</h2><p>define crystal orientations of interest for polefigures and plot figure</p><pre class="codeinput">h = Miller({0,0,0,1},{1,0,-1,0},{1,0,-1,1},cs);
+
+pfAnnotations = @(varargin) text([-vector3d.X,vector3d.Y],{<span class="string">'Tension'</span>,<span class="string">'TD'</span>},<span class="keyword">...</span>
+  <span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>,<span class="string">'tag'</span>,<span class="string">'axesLabels'</span>,varargin{:});
+setMTEXpref(<span class="string">'pfAnnotations'</span>,pfAnnotations);
+plotPDF(odf,h,<span class="string">'antipodal'</span>,<span class="string">'contourf'</span>,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+mtexColorbar;
+</pre><img vspace="50" hspace="5" src="TaylorHex_01.png" alt=""> <h2 id="4">Setting up the slip systems</h2><p>The critical resolved shear stresses (CRSS) needed to activate certain slip systems is temperature AND material dependant. As it is not trivial to measure/define CRSS, there are many different values in literature.</p><p>In practise, at room temperature basal slip dominates and commonly simple tension twins are activated as well (they have very low CRSS). During tension stress perpendicular to the c-axis tension twinning cannot occur. Thats why it is sensible to only define compression twins (which in Mg have a very high CRSS)</p><pre class="codeinput"><span class="comment">% second argument is CRSS normalized to basal slip</span>
+sScold = [slipSystem.basal(cs,1),<span class="keyword">...</span>
+  slipSystem.prismatic2A(cs,66),<span class="keyword">...</span>
+  slipSystem.pyramidalCA(cs,80),<span class="keyword">...</span>
+  slipSystem.twinC1(cs,100)];
+
+<span class="comment">% consider all symmetrically equivlent slip systems</span>
+[sScold,slipId] = sScold.symmetrise;
+</pre><p>At higher temperatures the CRSS of non-basal slip systems decreases.</p><pre class="codeinput"><span class="comment">% second argument is CRSS normalized to basal slip</span>
+sSwarm = [slipSystem.basal(cs,1),<span class="keyword">...</span>
+  slipSystem.prismatic2A(cs,15),<span class="keyword">...</span>
+  slipSystem.pyramidalCA(cs,10),<span class="keyword">...</span>
+  slipSystem.twinC1(cs,100)];
+
+<span class="comment">% consider all symmetrically equivlent slip systems</span>
+sSwarm = sSwarm.symmetrise;
+</pre><h2 id="6">Defining strain tensors</h2><p>Due to constant volume law, the sum of all strains must equal zero. Here slightly anisotropic strain is assumed at room temperature, with more thinning in y-direction than in z-direction. In practise the anisotropy of Mg at high temperatures becomes negligible.</p><pre class="codeinput">epsCold = 0.3 * strainTensor(diag([1 -0.6 -0.4]))
+epsWarm = 0.7 * strainTensor(diag([1 -0.5 -0.5]))
+</pre><pre class="codeoutput"> 
+epsCold = strainTensor (xyz)
+  type: Lagrange 
+  rank: 2 (3 x 3)
+ 
+ *10^-2
+  30   0   0
+   0 -18   0
+   0   0 -12
+ 
+epsWarm = strainTensor (xyz)
+  type: Lagrange 
+  rank: 2 (3 x 3)
+ 
+ *10^-2
+  70   0   0
+   0 -35   0
+   0   0 -35
+</pre><h2 id="7">Calculate texture evolution</h2><p>The Tayor calculation is used to get the resulting spin of each vector as well as the coeffeicients for each slip system for cold and hot state</p><pre class="codeinput"><span class="comment">% simulated an initial orientation distribution of 10000 grains</span>
+ori = odf.discreteSample(10000);
+
+<span class="comment">% apply the Taylor model</span>
+[~,bCold,Wcold] = calcTaylor( inv(ori) .* epsCold, sScold);
+[~,bWarm,Wwarm] = calcTaylor( inv(ori) .* epsWarm, sSwarm);
+</pre><p>Apply the Taylor spin to the initial orientation distribution</p><pre class="codeinput">oriCold = ori .* orientation(-Wcold);
+oriWarm = ori .* orientation(-Wwarm);
+</pre><p>Plot pole figures in comparison to inital texture</p><pre class="codeinput">nextAxis <span class="comment">%create a new axis on the existing figure and put along side</span>
+plotPDF(oriCold,h,<span class="string">'antipodal'</span>,<span class="string">'contourf'</span>,<span class="string">'grid'</span>,<span class="string">'grid_res'</span>,30*degree)
+mtexColorbar;
+
+nextAxis <span class="comment">%create a new axis on the existing figure and put along side</span>
+plotPDF(oriWarm,h,<span class="string">'antipodal'</span>,<span class="string">'contourf'</span>,<span class="string">'grid'</span>,<span class="string">'grid_res'</span>,30*degree)
+mtexColorbar;
+
+<span class="comment">% get figure handle and set correct layout</span>
+mtexFig = gcm;
+mtexFig.ncols = 3; mtexFig.nrows = 3; mtexFig.layoutMode = <span class="string">'user'</span>;
+drawNow(gcm)
+</pre><img vspace="50" hspace="5" src="TaylorHex_02.png" alt=""> <h2 id="10">Statistics on activated slip systems</h2><p>By adding up the coefficients of the taylor calculation and grouping them according to their slip system type, a bar chart can be plotted</p><pre class="codeinput"><span class="comment">% ensure slipId has the same size as |bCold|</span>
+slipId = repmat(slipId.',length(ori),1);
+
+<span class="comment">% sum up the sliprates of symmetrically equivalent slip systems, i.e.,</span>
+<span class="comment">% those that have the same |slipId|</span>
+statSsCold = accumarray(slipId(:),bCold(:));
+statSsWarm = accumarray(slipId(:),bWarm(:));
+</pre><p>The results can be plotted with logarithmic scale for better visualization</p><pre class="codeinput">figure(2)
+bar([statSsCold.';statSsWarm.'])
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>,<span class="string">'XTickLabel'</span>, {<span class="string">'RT'</span> <span class="string">'250 &deg;C'</span>})
+legend({<span class="string">'Basal slip'</span>,<span class="string">'Prismatic slip'</span>,<span class="string">'Pyramidal slip'</span>,<span class="string">'Comp. Twin'</span>},<span class="keyword">...</span>
+    <span class="string">'Location'</span>,<span class="string">'eastoutside'</span>)
+legend(<span class="string">'boxoff'</span>)
+</pre><img vspace="50" hspace="5" src="TaylorHex_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Texture evolution in rolled magnesium during uniaxial tension
+%
+% This examples models the texture evolution of rolled magnesium under
+% unixaxial tension using the Taylor model. The undeformed material is
+% assumed to have a basal fibre texture perpendicular to tension direction.
+% Then tension experiment has been performed twice: at room temperature and
+% at 250 degree Celcius. The strain at fracture was approx. 30 percent and
+% 70 percent, respectively.
+
+%% Setting up hexagonal crystal symmetry
+% First we need to set up hexagonal crystal symmetry.
+
+cs = crystalSymmetry.load('Mg-Magnesium.cif')
+
+%% Setting up the basal fibre texture
+% 
+% Second, we set up the initial fibre texture which has the c-axis
+% perpendicular to the (x,y)-sheet plane and the a-axes are randomized.
+% This is typical for rolled Mg-sheet
+
+odf = fibreODF(cs.cAxis, vector3d.Z);
+
+%% Plot polefigures of generated initial state without strains
+% define crystal orientations of interest for polefigures and plot figure
+
+h = Miller({0,0,0,1},{1,0,-1,0},{1,0,-1,1},cs);
+
+pfAnnotations = @(varargin) text([-vector3d.X,vector3d.Y],{'Tension','TD'},...
+  'BackgroundColor','w','tag','axesLabels',varargin{:});
+setMTEXpref('pfAnnotations',pfAnnotations);
+plotPDF(odf,h,'antipodal','contourf','figSize','small')
+mtexColorbar;
+
+%% Setting up the slip systems
+%
+% The critical resolved shear stresses (CRSS) needed to activate certain
+% slip systems is temperature AND material dependant. As it is not trivial
+% to measure/define CRSS, there are many different values in literature.
+%
+% In practise, at room temperature basal slip dominates and commonly simple
+% tension twins are activated as well (they have very low CRSS). During
+% tension stress perpendicular to the c-axis tension twinning cannot occur.
+% Thats why it is sensible to only define compression twins (which in Mg
+% have a very high CRSS)
+
+% second argument is CRSS normalized to basal slip
+sScold = [slipSystem.basal(cs,1),...
+  slipSystem.prismatic2A(cs,66),...
+  slipSystem.pyramidalCA(cs,80),...
+  slipSystem.twinC1(cs,100)];
+
+% consider all symmetrically equivlent slip systems
+[sScold,slipId] = sScold.symmetrise;
+
+%%
+% At higher temperatures the CRSS of non-basal slip systems decreases.
+
+% second argument is CRSS normalized to basal slip
+sSwarm = [slipSystem.basal(cs,1),...
+  slipSystem.prismatic2A(cs,15),...
+  slipSystem.pyramidalCA(cs,10),...
+  slipSystem.twinC1(cs,100)];
+
+% consider all symmetrically equivlent slip systems
+sSwarm = sSwarm.symmetrise;
+
+%% Defining strain tensors
+% Due to constant volume law, the sum of all strains must equal zero. Here
+% slightly anisotropic strain is assumed at room temperature, with more
+% thinning in y-direction than in z-direction. In practise the anisotropy
+% of Mg at high temperatures becomes negligible.
+
+epsCold = 0.3 * strainTensor(diag([1 -0.6 -0.4]))
+epsWarm = 0.7 * strainTensor(diag([1 -0.5 -0.5]))
+
+%% Calculate texture evolution
+% The Tayor calculation is used to get the resulting spin of each vector as
+% well as the coeffeicients for each slip system for cold and hot state
+
+% simulated an initial orientation distribution of 10000 grains
+ori = odf.discreteSample(10000);
+
+% apply the Taylor model 
+[~,bCold,Wcold] = calcTaylor( inv(ori) .* epsCold, sScold);
+[~,bWarm,Wwarm] = calcTaylor( inv(ori) .* epsWarm, sSwarm);
+
+%%
+% Apply the Taylor spin to the initial orientation distribution
+
+oriCold = ori .* orientation(-Wcold);
+oriWarm = ori .* orientation(-Wwarm);
+
+%%
+% Plot pole figures in comparison to inital texture
+
+nextAxis %create a new axis on the existing figure and put along side
+plotPDF(oriCold,h,'antipodal','contourf','grid','grid_res',30*degree)
+mtexColorbar;
+
+nextAxis %create a new axis on the existing figure and put along side
+plotPDF(oriWarm,h,'antipodal','contourf','grid','grid_res',30*degree)
+mtexColorbar;
+
+% get figure handle and set correct layout
+mtexFig = gcm;
+mtexFig.ncols = 3; mtexFig.nrows = 3; mtexFig.layoutMode = 'user';
+drawNow(gcm)
+
+
+%% Statistics on activated slip systems
+% By adding up the coefficients of the taylor calculation and grouping them
+% according to their slip system type, a bar chart can be plotted
+
+% ensure slipId has the same size as |bCold|
+slipId = repmat(slipId.',length(ori),1);
+
+% sum up the sliprates of symmetrically equivalent slip systems, i.e.,
+% those that have the same |slipId|
+statSsCold = accumarray(slipId(:),bCold(:));
+statSsWarm = accumarray(slipId(:),bWarm(:));
+
+%%
+% The results can be plotted with logarithmic scale for better
+% visualization
+
+figure(2)
+bar([statSsCold.';statSsWarm.'])
+set(gca, 'YScale', 'log','XTickLabel', {'RT' '250 °C'})
+legend({'Basal slip','Prismatic slip','Pyramidal slip','Comp. Twin'},...
+    'Location','eastoutside')
+legend('boxoff')
+
+##### SOURCE END #####
+--></body></html>

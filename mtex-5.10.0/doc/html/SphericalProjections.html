@@ -1,0 +1,210 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Spherical Projections</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SphericalProjections.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Spherical Projections</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Alignment of the Hemispheres</a></li><li><a href="#5">Alignment of the Coordinate Axes</a></li><li><a href="#7">Equal Area Projection (Schmidt Projection)</a></li><li><a href="#8">Equal Distance Projection</a></li><li><a href="#9">Stereographic Projection (Equal Angle Projection)</a></li><li><a href="#10">Plain Projection</a></li><li><a href="#11">Three-dimensional Plots</a></li></ul></div><p>MTEX supports four types of spherical projection which are available for all spherical plot, e.g. <a href="SO3Fun.plotPDF.html">polefigure plots</a>, <a href="SO3Fun.plotIPDF.html">inverse polefigure plots</a> or <a href="SO3Fun.plotSection.html">ODF plots</a>. These are the equal area projection (Schmidt projection), the equal distance projection, the stereographic projection (equal angle projection), the three-dimensional projection and the flat projection.</p><p>In order to demonstrate the different projections we start by defining a model ODF.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'321'</span>);
+odf = fibreODF(Miller(1,1,0,cs),zvector)
+</pre><pre class="codeoutput"> 
+odf = SO3FunCBF (321 &#8594; xyz)
+ 
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (11-20) || 0,0,1
+  weight: 1
+ 
+</pre><h2 id="2">Alignment of the Hemispheres</h2><p><b>Partial Spherical Plots</b></p><p>If an ODF has triclinic specimen symmetry its pole figures differs in general on the upper hemisphere and the lower hemisphere. By default MTEX plots, in this case, both hemispheres. The upper on the left-hand side and the lower on the right-hand side. TODO: this is currently missing</p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,cs),<span class="string">'minmax'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_01.png" alt=""> <p>MTEX allows also to plot only the upper or the lower hemisphere by passing the options <tt>upper</tt> or <tt>lower</tt>.</p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,cs),<span class="string">'lower'</span>,<span class="string">'minmax'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_02.png" alt=""> <p>Due to Friedel's law measured pole figures are a superposition of the upper and the lower hemisphere (since antipodal directions are associated). In order to plot pole figures as a superposition of the upper and lower hemisphere one has to enforce <a href="VectorsAxes.html">antipodal symmetry</a>. This is done by the option <b>antipodal</b>.</p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,cs),<span class="string">'antipodal'</span>,<span class="string">'minmax'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_03.png" alt=""> <h2 id="5">Alignment of the Coordinate Axes</h2><p><b>Rotate and Flip Plots</b></p><p>Sometimes it is more convenient to have the coordinate system rotated or flipped in some way. For this reason, all plot commands in MTEX allows for the options <b>rotate</b>, <b>flipud</b> and <b>fliplr</b>. A more direct way for changing the orientation of the plot is to specify the direction of the x-axis by the commands <a href="plotx2east.html">plotx2east</a>, <a href="plotx2north.html">plotx2north</a>, <a href="plotx2west.html">plotx2west</a>, <a href="plotx2south.html">plotx2south</a>.</p><pre class="codeinput">plotx2north
+
+plotPDF(odf,Miller(1,0,0,cs),<span class="string">'antipodal'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_04.png" alt=""> <pre class="codeinput">plotx2east
+
+plotPDF(odf,Miller(1,0,0,cs),<span class="string">'antipodal'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_05.png" alt=""> <h2 id="7">Equal Area Projection (Schmidt Projection)</h2><p>Equal area projection is defined by the characteristic that it preserves the spherical area. Since pole figures are defined as relative frequency by area equal area projection is the default projection in MTEX. In can be set explicitly by the flags <b>earea</b> or <b>schmidt</b>.</p><pre class="codeinput">plotPDF(odf,Miller(1,0,0,cs),<span class="string">'antipodal'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_06.png" alt=""> <h2 id="8">Equal Distance Projection</h2><p>The equal distance projection differs from the equal area projection by the characteristic that it preserves the distances of points to the origin. Hence it might be a more intuitive projection if you look at crystal directions.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'m-3m'</span>);
+plotHKL(cs,<span class="string">'projection'</span>,<span class="string">'edist'</span>,<span class="string">'upper'</span>,<span class="string">'grid_res'</span>,15*degree,<span class="string">'BackGroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_07.png" alt=""> <h2 id="9">Stereographic Projection (Equal Angle Projection)</h2><p>Another famous spherical projection is the stereographic projection which preserves the angle between arbitrary great circles. It can be chosen by setting the option <b>stereo</b> or <b>eangle</b>.</p><pre class="codeinput">plotHKL(cs,<span class="string">'projection'</span>,<span class="string">'eangle'</span>,<span class="string">'upper'</span>,<span class="string">'grid_res'</span>,15*degree,<span class="string">'BackGroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_08.png" alt=""> <h2 id="10">Plain Projection</h2><p><b>Plain</b> means that the polar angles theta / rho are plotted in a simple rectangular plot. This projection is often chosen for ODF plots, e.g.</p><pre class="codeinput">plot(SantaFe,<span class="string">'alpha'</span>,<span class="string">'sections'</span>,18,<span class="string">'resolution'</span>,5*degree,<span class="keyword">...</span>
+  <span class="string">'projection'</span>,<span class="string">'plain'</span>,<span class="string">'contourf'</span>,<span class="string">'FontSize'</span>,10,<span class="string">'silent'</span>)
+mtexColorMap <span class="string">white2black</span>
+</pre><img vspace="50" hspace="5" src="SphericalProjections_09.png" alt=""> <h2 id="11">Three-dimensional Plots</h2><p>MTEX also offers a three-dimensional plot of pole figures which even might be rotated freely in space</p><pre class="codeinput">plotPDF(odf,Miller(1,1,0,odf.CS),<span class="string">'3d'</span>)
+</pre><img vspace="50" hspace="5" src="SphericalProjections_10.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Spherical Projections
+%
+%%
+% MTEX supports four types of spherical projection which are available for
+% all spherical plot, e.g. <SO3Fun.plotPDF.html polefigure plots>,
+% <SO3Fun.plotIPDF.html inverse polefigure plots> or <SO3Fun.plotSection.html
+% ODF plots>. These are the equal area projection (Schmidt projection), the
+% equal distance projection, the stereographic projection (equal angle
+% projection), the three-dimensional projection and the flat projection.
+%
+% In order to demonstrate the different projections we start by defining a
+% model ODF.
+
+cs = crystalSymmetry('321');
+odf = fibreODF(Miller(1,1,0,cs),zvector)
+
+
+%% Alignment of the Hemispheres
+%
+% *Partial Spherical Plots*
+%
+% If an ODF has triclinic specimen symmetry its pole figures differs in
+% general on the upper hemisphere and the lower hemisphere. By
+% default MTEX plots, in this case, both hemispheres. The upper on the
+% left-hand side and the lower on the right-hand side.
+% TODO: this is currently missing
+
+plotPDF(odf,Miller(1,1,0,cs),'minmax')
+
+%%
+%
+% MTEX allows also to plot only the upper or the lower hemisphere by
+% passing the options |upper| or |lower|.
+
+plotPDF(odf,Miller(1,1,0,cs),'lower','minmax')
+
+%%
+% Due to Friedel's law measured pole figures are a superposition of the
+% upper and the lower hemisphere (since antipodal directions are
+% associated). In order to plot pole figures as a superposition of the
+% upper and lower hemisphere one has to enforce <VectorsAxes.html
+% antipodal symmetry>. This is done by the option *antipodal*.
+
+plotPDF(odf,Miller(1,1,0,cs),'antipodal','minmax')
+
+
+%% Alignment of the Coordinate Axes
+%
+% *Rotate and Flip Plots*
+%
+% Sometimes it is more convenient to have the coordinate system rotated or
+% flipped in some way. For this reason, all plot commands in MTEX allows for
+% the options *rotate*, *flipud* and *fliplr*. A more direct way for
+% changing the orientation of the plot is to specify the direction of the
+% x-axis by the commands <plotx2east.html plotx2east>, <plotx2north.html
+% plotx2north>, <plotx2west.html plotx2west>, <plotx2south.html
+% plotx2south>.
+
+plotx2north
+
+plotPDF(odf,Miller(1,0,0,cs),'antipodal')
+
+%%
+plotx2east
+
+plotPDF(odf,Miller(1,0,0,cs),'antipodal')
+
+%% Equal Area Projection (Schmidt Projection)
+%
+% Equal area projection is defined by the characteristic that it preserves
+% the spherical area. Since pole figures are defined as relative frequency
+% by area equal area projection is the default projection in MTEX. In can
+% be set explicitly by the flags *earea* or *schmidt*.
+
+plotPDF(odf,Miller(1,0,0,cs),'antipodal')
+
+%% Equal Distance Projection
+%
+% The equal distance projection differs from the equal area projection by
+% the characteristic that it preserves the distances of points to the
+% origin. Hence it might be a more intuitive projection if you look at
+% crystal directions.
+
+cs = crystalSymmetry('m-3m');
+plotHKL(cs,'projection','edist','upper','grid_res',15*degree,'BackGroundColor','w')
+
+%% Stereographic Projection (Equal Angle Projection)
+%
+% Another famous spherical projection is the stereographic projection
+% which preserves the angle between arbitrary great circles. It
+% can be chosen by setting the option *stereo* or *eangle*.
+
+plotHKL(cs,'projection','eangle','upper','grid_res',15*degree,'BackGroundColor','w')
+
+%% Plain Projection
+%
+% *Plain* means that the polar angles theta / rho are plotted in a simple
+% rectangular plot. This projection is often chosen for ODF plots, e.g.
+
+plot(SantaFe,'alpha','sections',18,'resolution',5*degree,...
+  'projection','plain','contourf','FontSize',10,'silent')
+mtexColorMap white2black
+
+
+%% Three-dimensional Plots
+%
+% MTEX also offers a three-dimensional plot of pole figures which even
+% might be rotated freely in space
+
+plotPDF(odf,Miller(1,1,0,odf.CS),'3d')
+
+##### SOURCE END #####
+--></body></html>

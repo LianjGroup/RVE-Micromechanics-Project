@@ -1,0 +1,581 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Projection Based Shape Parameters</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ProjectionBasedParameters.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Projection Based Shape Parameters</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#7">PAROR and SURFOR</a></li><li><a href="#13">Characteristic Shape</a></li></ul></div><p>In this section we discuss shape parameters grains that depend on one dimensional projections, i.e.,</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>
+                  <a href="grain2d.caliper.html">
+                     <tt>caliper</tt>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>caliper or Feret diameter in <equation>
+                     <img alt="$\mu m$" class="equation" height="10px"
+                          src="0988192817_tmp_eq17376418037532559476.png"
+                          width="22px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <a href="grain2d.diameter.html">
+                     <tt>diameter</tt>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>diameter in <equation>
+                     <img alt="$\mu m$" class="equation" height="10px"
+                          src="0498532101_tmp_eq17376418037532559476.png"
+                          width="22px"/>
+                  </equation>
+               </p>
+         </td>
+      </tr>
+   </table>
+</p><p>In order to demonstrate these parameters we first import a small sample data set.</p><pre class="codeinput"><span class="comment">% load sample EBSD data set</span>
+mtexdata <span class="string">forsterite</span> <span class="string">silent</span>
+
+<span class="comment">% reconstruct grains, discard boudnary grains and smooth them</span>
+[grains, ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,5*degree);
+ebsd(grains(grains.grainSize&lt;5)) = [];
+[grains, ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,5*degree);
+grains(grains.isBoundary) = [];
+
+grains = smooth(grains(<span class="string">'indexed'</span>),10,<span class="string">'moveTriplePoints'</span>);
+
+<span class="comment">% plot all grains and highlight a specific one</span>
+plot(grains)
+
+ind = 654;
+hold <span class="string">on</span>
+plot(grains(ind).boundary,<span class="string">'lineWidth'</span>,5,<span class="string">'linecolor'</span>,<span class="string">'blue'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_01.png" alt=""> <p>The most well known projection based parameter is the <a href="grain2d.diamter.html"><tt>diameter</tt></a> which refers to the longest distance between any two boundary points and is given in <img src="ProjectionBasedParameters_eq17376418037532559476.png" alt="$\mu m$">.</p><pre class="codeinput">grains(ind).diameter
+</pre><pre class="codeoutput">ans =
+   6.9276e+03
+</pre><p>The diameter is a special case of the <a href="grain2d.caliper.html"><tt>caliper</tt></a> or Feret diameter of a grain. By definition the caliper is the length of a grain when projected onto a line. We may trace the caliper with respect to projection direction</p><pre class="codeinput">close <span class="string">all</span>
+omega = linspace(0,180);
+plot(omega,grains(ind).caliper(omega*degree),<span class="string">'LineWidth'</span>,2)
+ylabel(<span class="string">'length in $\mu$m'</span>,<span class="string">'Interpreter'</span>,<span class="string">'latex'</span>)
+xlabel(<span class="string">'angle of the projection line in degree'</span>)
+xlim([0,180])
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_02.png" alt=""> <p>We observe that that maximum caliper is about 7000 while the minimum caliper is about 2000. We may compute the exact direction and length of the maximum or minimum by passing the options <tt>'longest'</tt> or <tt>'shortest'</tt> to the function <a href="grain2d.caliper.html"><tt>caliper</tt></a>. In this case the the output is of type <a href="vector3d.vector3d.html">vector3d</a> indicating the direction. The <a href="vector3d.norm.html"><tt>norm</tt></a> of the vector coincides with the caliper for this projection direction. Hence, the <tt>norm(grains.caliper('longest'))</tt> coincides with the diameter.</p><pre class="codeinput">plot(grains(ind),<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+legend(<span class="string">'off'</span>)
+
+norm(grains(ind).caliper(<span class="string">'longest'</span>))
+norm(grains(ind).caliper(<span class="string">'shortest'</span>))
+
+hold <span class="string">on</span>
+quiver(grains(ind),grains(ind).caliper(<span class="string">'longest'</span>),<span class="string">'noScaling'</span>)
+quiver(grains(ind),grains(ind).caliper(<span class="string">'shortest'</span>),<span class="string">'noScaling'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">ans =
+   6.9276e+03
+ans =
+   1.6308e+03
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_03.png" alt=""> <p>The difference between the longest and the shortest caliper can be taken as a measure how round a grain is.</p><pre class="codeinput">cMin = grains.caliper(<span class="string">'shortest'</span>);
+cMax = grains.caliper(<span class="string">'longest'</span>);
+
+plot(grains,(norm(cMax) - norm(cMin))./norm(cMax),<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'TODO'</span>)
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_04.png" alt=""> <p>This longest and shortest caliper are comparable to <a href="grain2d.longAxis.html"><tt>grains.longAxis</tt></a> and <a href="grain2d.shortAxis.html"><tt>grains.shortAxis</tt></a> computed from an ellipse fitted to the grain. In the case of rectangular particles, one might not primarily be interested in the longest caliper of a grain but rather in the direction normal to the shortest caliper. This is computed when specifying the option <tt>'shortestPerp'</tt>. If we imagine a very strong alignment of the long axes of orthorhombic particles, the maximum diameter may show a bimodal distribution (the two, roughly equally distributed diagonals of the particle).</p><pre class="codeinput"><span class="comment">% load some test grains</span>
+testgrains = mtexdata(<span class="string">'testgrains'</span>);
+testgrains = smooth(testgrains([6 8]),10);
+
+<span class="comment">% compute the longest caliper and the caliper perpendicular to the shortest</span>
+cMax = testgrains.caliper(<span class="string">'longest'</span>);
+cMinPerp = testgrains.caliper(<span class="string">'shortestPerp'</span>);
+
+<span class="comment">% plot the grains and visualize the different long axes</span>
+plot(testgrains,<span class="string">'micronbar'</span>,<span class="string">'off'</span>,<span class="string">'lineWidth'</span>,2)
+hold <span class="string">on</span>
+quiver(testgrains,cMax,<span class="string">'DisplayName'</span>,<span class="string">'longest calliper'</span>,<span class="string">'LineWidth'</span>,3)
+quiver(testgrains,testgrains.longAxis,<span class="string">'DisplayName'</span>,<span class="string">'long axis'</span>,<span class="string">'LineWidth'</span>,3)
+quiver(testgrains,cMinPerp,<span class="string">'DisplayName'</span>,<span class="string">'perp to shortest'</span>,<span class="string">'LineWidth'</span>,3)
+hold <span class="string">off</span>
+legend(<span class="string">'Location'</span>,<span class="string">'east'</span>)
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_05.png" alt=""> <h2 id="7">PAROR and SURFOR</h2><p>Another way of quantifying shape farbics is by making use of the cumulative projection function of the grains or the grain boundary segments. These methods are heavily inspired by <a href="https://en.wikipedia.org/wiki/Flatland">Edwin A. Abbotts 'Flatland - A romance of many dimensions' (1884)</a> and based on Panozzo, R., 1983, "Two-dimensional analysis of shape fabric using projections of digitized lines in a plane". Tectonophysics 95, 279-294. and Panozzo, R., 1984, "Two-dimensional strain from the orientation of lines in a plane." J. Struct. Geol. 6, 215-221. implemented in Mtex as <a href="grain2d.paror.html"><tt>grains.paror</tt></a> and <a href="grainBoundary.surfor.html"><tt>grainBoudnary.surfor</tt></a></p><p>As mentioned above the function <a href="grain2d.caliper.html"><tt>caliper</tt></a> can be called with a list of angles and returns the projection length of all grains with respect to all angles.</p><pre class="codeinput"><span class="comment">% projection angle</span>
+omega = linspace(0,360*degree,361);
+c = grains(<span class="string">'Fo'</span>).caliper(omega);
+
+subplot(1,2,1)
+polarplot(omega,c,<span class="string">'LineWidth'</span>,2,<span class="string">'color'</span>,[0 0.25 0.5 0.25])
+title(<span class="string">'Forsterite'</span>)
+
+<span class="comment">% take the average</span>
+hold <span class="string">on</span>
+polarplot(omega,5*mean(c),<span class="string">'LineWidth'</span>,3,<span class="string">'color'</span>,<span class="string">'k'</span>);
+hold <span class="string">off</span>
+
+subplot(1,2,2)
+c = grains(<span class="string">'Enstatite'</span>).caliper(omega);
+
+polarplot(omega,c,<span class="string">'LineWidth'</span>,2,<span class="string">'color'</span>,[0 0.25 0.5 0.25])
+title(<span class="string">'Enstatite'</span>)
+
+<span class="comment">% take the average</span>
+hold <span class="string">on</span>
+polarplot(omega,5*mean(c),<span class="string">'LineWidth'</span>,3,<span class="string">'color'</span>,<span class="string">'k'</span>);
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_06.png" alt=""> <p>The above averaged caliper can be computed more directly by the function <a href="grain2d.paror.html"><tt>grains.paror</tt></a> which returns the cumulative particle projection function normalized to 1. The projection angles can be regarded as the rotation angle of the particle (counterclockwise) while projecting from the y-axis onto the x-axis.</p><pre class="codeinput">close <span class="string">all</span>
+cumplF = paror(grains(<span class="string">'fo'</span>),omega);
+cumplE = paror(grains(<span class="string">'en'</span>),omega);
+
+subplot(1,2,1)
+polarplot(omega,cumplF,<span class="string">'LineWidth'</span>,3,<span class="string">'color'</span>,<span class="string">'k'</span>)
+
+subplot(1,2,2)
+polarplot(omega,cumplE,<span class="string">'LineWidth'</span>,3,<span class="string">'color'</span>,<span class="string">'k'</span>)
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_07.png" alt=""> <p>We can interpret the results in the following way. The minimum of the curve is a measure of the amplitude of the projection function and can be compared to an averaged axial ratio <img src="ProjectionBasedParameters_eq08669593702894242694.png" alt="$b/a$"> of the entire  fabric; isotropic fabrics would have a <img src="ProjectionBasedParameters_eq08669593702894242694.png" alt="$b/a$"> close to 1 while highly anisotropic fabrics can be identified by small <img src="ProjectionBasedParameters_eq08669593702894242694.png" alt="$b/a$"> values.</p><pre class="codeinput">min(cumplF), min(cumplE)
+</pre><pre class="codeoutput">ans =
+    0.7102
+ans =
+    0.7203
+</pre><p>The position of the maxima and minima of the projection function derived from <a href="grain2d.paror.html"><tt>paror</tt></a> can be interpreted in the following way: the maximum position represents the preferred axis parallel to the longest projection and the normal the minimum position represents the preferred axis related to the normal to the shortest projection function.</p><pre class="codeinput"><span class="comment">% for the Forsterite</span>
+[~, id_max] = max(cumplF);
+[~, id_min] = min(cumplF);
+
+mod(omega(id_max)./degree,180)
+mod(omega(id_min)./degree-90,180)
+
+<span class="comment">% for the Enstatite</span>
+[~, id_max] = max(cumplE);
+[~, id_min] = min(cumplE);
+
+mod(omega(id_max)./degree,180)
+mod(omega(id_min)./degree-90,180)
+</pre><pre class="codeoutput">ans =
+    71
+ans =
+   74.0000
+ans =
+    87
+ans =
+   88.0000
+</pre><p>The smaller the difference between these values, the closer the fabric is to an orthorhombic symmetry.</p><p>Similarly to using the entire particle (the convex hull in case of the projection functions), we can use a distribution of lines <a href="grainBoundary.surfor.html"><tt>grainBoudnary.surfor</tt></a>. This can be useful for the quantification of the grain boundary anisotropy or in general might be needed if we look at boundaries which do not form closed outlines, e.g. a list of subgrain or twin boundaries or the contact between certain phases.</p><p>Let's compare the boundaries between the different unlike phases and between forsterite-forsterite in our sample:</p><pre class="codeinput">close <span class="string">all</span>
+pairs = [1 1; nchoosek(1:3,2)];
+phase = {<span class="string">'Fo'</span> <span class="string">'En'</span> <span class="string">'Di'</span>};
+<span class="keyword">for</span> i=1:length(pairs)
+
+  gB = grains.boundary(phase{pairs(i,:)});
+  polarplot(omega, surfor(gB,omega), <span class="string">'linewidth'</span>,2, <span class="keyword">...</span>
+    <span class="string">'DisplayName'</span>,[phase{pairs(i,1)} <span class="string">'-'</span> phase{pairs(i,2)}]);
+  hold <span class="string">on</span>
+
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+legend(<span class="string">'Location'</span>,<span class="string">'southoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>)
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_08.png" alt=""> <p>We can see that Forsterite-Forsterite boundaries form a fabric slightly more inclined with respect to the other phase boundariesand that the phase boundaries between the two pyroxenes (Enstatite and Diopside) show the lowest anisotropy.</p><h2 id="13">Characteristic Shape</h2><p>The characteristic shape results from the cummulative sum of all grain boundary segements ordered by the angle of the segment direction. It can be regarded as to represent the average grain shape, however without the need to use closed areas such as it would be required when working with grains.</p><p>Here we can compare the shape defined by Forterite-Forsterite, Enstatite-Enstatite and Forsterite-Enstatite boundaries</p><pre class="codeinput">plotopts = {<span class="string">'normalize'</span>,<span class="string">'linewidth'</span>,2, <span class="string">'plain'</span>};
+
+shapeF = characteristicShape(grains.boundary(<span class="string">'Fo'</span>,<span class="string">'Fo'</span>))
+plot(shapeF,plotopts{:},<span class="string">'DisplayName'</span>,<span class="string">'Fo-Fo'</span>)
+
+hold <span class="string">on</span>
+shapeE = characteristicShape(grains.boundary(<span class="string">'En'</span>,<span class="string">'En'</span>));
+plot(shapeE,plotopts{:},<span class="string">'DisplayName'</span>,<span class="string">'En-En'</span>)
+
+hold <span class="string">on</span>
+shapeEF = characteristicShape(grains.boundary(<span class="string">'En'</span>,<span class="string">'Fo'</span>));
+plot(shapeEF,plotopts{:},<span class="string">'DisplayName'</span>,<span class="string">'En-Fo'</span>)
+hold <span class="string">off</span>
+
+legend(<span class="string">'Location'</span>,<span class="string">'southoutside'</span>,<span class="string">'Orientation'</span>,<span class="string">'horizontal'</span>)
+</pre><pre class="codeoutput"> 
+shapeF = shape2d
+ 
+ vertices: 1024
+ 
+</pre><img vspace="50" hspace="5" src="ProjectionBasedParameters_09.png" alt=""> <p>The output of the command <a href="grainBoundary.characteristicShape.html"><tt>characteristicShape</tt></a> is a <a href="shape2d.shape2d.html"><tt>shape2d</tt></a> object which behaves very similar to a <a href="grain2d.grain2d.html"><tt>grain2d</tt></a> object. Hence it is easy to derive things such as a long axis or e.g. the angle between the longest and the shortest caliper which can be regarded as a measure of asymmetry.</p><pre class="codeinput">angle(shapeF.caliper(<span class="string">'longest'</span>),shapeF.caliper(<span class="string">'shortest'</span>))/degree
+angle(shapeE.caliper(<span class="string">'longest'</span>),shapeE.caliper(<span class="string">'shortest'</span>))/degree
+angle(shapeEF.caliper(<span class="string">'longest'</span>),shapeF.caliper(<span class="string">'shortest'</span>))/degree
+</pre><pre class="codeoutput">ans =
+   78.8627
+ans =
+   86.9482
+ans =
+   79.6680
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Projection Based Shape Parameters
+%
+%%
+% In this section we discuss shape parameters grains that depend on one
+% dimensional projections, i.e., 
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="grain2d.caliper.html">
+%                      <tt>caliper</tt>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>caliper or Feret diameter in <equation>
+%                      <img alt="$\mu m$" class="equation" height="10px"
+%                           src="0988192817_tmp_eq17376418037532559476.png"
+%                           width="22px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="grain2d.diameter.html">
+%                      <tt>diameter</tt>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>diameter in <equation>
+%                      <img alt="$\mu m$" class="equation" height="10px"
+%                           src="0498532101_tmp_eq17376418037532559476.png"
+%                           width="22px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+% In order to demonstrate these parameters we first import a small sample
+% data set.
+
+% load sample EBSD data set
+mtexdata forsterite silent
+
+% reconstruct grains, discard boudnary grains and smooth them
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'angle',5*degree);
+ebsd(grains(grains.grainSize<5)) = [];
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'angle',5*degree);
+grains(grains.isBoundary) = [];
+
+grains = smooth(grains('indexed'),10,'moveTriplePoints');
+
+% plot all grains and highlight a specific one
+plot(grains)
+
+ind = 654;
+hold on
+plot(grains(ind).boundary,'lineWidth',5,'linecolor','blue')
+hold off
+
+%%
+% The most well known projection based parameter is the
+% <grain2d.diamter.html |diameter|> which refers to the longest distance
+% between any two boundary points and is given in $\mu m$.
+
+grains(ind).diameter
+
+%%
+% The diameter is a special case of the <grain2d.caliper.html |caliper|> or
+% Feret diameter of a grain. By definition the caliper is the length of a
+% grain when projected onto a line. We may trace the caliper with respect
+% to projection direction
+
+close all
+omega = linspace(0,180);
+plot(omega,grains(ind).caliper(omega*degree),'LineWidth',2)
+ylabel('length in $\mu$m','Interpreter','latex')
+xlabel('angle of the projection line in degree')
+xlim([0,180])
+
+%%
+% We observe that that maximum caliper is about 7000 while the minimum
+% caliper is about 2000. We may compute the exact direction and length of
+% the maximum or minimum by passing the options |'longest'| or |'shortest'|
+% to the function <grain2d.caliper.html |caliper|>. In this case the the
+% output is of type <vector3d.vector3d.html vector3d> indicating the direction. The
+% <vector3d.norm.html |norm|> of the vector coincides with the caliper for
+% this projection direction. Hence, the |norm(grains.caliper('longest'))|
+% coincides with the diameter.
+
+plot(grains(ind),'micronbar','off')
+legend('off')
+
+norm(grains(ind).caliper('longest'))
+norm(grains(ind).caliper('shortest'))
+
+hold on
+quiver(grains(ind),grains(ind).caliper('longest'),'noScaling')
+quiver(grains(ind),grains(ind).caliper('shortest'),'noScaling')
+hold off
+
+
+%%
+% The difference between the longest and the shortest caliper can be taken
+% as a measure how round a grain is. 
+
+cMin = grains.caliper('shortest');
+cMax = grains.caliper('longest');
+
+plot(grains,(norm(cMax) - norm(cMin))./norm(cMax),'micronbar','off')
+mtexColorbar('title','TODO')
+
+%%
+% This longest and shortest caliper are comparable to
+% <grain2d.longAxis.html |grains.longAxis|> and <grain2d.shortAxis.html
+% |grains.shortAxis|> computed from an ellipse fitted to the grain. In the
+% case of rectangular particles, one might not primarily be interested in
+% the longest caliper of a grain but rather in the direction normal to the
+% shortest caliper. This is computed when specifying the option
+% |'shortestPerp'|. If we imagine a very strong alignment of the long axes
+% of orthorhombic particles, the maximum diameter may show a bimodal
+% distribution (the two, roughly equally distributed diagonals of the
+% particle).
+
+% load some test grains
+testgrains = mtexdata('testgrains');
+testgrains = smooth(testgrains([6 8]),10);
+
+% compute the longest caliper and the caliper perpendicular to the shortest
+cMax = testgrains.caliper('longest');
+cMinPerp = testgrains.caliper('shortestPerp');
+
+% plot the grains and visualize the different long axes
+plot(testgrains,'micronbar','off','lineWidth',2)
+hold on
+quiver(testgrains,cMax,'DisplayName','longest calliper','LineWidth',3)
+quiver(testgrains,testgrains.longAxis,'DisplayName','long axis','LineWidth',3)
+quiver(testgrains,cMinPerp,'DisplayName','perp to shortest','LineWidth',3)
+hold off
+legend('Location','east')
+
+%% PAROR and SURFOR
+% 
+% Another way of quantifying shape farbics is by making use of the
+% cumulative projection function of the grains or the grain boundary
+% segments. These methods are heavily inspired by
+% <https://en.wikipedia.org/wiki/Flatland Edwin A. Abbotts 'Flatland - A
+% romance of many dimensions' (1884)> and based on Panozzo, R., 1983,
+% "Two-dimensional analysis of shape fabric using projections of digitized
+% lines in a plane". Tectonophysics 95, 279-294. and Panozzo, R., 1984,
+% "Two-dimensional strain from the orientation of lines in a plane." J.
+% Struct. Geol. 6, 215-221. implemented in Mtex as <grain2d.paror.html
+% |grains.paror|> and <grainBoundary.surfor.html |grainBoudnary.surfor|>
+%
+% As mentioned above the function <grain2d.caliper.html |caliper|> can be
+% called with a list of angles and returns the projection length of all
+% grains with respect to all angles. 
+
+% projection angle
+omega = linspace(0,360*degree,361);
+c = grains('Fo').caliper(omega);
+
+subplot(1,2,1)
+polarplot(omega,c,'LineWidth',2,'color',[0 0.25 0.5 0.25])
+title('Forsterite') 
+
+% take the average
+hold on
+polarplot(omega,5*mean(c),'LineWidth',3,'color','k');
+hold off
+
+subplot(1,2,2)
+c = grains('Enstatite').caliper(omega);
+
+polarplot(omega,c,'LineWidth',2,'color',[0 0.25 0.5 0.25])
+title('Enstatite') 
+
+% take the average
+hold on
+polarplot(omega,5*mean(c),'LineWidth',3,'color','k');
+hold off
+
+%%
+% The above averaged caliper can be computed more directly by the function
+% <grain2d.paror.html |grains.paror|> which returns the cumulative particle
+% projection function normalized to 1. The projection angles can be
+% regarded as the rotation angle of the particle (counterclockwise) while
+% projecting from the y-axis onto the x-axis.
+
+close all
+cumplF = paror(grains('fo'),omega);
+cumplE = paror(grains('en'),omega);
+
+subplot(1,2,1)
+polarplot(omega,cumplF,'LineWidth',3,'color','k')
+
+subplot(1,2,2)
+polarplot(omega,cumplE,'LineWidth',3,'color','k')
+
+
+%%
+% We can interpret the results in the following way. The minimum of the
+% curve is a measure of the amplitude of the projection function and can be
+% compared to an averaged axial ratio $b/a$ of the entire  fabric;
+% isotropic fabrics would have a $b/a$ close to 1 while highly anisotropic
+% fabrics can be identified by small $b/a$ values.
+
+min(cumplF), min(cumplE)
+
+%%
+% The position of the maxima and minima of the projection function derived
+% from <grain2d.paror.html |paror|> can be interpreted in the following
+% way: the maximum position represents the preferred axis parallel to the
+% longest projection and the normal the minimum position represents the
+% preferred axis related to the normal to the shortest projection function.
+
+% for the Forsterite
+[~, id_max] = max(cumplF);
+[~, id_min] = min(cumplF);
+
+mod(omega(id_max)./degree,180)
+mod(omega(id_min)./degree-90,180)
+
+% for the Enstatite
+[~, id_max] = max(cumplE);
+[~, id_min] = min(cumplE);
+
+mod(omega(id_max)./degree,180)
+mod(omega(id_min)./degree-90,180)
+
+%%
+% The smaller the difference between these values, the closer the fabric is
+% to an orthorhombic symmetry.
+%
+% Similarly to using the entire particle (the convex hull in case of the
+% projection functions), we can use a distribution of lines
+% <grainBoundary.surfor.html |grainBoudnary.surfor|>. This can be useful
+% for the quantification of the grain boundary anisotropy or in general
+% might be needed if we look at boundaries which do not form closed
+% outlines, e.g. a list of subgrain or twin boundaries or the contact
+% between certain phases.
+% 
+% Let's compare the boundaries between the different unlike phases and
+% between forsterite-forsterite in our sample:
+
+close all
+pairs = [1 1; nchoosek(1:3,2)];
+phase = {'Fo' 'En' 'Di'};
+for i=1:length(pairs)
+  
+  gB = grains.boundary(phase{pairs(i,:)});
+  polarplot(omega, surfor(gB,omega), 'linewidth',2, ...
+    'DisplayName',[phase{pairs(i,1)} '-' phase{pairs(i,2)}]);
+  hold on
+  
+end
+hold off
+legend('Location','southoutside','Orientation','horizontal')
+
+%%
+% We can see that Forsterite-Forsterite boundaries form a fabric slightly
+% more inclined with respect to the other phase boundariesand that the
+% phase boundaries between the two pyroxenes (Enstatite and Diopside) show
+% the lowest anisotropy.
+%
+%% Characteristic Shape
+%
+% The characteristic shape results from the cummulative sum of all grain
+% boundary segements ordered by the angle of the segment direction. It can
+% be regarded as to represent the average grain shape, however without the
+% need to use closed areas such as it would be required when working with
+% grains.
+%
+% Here we can compare the shape defined by Forterite-Forsterite,
+% Enstatite-Enstatite and Forsterite-Enstatite boundaries
+
+plotopts = {'normalize','linewidth',2, 'plain'};
+
+shapeF = characteristicShape(grains.boundary('Fo','Fo'))
+plot(shapeF,plotopts{:},'DisplayName','Fo-Fo')
+
+hold on
+shapeE = characteristicShape(grains.boundary('En','En'));
+plot(shapeE,plotopts{:},'DisplayName','En-En')
+
+hold on
+shapeEF = characteristicShape(grains.boundary('En','Fo'));
+plot(shapeEF,plotopts{:},'DisplayName','En-Fo')
+hold off
+
+legend('Location','southoutside','Orientation','horizontal')
+
+%%
+% The output of the command <grainBoundary.characteristicShape.html
+% |characteristicShape|> is a <shape2d.shape2d.html |shape2d|> object which
+% behaves very similar to a <grain2d.grain2d.html |grain2d|> object. Hence
+% it is easy to derive things such as a long axis or e.g. the angle between
+% the longest and the shortest caliper which can be regarded as a measure
+% of asymmetry.
+
+angle(shapeF.caliper('longest'),shapeF.caliper('shortest'))/degree
+angle(shapeE.caliper('longest'),shapeE.caliper('shortest'))/degree
+angle(shapeEF.caliper('longest'),shapeF.caliper('shortest'))/degree
+
+##### SOURCE END #####
+--></body></html>

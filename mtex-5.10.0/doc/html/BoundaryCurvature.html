@@ -1,0 +1,210 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Boundary Curvature</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_BoundaryCurvature.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Boundary Curvature</h1><!--introduction--><!--/introduction--><p>The curvature of a curve is defined by fitting localy a circle and taking one over its radius. Hence, a straight line will have curvature 0 and a circle of radius <img src="BoundaryCurvature_eq10041624201793903543.png" alt="$2$"> will have constant curvature <img src="BoundaryCurvature_eq01612405356326167103.png" alt="$1/2$"> everywhere. Hence, the unit of the curvature computed in MTEX is one over the unit of the EBSD coordinates which is usually <img src="BoundaryCurvature_eq17376418037532559476.png" alt="$\mu m$">. Let us demonstrate boundary curvature use some artifical grain shapes</p><pre class="codeinput"><span class="comment">% import the artificial grain shapes</span>
+mtexdata <span class="string">testgrains</span> <span class="string">silent</span>
+
+<span class="comment">% select and smooth a few interesting grains</span>
+grains = smooth(grains(<span class="string">'id'</span>,[2 3 9 11 15 16 18 23 31 33 38 40]),10);
+
+plotx2east
+</pre><p>Therefore, we first extract all boundary segments and colorize them according to their curvature.</p><pre class="codeinput"><span class="comment">% extract boundary segments</span>
+gB = grains.boundary;
+
+<span class="comment">% plot some dark background</span>
+plot(gB,<span class="string">'linewidth'</span>,10,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+
+<span class="comment">% colorize boundaries by curvature</span>
+hold <span class="string">on</span>
+plot(gB,gB.curvature,<span class="string">'linewidth'</span>,6);
+hold <span class="string">off</span>
+
+<span class="comment">% set a specific colormap</span>
+mtexColorMap(<span class="string">'blue2red'</span>)
+setColorRange(0.25*[-1,1])
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="BoundaryCurvature_01.png" alt=""> <p>Note that all the curvature values are positive. This allways happens if the curvature is computed for multiple grains at one. If we consider single grains and compute the curvature of single grain boundaries the sign of the values indicates whether the grain boundary is convex for concav with respect to the specifc grain.</p><pre class="codeinput"><span class="keyword">for</span> k = 1:length(grains)
+
+  gB = grains(k).boundary;
+  plot(gB,<span class="string">'linewidth'</span>,10,<span class="string">'micronbar'</span>,<span class="string">'off'</span>);
+  hold <span class="string">on</span>
+  plot(gB,gB.curvature,<span class="string">'linewidth'</span>,6);
+
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+
+mtexColorMap(<span class="string">'blue2red'</span>)
+setColorRange(0.25*[-1,1])
+drawNow(gcm,<span class="string">'figSize'</span>,getMTEXpref(<span class="string">'figSize'</span>))
+</pre><img vspace="50" hspace="5" src="BoundaryCurvature_02.png" alt=""> <p>Finally we illustrate the ussage of the <a href="grainBoundary.curvature.html">curvature</a> command at a real EBSD map.</p><pre class="codeinput"><span class="comment">% import data and reconstruct grains</span>
+mtexdata <span class="string">titanium</span> <span class="string">silent</span>
+[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+grains = smooth(grains,5);
+
+<span class="comment">% plot an ipf map</span>
+plot(ebsd(<span class="string">'indexed'</span>),ebsd(<span class="string">'indexed'</span>).orientations)
+
+hold <span class="string">on</span>
+
+<span class="comment">% plot grain boundaries</span>
+plot(grains.boundary,<span class="string">'linewidth'</span>,4)
+
+<span class="comment">% colorize the grain boundaries of grain 42 according to curvature</span>
+plot(grains(42).boundary,grains(42).boundary.curvature(5),<span class="string">'linewidth'</span>,6)
+hold <span class="string">off</span>
+mtexColorMap(<span class="string">'blue2red'</span>)
+setColorRange(0.1*[-1,1])
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="BoundaryCurvature_03.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Boundary Curvature
+%
+%%
+% The curvature of a curve is defined by fitting localy a circle and taking
+% one over its radius. Hence, a straight line will have curvature 0 and a
+% circle of radius $2$ will have constant curvature $1/2$ everywhere.
+% Hence, the unit of the curvature computed in MTEX is one over the unit of
+% the EBSD coordinates which is usually $\mu m$. Let us demonstrate
+% boundary curvature use some artifical grain shapes
+
+% import the artificial grain shapes
+mtexdata testgrains silent
+
+% select and smooth a few interesting grains
+grains = smooth(grains('id',[2 3 9 11 15 16 18 23 31 33 38 40]),10);
+
+plotx2east
+
+%%
+% Therefore, we first extract all boundary segments and colorize them
+% according to their curvature.
+
+% extract boundary segments
+gB = grains.boundary;
+
+% plot some dark background
+plot(gB,'linewidth',10,'micronbar','off');  
+
+% colorize boundaries by curvature
+hold on
+plot(gB,gB.curvature,'linewidth',6);
+hold off
+
+% set a specific colormap
+mtexColorMap('blue2red')
+setColorRange(0.25*[-1,1])
+mtexColorbar
+
+%%
+% Note that all the curvature values are positive. This allways happens if
+% the curvature is computed for multiple grains at one. If we consider
+% single grains and compute the curvature of single grain boundaries the
+% sign of the values indicates whether the grain boundary is convex for
+% concav with respect to the specifc grain.
+
+for k = 1:length(grains)
+  
+  gB = grains(k).boundary;
+  plot(gB,'linewidth',10,'micronbar','off');
+  hold on
+  plot(gB,gB.curvature,'linewidth',6);
+  
+end
+hold off
+
+mtexColorMap('blue2red')
+setColorRange(0.25*[-1,1])
+drawNow(gcm,'figSize',getMTEXpref('figSize'))
+
+%%
+% Finally we illustrate the ussage of the <grainBoundary.curvature.html
+% curvature> command at a real EBSD map.
+
+% import data and reconstruct grains
+mtexdata titanium silent
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'));
+grains = smooth(grains,5);
+
+% plot an ipf map
+plot(ebsd('indexed'),ebsd('indexed').orientations)
+
+hold on
+
+% plot grain boundaries
+plot(grains.boundary,'linewidth',4)
+
+% colorize the grain boundaries of grain 42 according to curvature
+plot(grains(42).boundary,grains(42).boundary.curvature(5),'linewidth',6)
+hold off
+mtexColorMap('blue2red')
+setColorRange(0.1*[-1,1])
+mtexColorbar
+
+##### SOURCE END #####
+--></body></html>

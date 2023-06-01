@@ -1,0 +1,272 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Cluster demo</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ClusterDemo.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Cluster demo</h1><!--introduction--><p>This code demonstrates how the clustering algorithm can be used to assign vector3d and crystal directions to groups by proximity.</p><!--/introduction--><p>define an octohedral crystal symmetry</p><pre class="codeinput">cs  = crystalSymmetry(<span class="string">'432'</span>);
+
+<span class="comment">% define an ODF with two radial peaks</span>
+ori = orientation.byEuler([10 40]*degree,[30 50]*degree,[50 70]*degree,cs)
+odf = unimodalODF(ori,<span class="string">'halfwidth'</span>,5*degree);
+
+
+<span class="comment">% view the odf</span>
+plotPDF(odf,Miller(1,0,0,odf.CS),<span class="string">'contour'</span>,<span class="string">'linewidth'</span>,2);
+
+<span class="comment">% generate 10k orientations from this randomly defined ODF function</span>
+ori = odf.discreteSample(10000);
+
+<span class="comment">% convert the orientations to vector3D</span>
+r = ori * Miller(1,0,0,odf.CS);
+</pre><pre class="codeoutput"> 
+ori = orientation (432 &#8594; xyz)
+  size: 1 x 2
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+    10   30   50
+    40   50   70
+ 
+</pre><img vspace="50" hspace="5" src="ClusterDemo_01.png" alt=""> <p>assign each vector3d to one of twelve clusters, and calculate the vector3D located at the center of each cluster</p><pre class="codeinput">[cId,center] = calcCluster(r,<span class="string">'numCluster'</span>,12);
+
+<span class="comment">% plot the clusters, sorted by colour</span>
+figure;
+plot(r,ind2color(cId))
+
+<span class="comment">% annotate all the cluster centers, on all figures.</span>
+annotate(center,<span class="string">'add2all'</span>);
+</pre><img vspace="50" hspace="5" src="ClusterDemo_02.png" alt=""> <p>Note that the upper and lower hemisphere plots are versions of each other, reflected horizontally plus vertically.  This means that the underlying data has antipodal symmetry, contributing equally to both hemispheres. Let's include that in the cluster sorting.</p><p>repeat the calculation after changing all the vector3d to be antipodal</p><pre class="codeinput">r.antipodal = true;
+
+<span class="comment">% repeat the calculation assigning vector3D to clusters.  Due to the</span>
+<span class="comment">% increase in symmetry, there are only six clusters now.</span>
+[cId,center] = calcCluster(r,<span class="string">'numCluster'</span>,6);
+
+<span class="comment">% plot the vectors.  Note that we no longer get an upper and lower hemisphere plot; the antipodal symmetry tells MTEX they are equivilent and so one sufficient to represent the data.</span>
+figure;plot(r,ind2color(cId))
+
+<span class="comment">% annotate the cluster centers.</span>
+annotate(center,<span class="string">'add2all'</span>)
+</pre><img vspace="50" hspace="5" src="ClusterDemo_03.png" alt=""> <p>pick a vector3d, and use that to convert the 10k random orientations previously generated into crystal directions.</p><pre class="codeinput">h = ori \ vector3d(1,1,0);
+
+<span class="comment">% assign the crystal directions to two clusters</span>
+[cId,center] = calcCluster(h,<span class="string">'numCluster'</span>,2);
+
+<span class="comment">% plot the crystal symmetry data on appropiate fundamental sector</span>
+plot(h.project2FundamentalRegion,ind2color(cId),<span class="string">'fundamentalSector'</span>)
+
+<span class="comment">% annote the cluster centers</span>
+annotate(center,<span class="string">'add2all'</span>)
+</pre><img vspace="50" hspace="5" src="ClusterDemo_04.png" alt=""> <p>just as we calculated clusters for vector3D and crystal directions, we're now going to do so for orientations</p><pre class="codeinput">[cId,center] = calcCluster(ori,<span class="string">'numCluster'</span>,2,<span class="string">'method'</span>,<span class="string">'hierarchical'</span>);
+
+<span class="comment">% create a pole figure of the orientations coloured by the cluster they</span>
+<span class="comment">% belong to.</span>
+plotPDF(ori,ind2color(cId),Miller(1,0,0,cs),<span class="string">'all'</span>)
+</pre><img vspace="50" hspace="5" src="ClusterDemo_05.png" alt=""> <p>If you have the statistics toolbox, you can make some calculations about the spread of points assigned to each cluster.</p><pre class="codeinput"><span class="comment">% compute the full distance matrix between all combinations of vector3D</span>
+d = angle_outer(r,r);
+<span class="comment">% convert all small values to zero to simplify later calculations</span>
+d(d&lt;0.01) = 0;
+<span class="comment">%d = d(triu(true(size(d)),1));</span>
+
+<span class="comment">% use the statistic toolbox</span>
+<span class="keyword">try</span>
+  d = squareform(d);
+  z = linkage(d,<span class="string">'ward'</span>);
+
+  <span class="comment">%cId = cluster(z,'cutoff',30*degree);</span>
+  cId = cluster(z,<span class="string">'maxclust'</span>,6);
+
+  plotCluster(r,cId)
+<span class="keyword">catch</span>
+  warning(<span class="string">'Statistics Toolbox not installed!'</span>)
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Warning: ward's linkage specified with non-Euclidean
+dissimilarity matrix. 
+</pre><pre class="codeinput"><span class="keyword">function</span> plotCluster(r,cId,varargin)
+
+scatter(r(cId==1),<span class="string">'MarkerFaceColor'</span>,ind2color(1),varargin{:})
+hold <span class="string">on</span>
+<span class="keyword">for</span> i = 2:max(cId)
+  scatter(r(cId==i),<span class="string">'add2all'</span>,<span class="string">'MarkerFaceColor'</span>,ind2color(i),varargin{:})
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+<span class="keyword">end</span>
+</pre><img vspace="50" hspace="5" src="ClusterDemo_06.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Cluster demo 
+% This code demonstrates how the clustering algorithm can be used to assign
+% vector3d and crystal directions to groups by proximity.
+%
+%%
+% define an octohedral crystal symmetry
+cs  = crystalSymmetry('432');
+
+% define an ODF with two radial peaks
+ori = orientation.byEuler([10 40]*degree,[30 50]*degree,[50 70]*degree,cs)
+odf = unimodalODF(ori,'halfwidth',5*degree);
+
+
+% view the odf 
+plotPDF(odf,Miller(1,0,0,odf.CS),'contour','linewidth',2);
+
+% generate 10k orientations from this randomly defined ODF function
+ori = odf.discreteSample(10000);
+
+% convert the orientations to vector3D
+r = ori * Miller(1,0,0,odf.CS);
+
+%%
+% assign each vector3d to one of twelve clusters, and calculate the
+% vector3D located at the center of each cluster
+[cId,center] = calcCluster(r,'numCluster',12);
+
+% plot the clusters, sorted by colour
+figure;
+plot(r,ind2color(cId))
+
+% annotate all the cluster centers, on all figures.
+annotate(center,'add2all');
+
+%%
+% Note that the upper and lower hemisphere plots are versions of each
+% other, reflected horizontally plus vertically.  This means that the
+% underlying data has antipodal symmetry, contributing equally to both
+% hemispheres. Let's include that in the cluster sorting.
+%%
+% repeat the calculation after changing all the vector3d to be antipodal
+r.antipodal = true;
+
+% repeat the calculation assigning vector3D to clusters.  Due to the
+% increase in symmetry, there are only six clusters now.
+[cId,center] = calcCluster(r,'numCluster',6);
+
+% plot the vectors.  Note that we no longer get an upper and lower hemisphere plot; the antipodal symmetry tells MTEX they are equivilent and so one sufficient to represent the data.
+figure;plot(r,ind2color(cId))
+
+% annotate the cluster centers.
+annotate(center,'add2all')
+
+%%
+% pick a vector3d, and use that to convert the 10k random orientations
+% previously generated into crystal directions.
+h = ori \ vector3d(1,1,0);
+
+% assign the crystal directions to two clusters
+[cId,center] = calcCluster(h,'numCluster',2);
+
+% plot the crystal symmetry data on appropiate fundamental sector
+plot(h.project2FundamentalRegion,ind2color(cId),'fundamentalSector')
+
+% annote the cluster centers
+annotate(center,'add2all')
+
+%%
+% just as we calculated clusters for vector3D and crystal directions, we're
+% now going to do so for orientations
+[cId,center] = calcCluster(ori,'numCluster',2,'method','hierarchical');
+
+% create a pole figure of the orientations coloured by the cluster they
+% belong to.
+plotPDF(ori,ind2color(cId),Miller(1,0,0,cs),'all')
+
+%%
+% If you have the statistics toolbox, you can make some calculations about
+% the spread of points assigned to each cluster.
+
+% compute the full distance matrix between all combinations of vector3D
+d = angle_outer(r,r);
+% convert all small values to zero to simplify later calculations
+d(d<0.01) = 0;
+%d = d(triu(true(size(d)),1));
+
+% use the statistic toolbox
+try
+  d = squareform(d);
+  z = linkage(d,'ward');
+    
+  %cId = cluster(z,'cutoff',30*degree);
+  cId = cluster(z,'maxclust',6);
+
+  plotCluster(r,cId)
+catch
+  warning('Statistics Toolbox not installed!')
+end
+
+%%
+
+
+function plotCluster(r,cId,varargin)
+
+scatter(r(cId==1),'MarkerFaceColor',ind2color(1),varargin{:})
+hold on
+for i = 2:max(cId)
+  scatter(r(cId==i),'add2all','MarkerFaceColor',ind2color(i),varargin{:})
+end
+hold off
+end
+
+##### SOURCE END #####
+--></body></html>

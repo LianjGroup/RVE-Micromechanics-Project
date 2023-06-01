@@ -1,0 +1,191 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Calculating with Rotations</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_RotationOperations.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Calculating with Rotations</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Rotating Vectors</a></li><li><a href="#4">Concatenating Rotations</a></li><li><a href="#6">Rotational angle and the rotational axis</a></li><li><a href="#8">The inverse Rotation</a></li><li><a href="#9">Conversion into Euler Angles and Rodrigues Parametrisation</a></li></ul></div><h2 id="1">Rotating Vectors</h2><p>Let</p><pre class="codeinput">o = rotation.byEuler(90*degree,90*degree,0*degree)
+</pre><pre class="codeoutput"> 
+o = rotation
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+    90   90    0
+ 
+</pre><p>a certain rotation. Then the rotation of the xvector is computed via</p><pre class="codeinput">v = o * xvector
+</pre><pre class="codeoutput"> 
+v = vector3d
+</pre><p>The inverse rotation is computed via the <a href="rotation.mldivide.html">backslash operator</a></p><pre class="codeinput">o \ v
+</pre><pre class="codeoutput"> 
+ans = vector3d
+</pre><h2 id="4">Concatenating Rotations</h2><p>Let</p><pre class="codeinput">rot1 = rotation.byEuler(90*degree,0,0);
+rot2 = rotation.byEuler(0,60*degree,0);
+</pre><p>be two rotations. Then the rotation defined by applying first rotation one and then rotation two is computed by</p><pre class="codeinput">rot = rot2 * rot1
+</pre><pre class="codeoutput"> 
+rot = rotation
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+     0   60   90
+ 
+</pre><h2 id="6">Rotational angle and the rotational axis</h2><p>Then rotational angle and the axis of rotation can be computed via then commands <a href="quaternion.angle.html">angle(rot)</a> and <a href="quaternion.axis.html">axis(rot)</a></p><pre class="codeinput">rot.angle / degree
+
+rot.axis
+</pre><pre class="codeoutput">ans =
+  104.4775
+ 
+ans = vector3d
+</pre><p>If two rotations are specifies the command <a href="quaternion.angle.html">angle(rot1,rot2)</a> computes the rotational angle between both rotations</p><pre class="codeinput">angle(rot1,rot2) / degree
+</pre><pre class="codeoutput">ans =
+  104.4775
+</pre><h2 id="8">The inverse Rotation</h2><p>The inverse rotation you get from the command <a href="quaternion.inv.html">inv(rot)</a></p><pre class="codeinput">inv(rot)
+</pre><pre class="codeoutput"> 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+    90   60  180
+ 
+</pre><h2 id="9">Conversion into Euler Angles and Rodrigues Parametrisation</h2><p>There are methods to transform rotations in almost any other parameterization of rotations as they are:</p><div><ul><li><a href="quaternion.Euler.html,">Euler(rot)</a>   in Euler angle</li><li><a href="quaternion.Rodrigues.html,">Rodrigues(rot)</a>  in Rodrigues parameter</li></ul></div><pre class="codeinput">[alpha,beta,gamma] = Euler(rot,<span class="string">'Matthies'</span>)
+</pre><pre class="codeoutput">alpha =
+    4.7124
+beta =
+    1.0472
+gamma =
+    3.1416
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Calculating with Rotations
+%
+%% Rotating Vectors
+%
+% Let
+
+o = rotation.byEuler(90*degree,90*degree,0*degree)
+
+%%
+% a certain rotation. Then the rotation of the xvector is computed via
+
+v = o * xvector
+
+%%
+% The inverse rotation is computed via the <rotation.mldivide.html
+% backslash operator>
+
+o \ v
+
+%% Concatenating Rotations
+%
+% Let
+
+rot1 = rotation.byEuler(90*degree,0,0);
+rot2 = rotation.byEuler(0,60*degree,0);
+
+%%
+% be two rotations. Then the rotation defined by applying first rotation
+% one and then rotation two is computed by
+
+rot = rot2 * rot1
+
+%% Rotational angle and the rotational axis
+%
+% Then rotational angle and the axis
+% of rotation can be computed via then commands
+% <quaternion.angle.html angle(rot)> and
+% <quaternion.axis.html axis(rot)>
+
+rot.angle / degree
+
+rot.axis
+
+%%
+% If two rotations are specifies the command
+% <quaternion.angle.html angle(rot1,rot2)> computes the rotational angle
+% between both rotations
+
+angle(rot1,rot2) / degree
+
+
+%% The inverse Rotation
+%
+% The inverse rotation you get from the command
+% <quaternion.inv.html inv(rot)>
+
+inv(rot)
+
+%% Conversion into Euler Angles and Rodrigues Parametrisation
+%
+% There are methods to transform rotations in almost any other
+% parameterization of rotations as they are:
+%
+% * <quaternion.Euler.html, Euler(rot)>   in Euler angle
+% * <quaternion.Rodrigues.html, Rodrigues(rot)>  in Rodrigues parameter
+%
+
+[alpha,beta,gamma] = Euler(rot,'Matthies')
+
+##### SOURCE END #####
+--></body></html>

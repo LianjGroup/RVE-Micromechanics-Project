@@ -1,0 +1,254 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ODF Estimation from EBSD data</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSD2ODF.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ODF Estimation from EBSD data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#4">Automatic halfwidth selection</a></li><li><a href="#7">Effect of halfwidth selection</a></li></ul></div><p>In order to discuss ODF estimation from individual orientation data we start by loading an EBSD data set</p><pre class="codeinput">mtexdata <span class="string">copper</span>
+
+plot(ebsd,ebsd.orientations)
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations  Mineral         Color  Symmetry  Crystal reference frame
+     0  16116 (100%)   Copper  LightSkyBlue       432                         
+ 
+ Properties: confidenceindex, fit, imagequality, semsignal, unknown_11, unknown_12, unknown_13, unknown_14, x, y
+ Scan unit : um
+ 
+</pre><img vspace="50" hspace="5" src="EBSD2ODF_01.png" alt=""> <p>of copper. The orientation distribution function can now be computed by</p><pre class="codeinput">odf = calcDensity(ebsd(<span class="string">'copper'</span>).orientations)
+
+plotSection(odf,<span class="string">'contourf'</span>)
+mtexColorMap <span class="string">LaboTeX</span>
+mtexColorbar
+</pre><pre class="codeoutput"> 
+odf = SO3FunHarmonic (Copper &#8594; xyz)
+  isReal: true
+  bandwidth: 25
+  weight: 1
+ 
+</pre><img vspace="50" hspace="5" src="EBSD2ODF_02.png" alt=""> <p>The function <a href="rotation.calcDensity.html">calcDensity</a> implements the ODF estimation from EBSD data in MTEX. The underlying statistical method is called kernel density estimation, which can be seen as a generalized histogram. To be more precise, let's <img src="EBSD2ODF_eq12597203587872788464.png" alt="$\psi : SO(3) \to R$"> be a radially symmetric, unimodal model ODF. Then the kernel density estimator for the individual orientation data <img src="EBSD2ODF_eq15579615811920746173.png" alt="$o_1,o_2,\ldots,o_M$"> is defined as</p><p><img src="EBSD2ODF_eq05469883772502942892.png" alt="$$f(o) = \frac{1}{M} \sum_{i=1}^{M} \psi(o o_i^{-1})$$"></p><p>The choice of the model ODF <img src="EBSD2ODF_eq03702555302202684472.png" alt="$\psi$"> and in particular its halfwidth has a great impact in the resulting ODF. If no halfwidth is specified the default halfwidth of 10 degrees is selected.</p><h2 id="4">Automatic halfwidth selection</h2><p>MTEX includes an automatic halfwidth selection algorithm which is called by the command <a href="orientation.calcKernel.html">calcKernel</a>. To work properly, this algorithm needs spatially independent EBSD data as in the case of this dataset of very rough EBSD measurements (only one measurement per grain).</p><pre class="codeinput"><span class="comment">% try to compute an optimal kernel</span>
+psi = calcKernel(ebsd.orientations)
+</pre><pre class="codeoutput"> 
+psi = SO3DeLaValleePoussinKernel
+  bandwidth: 84
+  halfwidth: 2.7&deg;
+ 
+</pre><p>In the above example, the EBSD measurements are spatial dependent and the resulting halfwidth is too small. To avoid this problem we have to perform grain reconstruction first and then estimate the halfwidth from the grains.</p><pre class="codeinput"><span class="comment">% grains reconstruction</span>
+grains = calcGrains(ebsd);
+
+<span class="comment">% correct for to small grains</span>
+grains = grains(grains.grainSize&gt;5);
+
+<span class="comment">% compute optimal halfwidth from the meanorientations of grains</span>
+psi = calcKernel(grains(<span class="string">'co'</span>).meanOrientation)
+
+<span class="comment">% compute the ODF with the kernel psi</span>
+odf = calcDensity(ebsd(<span class="string">'co'</span>).orientations,<span class="string">'kernel'</span>,psi)
+</pre><pre class="codeoutput"> 
+psi = SO3DeLaValleePoussinKernel
+  bandwidth: 51
+  halfwidth: 4.7&deg;
+ 
+ 
+odf = SO3FunHarmonic (Copper &#8594; xyz)
+  isReal: true
+  bandwidth: 51
+  weight: 1
+ 
+</pre><p>Once an ODF is estimated all the functionality MTEX offers for <a href="ODFCharacteristics.html">ODF analysis</a> and <a href="ODFPlot.html">ODF visualization</a> is available.</p><pre class="codeinput">h = [Miller(1,0,0,odf.CS),Miller(1,1,0,odf.CS),Miller(1,1,1,odf.CS)];
+plotPDF(odf,h,<span class="string">'antipodal'</span>,<span class="string">'silent'</span>)
+</pre><img vspace="50" hspace="5" src="EBSD2ODF_03.png" alt=""> <h2 id="7">Effect of halfwidth selection</h2><p>As mentioned above a proper halfwidth selection is crucial for ODF estimation. The following simple numerical experiment illustrates the dependency between the kernel halfwidth and the estimated error.</p><p>Let's start with a model ODF and simulate some individual orientation data.</p><pre class="codeinput">modelODF = fibreODF(Miller(1,1,1,crystalSymmetry(<span class="string">'cubic'</span>)),xvector);
+ori = discreteSample(modelODF,10000)
+</pre><pre class="codeoutput"> 
+ori = orientation (m-3m &#8594; xyz)
+  size: 10000 x 1
+</pre><p>Next we define a list of kernel halfwidth ,</p><pre class="codeinput">hw = [1*degree, 2*degree, 4*degree, 8*degree, 16*degree, 32*degree];
+</pre><p>estimate for each halfwidth an ODF and compare it to the original ODF.</p><pre class="codeinput">e = zeros(size(hw));
+<span class="keyword">for</span> i = 1:length(hw)
+
+  odf = calcDensity(ori,<span class="string">'halfwidth'</span>,hw(i),<span class="string">'silent'</span>);
+  e(i) = calcError(modelODF, odf);
+
+<span class="keyword">end</span>
+</pre><p>After visualizing the estimation error we observe that its value is large either if we choose a very small or a very large halfwidth. In this specific example, the optimal halfwidth seems to be about 4 degrees.</p><pre class="codeinput">close <span class="string">all</span>
+plot(hw/degree,e)
+xlabel(<span class="string">'halfwidth in degree'</span>)
+ylabel(<span class="string">'esimation error'</span>)
+</pre><img vspace="50" hspace="5" src="EBSD2ODF_04.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ODF Estimation from EBSD data
+%
+%%
+% In order to discuss ODF estimation from individual orientation data we
+% start by loading an EBSD data set
+
+mtexdata copper
+
+plot(ebsd,ebsd.orientations)
+
+%%
+% of copper. The orientation distribution function can now be computed by
+
+odf = calcDensity(ebsd('copper').orientations)
+
+plotSection(odf,'contourf')
+mtexColorMap LaboTeX
+mtexColorbar
+
+%%
+% The function <rotation.calcDensity.html calcDensity> implements the ODF
+% estimation from EBSD data in MTEX. The underlying statistical method is
+% called kernel density estimation, which can be seen as a generalized
+% histogram. To be more precise, let's $\psi : SO(3) \to R$ be a radially
+% symmetric, unimodal model ODF. Then the kernel density estimator for the
+% individual orientation data $o_1,o_2,\ldots,o_M$ is defined as
+%
+% $$f(o) = \frac{1}{M} \sum_{i=1}^{M} \psi(o o_i^{-1})$$
+%
+% The choice of the model ODF $\psi$ and in particular its halfwidth has a
+% great impact in the resulting ODF. If no halfwidth is specified the
+% default halfwidth of 10 degrees is selected.
+%
+%% Automatic halfwidth selection
+%
+% MTEX includes an automatic halfwidth selection algorithm which is called
+% by the command <orientation.calcKernel.html calcKernel>. To work
+% properly, this algorithm needs spatially independent EBSD data as in the
+% case of this dataset of very rough EBSD measurements (only one
+% measurement per grain).
+
+% try to compute an optimal kernel
+psi = calcKernel(ebsd.orientations)
+
+%%
+% In the above example, the EBSD measurements are spatial dependent and the
+% resulting halfwidth is too small. To avoid this problem we have to perform
+% grain reconstruction first and then estimate the halfwidth from the
+% grains.
+
+% grains reconstruction
+grains = calcGrains(ebsd);
+
+% correct for to small grains
+grains = grains(grains.grainSize>5);
+
+% compute optimal halfwidth from the meanorientations of grains
+psi = calcKernel(grains('co').meanOrientation)
+
+% compute the ODF with the kernel psi
+odf = calcDensity(ebsd('co').orientations,'kernel',psi)
+
+
+%%
+% Once an ODF is estimated all the functionality MTEX offers for
+% <ODFCharacteristics.html ODF analysis> and <ODFPlot.html ODF
+% visualization> is available.
+
+h = [Miller(1,0,0,odf.CS),Miller(1,1,0,odf.CS),Miller(1,1,1,odf.CS)];
+plotPDF(odf,h,'antipodal','silent')
+
+
+%% Effect of halfwidth selection
+%
+% As mentioned above a proper halfwidth selection is crucial for ODF
+% estimation. The following simple numerical experiment illustrates the
+% dependency between the kernel halfwidth and the estimated error.
+%
+% Let's start with a model ODF and simulate some individual orientation data.
+
+modelODF = fibreODF(Miller(1,1,1,crystalSymmetry('cubic')),xvector);
+ori = discreteSample(modelODF,10000)
+
+%%
+% Next we define a list of kernel halfwidth ,
+
+hw = [1*degree, 2*degree, 4*degree, 8*degree, 16*degree, 32*degree];
+
+%%
+% estimate for each halfwidth an ODF and compare it to the original ODF.
+
+e = zeros(size(hw));
+for i = 1:length(hw)
+  
+  odf = calcDensity(ori,'halfwidth',hw(i),'silent');
+  e(i) = calcError(modelODF, odf);
+  
+end
+
+%%
+% After visualizing the estimation error we observe that its value is large 
+% either if we choose a very small or a very large halfwidth.
+% In this specific example, the optimal halfwidth seems to be about 4
+% degrees.
+
+close all
+plot(hw/degree,e)
+xlabel('halfwidth in degree')
+ylabel('esimation error')
+
+##### SOURCE END #####
+--></body></html>

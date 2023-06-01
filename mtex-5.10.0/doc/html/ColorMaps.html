@@ -1,0 +1,252 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Color Mapping</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ColorMaps.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Color Mapping</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">A sample ODFs and Simulated Pole Figure Data</a></li><li><a href="#3">Tight Colorcoding</a></li><li><a href="#4">Equal Colorcoding</a></li><li><a href="#5">Setting an Explicite Colorrange</a></li><li><a href="#6">Setting the Contour Levels</a></li><li><a href="#7">Modifying the Colorrange After Plotting</a></li><li><a href="#8">Logarithmic Plots</a></li><li><a href="#9">Changing the Colormap</a></li><li><a href="#10">Multiple Colormaps</a></li></ul></div><p>A central issue when interpreting plots is to have a consistent color coding among all plots. In MTEX this can be achieved in two ways. If the the minimum and maximum value are known then one can specify the color range directly using the options <b>colorrange</b> or <b>contourf</b>, or the command <a href="setColorRange.html">setColorRange</a> is used which allows to set the color range afterwards.</p><h2 id="2">A sample ODFs and Simulated Pole Figure Data</h2><p>Let us first define some model <a href="SO3Fun.SO3Fun.html">ODFs</a> to be plotted later on.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'-3m'</span>);
+odf = fibreODF(Miller(1,1,0,cs),zvector)
+pf = calcPoleFigure(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  equispacedS2Grid(<span class="string">'points'</span>,500,<span class="string">'antipodal'</span>));
+</pre><pre class="codeoutput"> 
+odf = SO3FunCBF (-3m1 &#8594; xyz)
+ 
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (11-20) || 0,0,1
+  weight: 1
+ 
+</pre><h2 id="3">Tight Colorcoding</h2><p>When <a href="PoleFigure.plot.html">plot</a> is called without any colorcoding option, the plots are constructed using the  <b>tight</b> option to the range of the data independently from the other plots. This means that different pole figures may have different color coding and in principle cannot be compared to each other.</p><pre class="codeinput">close <span class="string">all</span>
+plot(pf)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_01.png" alt=""> <h2 id="4">Equal Colorcoding</h2><p>The <b>tight</b> colorcoding can make the reading and comparison of two pole figures a bit hard. If you want to have one colorcoding for all plots within one figure use the option <b>colorrange</b> to <b>equal</b>.</p><pre class="codeinput">plot(pf,<span class="string">'colorRange'</span>,<span class="string">'equal'</span>)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_02.png" alt=""> <h2 id="5">Setting an Explicite Colorrange</h2><p>If you want to have a unified colorcoding for several figures you can set the colorrange directly in the <a href="SO3Fun.plotPDF.html">plot command</a></p><pre class="codeinput">close <span class="string">all</span>
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  <span class="string">'colorrange'</span>,[0 4],<span class="string">'antipodal'</span>);
+mtexColorbar
+
+figure
+plotPDF(.5*odf+.5*uniformODF(cs),[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  <span class="string">'colorrange'</span>,[0 4],<span class="string">'antipodal'</span>);
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_03.png" alt=""> <img vspace="50" hspace="5" src="ColorMaps_04.png" alt=""> <h2 id="6">Setting the Contour Levels</h2><p>In the case of contour plots you can also specify the <b>contour levels</b> directly</p><pre class="codeinput">close <span class="string">all</span>
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="keyword">...</span>
+  <span class="string">'contourf'</span>,0:1:5,<span class="string">'antipodal'</span>)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_05.png" alt=""> <h2 id="7">Modifying the Colorrange After Plotting</h2><p>The color range of the figures can also be adjusted afterwards using the command <a href="mtexFigure.CLim.html">CLim</a></p><pre class="codeinput">CLim(gcm,[0.38,3.9])
+</pre><img vspace="50" hspace="5" src="ColorMaps_06.png" alt=""> <h2 id="8">Logarithmic Plots</h2><p>Sometimes logarithmic scaled plots are of interest. For this case all plots in MTEX understand the option <b>logarithmic</b>, e.g.</p><pre class="codeinput">close <span class="string">all</span>;
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="string">'antipodal'</span>,<span class="string">'logarithmic'</span>)
+CLim(gcm,[0.01 12]);
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_07.png" alt=""> <h2 id="9">Changing the Colormap</h2><p>The colormap can be changed by the command mtexColorMap, e.g., in order to set a white to black colormap one has the commands</p><pre class="codeinput">plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],<span class="string">'antipodal'</span>)
+mtexColorMap <span class="string">white2black</span>
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_08.png" alt=""> <h2 id="10">Multiple Colormaps</h2><p>One can even use different colormaps within one figure</p><pre class="codeinput"><span class="comment">% initialize an MTEXFigure</span>
+mtexFig = newMtexFigure;
+
+<span class="comment">% for three different colormaps</span>
+<span class="keyword">for</span> cm = {<span class="string">'hot'</span>, <span class="string">'cool'</span>, <span class="string">'parula'</span>}
+
+  <span class="comment">% generate a new axis</span>
+  nextAxis
+
+  <span class="comment">% plot some random data in different axis</span>
+  plot(vector3d.rand(100),<span class="string">'smooth'</span>,<span class="string">'grid'</span>,<span class="string">'grid_res'</span>,90*degree,<span class="string">'upper'</span>);
+
+  <span class="comment">% and apply an individual colormap</span>
+  mtexColorMap(mtexFig.gca,char(cm))
+
+  <span class="comment">% set the title to be the name of the colormap</span>
+  mtexTitle(char(cm))
+<span class="keyword">end</span>
+
+<span class="comment">% plot a colorbar for each plot</span>
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="ColorMaps_09.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Color Mapping
+%
+%%
+% A central issue when interpreting plots is to have a consistent color
+% coding among all plots. In MTEX this can be achieved in two ways. If the
+% the minimum and maximum value are known then one can specify the color
+% range directly using the options *colorrange* or *contourf*, or the
+% command <setColorRange.html setColorRange> is used which allows to set
+% the color range afterwards.
+%
+%% A sample ODFs and Simulated Pole Figure Data
+%
+% Let us first define some model <SO3Fun.SO3Fun.html ODFs> to be plotted later
+% on.
+
+cs = crystalSymmetry('-3m');
+odf = fibreODF(Miller(1,1,0,cs),zvector)
+pf = calcPoleFigure(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],...
+  equispacedS2Grid('points',500,'antipodal'));
+
+%% Tight Colorcoding
+%
+% When <PoleFigure.plot.html plot> is called without any colorcoding option, 
+% the plots are constructed using the  *tight* option to the range of the data 
+% independently from the other plots. This means that different pole
+% figures may have different color coding and in principle cannot be
+% compared to each other.
+
+close all
+plot(pf)
+mtexColorbar
+
+%% Equal Colorcoding
+%
+% The *tight* colorcoding can make the reading and comparison of two pole figures 
+% a bit hard. If you want to have one colorcoding for all plots within one figure use the
+% option *colorrange* to *equal*.
+
+plot(pf,'colorRange','equal')
+mtexColorbar
+
+%% Setting an Explicite Colorrange
+%
+% If you want to have a unified colorcoding for several figures you can
+% set the colorrange directly in the <SO3Fun.plotPDF.html plot command>
+
+close all
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],...
+  'colorrange',[0 4],'antipodal');
+mtexColorbar
+
+figure
+plotPDF(.5*odf+.5*uniformODF(cs),[Miller(1,0,0,cs),Miller(1,1,1,cs)],...
+  'colorrange',[0 4],'antipodal');
+mtexColorbar
+
+%% Setting the Contour Levels
+%
+% In the case of contour plots you can also specify the *contour levels*
+% directly
+
+close all
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],...
+  'contourf',0:1:5,'antipodal')
+mtexColorbar
+
+%% Modifying the Colorrange After Plotting
+%
+% The color range of the figures can also be adjusted afterwards using the
+% command <mtexFigure.CLim.html CLim>
+
+CLim(gcm,[0.38,3.9])
+
+
+%% Logarithmic Plots
+%
+% Sometimes logarithmic scaled plots are of interest. For this case all
+% plots in MTEX understand the option *logarithmic*, e.g.
+
+close all;
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],'antipodal','logarithmic')
+CLim(gcm,[0.01 12]);
+mtexColorbar
+
+
+%% Changing the Colormap
+%
+% The colormap can be changed by the command mtexColorMap, e.g., in order
+% to set a white to black colormap one has the commands
+
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,1,cs)],'antipodal')
+mtexColorMap white2black
+mtexColorbar
+
+%% Multiple Colormaps
+%
+% One can even use different colormaps within one figure
+
+% initialize an MTEXFigure
+mtexFig = newMtexFigure;
+
+% for three different colormaps 
+for cm = {'hot', 'cool', 'parula'}
+  
+  % generate a new axis
+  nextAxis
+  
+  % plot some random data in different axis
+  plot(vector3d.rand(100),'smooth','grid','grid_res',90*degree,'upper');
+  
+  % and apply an individual colormap
+  mtexColorMap(mtexFig.gca,char(cm))
+  
+  % set the title to be the name of the colormap
+  mtexTitle(char(cm))
+end
+
+% plot a colorbar for each plot
+mtexColorbar
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,397 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Fundamental Regions</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_OrientationFundamentalRegion.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Fundamental Regions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#4">Crystal Symmetries</a></li><li><a href="#8">Change the center of the fundamental region</a></li><li><a href="#9">Fundamental regions of misorientations</a></li><li><a href="#11">Fundamental regions of misorientations with antipodal symmetry</a></li><li><a href="#14">Axis angle sections</a></li></ul></div><p>Thanks to crystal symmetry the space of all rotations can be reduced to a so called fundamental or asymmetric region which has the property that each for orientation there is "exactly" one symmetrically equivalent orientation that is within the fundamental region. Those regions play an important role for visualizing orientations and ODFs as well as for the computation of axis and angle distributions of misorientations.</p><p>The space of all orientations can be imagined as a three dimensional ball with radius 180 degree. The distance of some point in the ball to the origin represent the rotational angle and the vector represents the rotational axis. In MTEX this can be represented as follows</p><pre class="codeinput"><span class="comment">% triclic crystal symmetry</span>
+cs = crystalSymmetry(<span class="string">'triclinic'</span>)
+
+<span class="comment">% the corresponding orientation space</span>
+oR_all = fundamentalRegion(cs);
+
+<span class="comment">% lets plot the ball of all orientations</span>
+plot(oR_all)
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  symmetry          : -1                 
+  elements          : 2                  
+  a, b, c           : 1, 1, 1            
+  alpha, beta, gamma: 90&deg;, 90&deg;, 90&deg;      
+  reference frame   : X||a*, Y||b*, Z||c*
+ 
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_01.png" alt=""> <p>Next we plot some orientations into this space</p><pre class="codeinput"><span class="comment">% rotation about the z-axis about 180 degree</span>
+rotZ = orientation.byAxisAngle(zvector,180*degree,cs);
+
+hold <span class="string">on</span>
+plot(rotZ,<span class="string">'MarkerColor'</span>,<span class="string">'b'</span>,<span class="string">'MarkerSize'</span>,10)
+hold <span class="string">off</span>
+
+<span class="comment">% rotations about the x- and y-axis about 30,60,90 ... degree</span>
+rotX = orientation.byAxisAngle(xvector,(-180:30:180)*degree,cs);
+rotY = orientation.byAxisAngle(yvector,(-180:30:180)*degree,cs);
+
+hold <span class="string">on</span>
+plot(rotX,<span class="string">'MarkerColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerSize'</span>,10)
+plot(rotY,<span class="string">'MarkerColor'</span>,<span class="string">'g'</span>,<span class="string">'MarkerSize'</span>,10)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_02.png" alt=""> <p>An alternative view on the orientation space is by sections, e.g. sections along the Euler angles or along the rotational angle. The latter one should be demonstrated next:</p><pre class="codeinput">plotSection(rotZ,<span class="string">'MarkerColor'</span>,<span class="string">'b'</span>,<span class="string">'axisAngle'</span>,(30:30:180)*degree)
+hold <span class="string">on</span>
+plot(rotX,<span class="string">'MarkerColor'</span>,<span class="string">'g'</span>,<span class="string">'add2all'</span>)
+hold <span class="string">on</span>
+plot(rotY,<span class="string">'MarkerColor'</span>,<span class="string">'r'</span>,<span class="string">'add2all'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_03.png" alt=""> <h2 id="4">Crystal Symmetries</h2><p>In case of crystal symmetries the orientation space can divided into as many equivalent segments as the symmetry group has elements. E.g. in the case of orthorombic symmetry the orientation space is subdivided into four equal parts, the central one looking like</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'222'</span>)
+oR = fundamentalRegion(cs);
+
+close <span class="string">all</span>
+plot(oR_all)
+hold <span class="string">on</span>
+plot(oR,<span class="string">'color'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  symmetry: 222    
+  elements: 4      
+  a, b, c : 1, 1, 1
+ 
+Warning: Possible symmetry mismach! 
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_04.png" alt=""> <p>As an example consider the following EBSD data set</p><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0   58485 (24%)  notIndexed                                                 
+     1  152345 (62%)  Forsterite  LightSkyBlue       mmm                         
+     2   26058 (11%)   Enstatite  DarkSeaGreen       mmm                         
+     3   9064 (3.7%)    Diopside     Goldenrod     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p>we can visualize the Forsterite orientations by</p><pre class="codeinput">plot(ebsd(<span class="string">'Fo'</span>).orientations,<span class="string">'axisAngle'</span>)
+</pre><pre class="codeoutput">plot 2000 random orientations out of 152345 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_05.png" alt=""> <p>We see that all orientations are automatically projected inside the fundamental region. In order to compute explicitly the represent inside the fundamental region we can do</p><pre class="codeinput">ori =  ebsd(<span class="string">'Fo'</span>).orientations.project2FundamentalRegion
+</pre><pre class="codeoutput"> 
+ori = orientation (Forsterite &#8594; xyz)
+  size: 152345 x 1
+</pre><h2 id="8">Change the center of the fundamental region</h2><p>There is no necessity that the fundamental region has to be centered in the origin - it can be centered at any orientation, e.g. at the mean orientation of a grain.</p><pre class="codeinput"><span class="comment">% segment data into grains</span>
+[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% take the orientations of the largest on</span>
+[~,id] = max(grains.area);
+largeGrain = grains(id)
+ori = ebsd(largeGrain).orientations
+
+<span class="comment">% recenter the fundamental zone to the mean orientation</span>
+center = largeGrain.meanOrientation;
+plot(rotate(oR,center))
+
+<span class="comment">% project the orientations into the fundamental region around the mean</span>
+<span class="comment">% orientation</span>
+ori = ori.project2FundamentalRegion(center)
+
+hold <span class="string">on</span>
+plot(ori,<span class="string">'axisAngle'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+largeGrain = grain2d
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1       1    2683  Forsterite       mmm                         
+ 
+ boundary segments: 714 (32005 &micro;m)
+ inner boundary segments: 0 (0 &micro;m)
+ triple points: 44
+ 
+  Id   Phase   Pixels   phi1   Phi   phi2         GOS
+ 931       1     2683    171    55    261   0.0220527
+ 
+ 
+ori = orientation (Forsterite &#8594; xyz)
+  size: 2683 x 1
+ 
+ori = orientation (Forsterite &#8594; xyz)
+  size: 2683 x 1
+ 
+ 
+cs1 = crystalSymmetry
+ 
+  mineral : Forsterite  
+  color   : LightSkyBlue
+  symmetry: mmm         
+  elements: 8           
+  a, b, c : 4.8, 10, 6  
+ 
+ 
+cs2 = crystalSymmetry
+ 
+  symmetry: 222    
+  elements: 4      
+  a, b, c : 1, 1, 1
+ 
+plot 2000 random orientations out of 2683 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_06.png" alt=""> <h2 id="9">Fundamental regions of misorientations</h2><p>Misorientations are characterised by two crystal symmetries. A corresponding fundamental region is defined by</p><pre class="codeinput">oR = fundamentalRegion(ebsd(<span class="string">'Fo'</span>).CS,ebsd(<span class="string">'En'</span>).CS);
+
+plot(oR)
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_07.png" alt=""> <p>Let plot grain boundary misorientations within this fundamental region</p><pre class="codeinput">plot(grains.boundary(<span class="string">'fo'</span>,<span class="string">'En'</span>).misorientation)
+</pre><pre class="codeoutput">plot 2000 random orientations out of 11814 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_08.png" alt=""> <h2 id="11">Fundamental regions of misorientations with antipodal symmetry</h2><p>Note that for boundary misorientations between the same phase we can <b>not</b> distinguish between a misorientation and its inverse. This is not the case for misorientations between different phases or the misorientation between the mean orientation of a grain and all other orientations. The inverse of a misorientation is axis - angle representation is simply the one with the same angle but antipodal axis. Accordingly this additional symmetry is handled in MTEX by the keyword <b>antipodal</b>.</p><pre class="codeinput">oR = fundamentalRegion(ebsd(<span class="string">'Fo'</span>).CS,ebsd(<span class="string">'Fo'</span>).CS,<span class="string">'antipodal'</span>);
+
+plot(oR)
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_09.png" alt=""> <p>We see that the fundamental region with antipodal symmetry has only half the size as without. In the case of misorientations between the same phase MTEX automatically sets the antipodal flag to the misorientations and plots them accordingly.</p><pre class="codeinput">mori = grains.boundary(<span class="string">'Fo'</span>,<span class="string">'Fo'</span>).misorientation
+plot(mori)
+</pre><pre class="codeoutput"> 
+mori = misorientation (Forsterite &#8594; Forsterite)
+  size: 15974 x 1
+  antipodal:         true
+plot 2000 random orientations out of 15974 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_10.png" alt=""> <p>If you want to avoid this you can remove the anitpodal flag by</p><pre class="codeinput">mori.antipodal = false;
+
+plot(mori)
+</pre><pre class="codeoutput">plot 2000 random orientations out of 15974 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_11.png" alt=""> <h2 id="14">Axis angle sections</h2><p>Again we can plot constant angle sections through the fundamental region. This is done by</p><pre class="codeinput">plotSection(mori,<span class="string">'axisAngle'</span>)
+</pre><pre class="codeoutput">  plotting 2000 random orientations out of 15974 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_12.png" alt=""> <p>Note that in the previous plot we distinguish between <tt>mori</tt> and <tt>inv(mori)</tt>. Adding antipodal symmetry those are considered as equivalent</p><pre class="codeinput">plotSection(mori,<span class="string">'axisAngle'</span>,<span class="string">'antipodal'</span>)
+</pre><pre class="codeoutput">  plotting 2000 random orientations out of 15974 given orientations
+</pre><img vspace="50" hspace="5" src="OrientationFundamentalRegion_13.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Fundamental Regions 
+%
+%%
+% Thanks to crystal symmetry the space of all rotations can be reduced to a
+% so called fundamental or asymmetric region which has the property that
+% each for orientation there is "exactly" one symmetrically equivalent
+% orientation that is within the fundamental region. Those regions play an
+% important role for visualizing orientations and ODFs as well as for the
+% computation of axis and angle distributions of misorientations.
+% 
+% The space of all orientations can be imagined as a three dimensional ball
+% with radius 180 degree. The distance of some point in the ball to the
+% origin represent the rotational angle and the vector represents the
+% rotational axis. In MTEX this can be represented as follows
+
+% triclic crystal symmetry
+cs = crystalSymmetry('triclinic')
+
+% the corresponding orientation space
+oR_all = fundamentalRegion(cs);
+
+% lets plot the ball of all orientations
+plot(oR_all)
+
+%%
+% Next we plot some orientations into this space
+
+% rotation about the z-axis about 180 degree
+rotZ = orientation.byAxisAngle(zvector,180*degree,cs); 
+
+hold on
+plot(rotZ,'MarkerColor','b','MarkerSize',10)
+hold off
+
+% rotations about the x- and y-axis about 30,60,90 ... degree
+rotX = orientation.byAxisAngle(xvector,(-180:30:180)*degree,cs); 
+rotY = orientation.byAxisAngle(yvector,(-180:30:180)*degree,cs); 
+
+hold on
+plot(rotX,'MarkerColor','r','MarkerSize',10)
+plot(rotY,'MarkerColor','g','MarkerSize',10)
+hold off
+
+%% 
+% An alternative view on the orientation space is by sections, e.g. 
+% sections along the Euler angles or along the rotational angle. The latter
+% one should be demonstrated next:
+
+plotSection(rotZ,'MarkerColor','b','axisAngle',(30:30:180)*degree)
+hold on
+plot(rotX,'MarkerColor','g','add2all')
+hold on
+plot(rotY,'MarkerColor','r','add2all')
+hold off
+
+%% Crystal Symmetries
+% In case of crystal symmetries the orientation space can divided into as
+% many equivalent segments as the symmetry group has elements. E.g. in the
+% case of orthorombic symmetry the orientation space is subdivided into four
+% equal parts, the central one looking like
+
+cs = crystalSymmetry('222')
+oR = fundamentalRegion(cs);
+
+close all
+plot(oR_all)
+hold on
+plot(oR,'color','r')
+hold off
+
+%%
+% As an example consider the following EBSD data set
+
+mtexdata forsterite
+
+%%
+% we can visualize the Forsterite orientations by
+
+plot(ebsd('Fo').orientations,'axisAngle')
+
+%%
+% We see that all orientations are automatically projected inside the
+% fundamental region. In order to compute explicitly the represent inside
+% the fundamental region we can do
+
+ori =  ebsd('Fo').orientations.project2FundamentalRegion
+
+%% Change the center of the fundamental region
+% There is no necessity that the fundamental region has to be centered in
+% the origin - it can be centered at any orientation, e.g. at the mean
+% orientation of a grain.
+
+% segment data into grains
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'));
+
+% take the orientations of the largest on
+[~,id] = max(grains.area);
+largeGrain = grains(id)
+ori = ebsd(largeGrain).orientations
+
+% recenter the fundamental zone to the mean orientation
+center = largeGrain.meanOrientation;
+plot(rotate(oR,center))
+
+% project the orientations into the fundamental region around the mean
+% orientation
+ori = ori.project2FundamentalRegion(center)
+
+hold on
+plot(ori,'axisAngle')
+hold off
+
+%% Fundamental regions of misorientations
+%
+% Misorientations are characterised by two crystal symmetries. A
+% corresponding fundamental region is defined by
+
+oR = fundamentalRegion(ebsd('Fo').CS,ebsd('En').CS);
+
+plot(oR)
+
+%%
+% Let plot grain boundary misorientations within this fundamental region
+
+plot(grains.boundary('fo','En').misorientation)
+
+
+%% Fundamental regions of misorientations with antipodal symmetry
+%
+% Note that for boundary misorientations between the same phase we can
+% *not* distinguish between a misorientation and its inverse. This is not
+% the case for misorientations between different phases or the
+% misorientation between the mean orientation of a grain and all other
+% orientations. The inverse of a misorientation is axis - angle
+% representation is simply the one with the same angle but antipodal axis.
+% Accordingly this additional symmetry is handled in MTEX by the keyword
+% *antipodal*. 
+
+oR = fundamentalRegion(ebsd('Fo').CS,ebsd('Fo').CS,'antipodal');
+
+plot(oR)
+
+%%
+% We see that the fundamental region with antipodal symmetry has only half
+% the size as without. In the case of misorientations between the same
+% phase MTEX automatically sets the antipodal flag to the misorientations
+% and plots them accordingly.
+
+mori = grains.boundary('Fo','Fo').misorientation
+plot(mori)
+
+%%
+% If you want to avoid this you can remove the anitpodal flag by
+
+mori.antipodal = false;
+
+plot(mori)
+
+%% Axis angle sections
+%
+% Again we can plot constant angle sections through the fundamental
+% region. This is done by
+
+plotSection(mori,'axisAngle')
+
+%%
+% Note that in the previous plot we distinguish between |mori| and
+% |inv(mori)|. Adding antipodal symmetry those are considered as equivalent
+
+plotSection(mori,'axisAngle','antipodal')
+
+
+##### SOURCE END #####
+--></body></html>

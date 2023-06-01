@@ -1,0 +1,213 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>The Spherical Bingham Distribution</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_S2FunBingham.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>The Spherical Bingham Distribution</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Meaning of <img src="S2FunBingham_eq01541992743032940906.png" alt="$Z$"></a></li><li><a href="#3">Drawing a random sample of the Bingham distribution</a></li><li><a href="#4">Estimating a spherical Bingham distribution from discrete data</a></li></ul></div><p>The Bingham distribution on the sphere is an antipodal symmetric distribution (Bingham, 1974) with a probabiliy density function given by</p><p><img src="S2FunBingham_eq11340297707996144608.png" alt="$$p_{b}(\hat{x}\vert AKA^T) = \frac{1}{F(\kappa_{1},\kappa_{2},\kappa_{3})}exp (\hat{x}^T AZA^T \hat{x})$$"></p><p>where <img src="S2FunBingham_eq08772416954200330719.png" alt="$A$"> is an orthognal covariance matrix, and <img src="S2FunBingham_eq01541992743032940906.png" alt="$Z$"> a concentration matrix with <img src="S2FunBingham_eq07612272419131893630.png" alt="$diag(\kappa_{1},\kappa_{2},\kappa_{3})$"> with <img src="S2FunBingham_eq08161848410286906755.png" alt="$\kappa_{1} < \kappa_{2} < \kappa_{3}$">.</p><p>In mtex <img src="S2FunBingham_eq01541992743032940906.png" alt="$Z$"> is given by <tt>Z = [k1,k2,k3]</tt> with <tt>k3 = 0</tt> and <img src="S2FunBingham_eq08772416954200330719.png" alt="$A$"> is given by three orthognal vectors.</p><p><a href="https://www.jstor.org/stable/2958339">Bingham, C., An Antipodally Symmetric Distribution on the Sphere, The Annals of Statistics Vol. 2, No. 6 (Nov., 1974), pp. 1201-1225</a></p><pre class="codeinput"><span class="comment">% A simple example:</span>
+Z = [-10 -4 0]
+a = rotation.rand(1).*vector3d([xvector yvector zvector])
+bs2 = BinghamS2(Z,a);
+plot(bs2)
+</pre><pre class="codeoutput">Z =
+   -10    -4     0
+ 
+a = vector3d
+ size: 1 x 3
+</pre><img vspace="50" hspace="5" src="S2FunBingham_01.png" alt=""> <h2 id="2">Meaning of <img src="S2FunBingham_eq01541992743032940906.png" alt="$Z$"></h2><p><img src="S2FunBingham_eq10939046045788127550.png" alt="$k1 = k2$"> defines a rotationally symmetric point maximum and <img src="S2FunBingham_eq04132005269364405305.png" alt="$k2 = 0$"> defines a girdle distribution.</p><pre class="codeinput">close
+kappa = [0 4 8 12 24];
+mtexFig = newMtexFigure(<span class="string">'layout'</span>,[length(kappa) length(kappa)]);
+<span class="keyword">for</span> k2 = kappa
+  <span class="keyword">for</span> k1 = kappa
+    <span class="keyword">if</span> k1 &gt;= k2
+      bs=BinghamS2([-k1 -k2 0]);
+      plot(bs,<span class="string">'colorRange'</span>,[0,25],<span class="string">'TR'</span>,[{<span class="string">'$\kappa_1 :$'</span>} ; num2str(k1)],<span class="string">'BR'</span>,[{<span class="string">'$\kappa_2 :$'</span>} ; num2str(k2)])
+<span class="comment">%       mtexTitle(['$\kappa_1 :$' num2str(k1)  '  ' '$\kappa_2 :$' num2str(k2)],'FontSize',14)</span>
+      nextAxis
+    <span class="keyword">else</span>
+      nextAxis
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+<span class="keyword">end</span>
+CLim(mtexFig,<span class="string">'equal'</span>)
+mtexFig.drawNow;
+</pre><img vspace="50" hspace="5" src="S2FunBingham_02.png" alt=""> <h2 id="3">Drawing a random sample of the Bingham distribution</h2><pre class="codeinput">close
+v = bs2.discreteSample(500)
+plot(bs2)
+hold <span class="string">on</span>
+plot(v,<span class="string">'MarkerFaceColor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+v = vector3d
+ size: 500 x 1
+ antipodal: true
+</pre><img vspace="50" hspace="5" src="S2FunBingham_03.png" alt=""> <h2 id="4">Estimating a spherical Bingham distribution from discrete data</h2><p>Given arbitrarily scattered data <tt>v</tt> on the sphere we can estimate the best fitting Bingham distribution by</p><pre class="codeinput"><span class="comment">% estimate a Bingham distribution</span>
+bs = BinghamS2.fit(v,<span class="string">'confElli'</span>,0.9)
+</pre><pre class="codeoutput"> 
+bs = BinghamS2
+</pre><p>Lets plot the fitted distribution with the data</p><pre class="codeinput">plot(bs)
+hold <span class="string">on</span>
+plot(v,<span class="string">'MarkerFaceColor'</span>,<span class="string">'Black'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="S2FunBingham_04.png" alt=""> <p>Under the assumption of sufficiently many and sufficently concetrated data we may also estimate a confidence ellipse for the mean direction (default p = 0.95). The center of the ellipse is given by the largest principle vector stored in <tt>bs.a(3)</tt></p><pre class="codeinput">annotate(bs.a(3),<span class="string">'MarkerFaceColor'</span>,<span class="string">'red'</span>,<span class="string">'MarkerSize'</span>,10)
+</pre><img vspace="50" hspace="5" src="S2FunBingham_05.png" alt=""> <p>The orientation of the ellipse is specified by all the principle vectors <tt>bs.a</tt> and the a and b axes are computed by the command <tt>cEllipse</tt></p><pre class="codeinput">mtexColorMap <span class="string">white2black</span>
+
+<span class="comment">% annotate the ellipse</span>
+ellipse(rotation(<span class="string">'matrix'</span>,bs.a.xyz'),bs.cEllipse(1),bs.cEllipse(2), <span class="keyword">...</span>
+    <span class="string">'linewidth'</span>,2,<span class="string">'lineColor'</span>,<span class="string">'r'</span>,<span class="string">'linestyle'</span>,<span class="string">'-.'</span>)
+</pre><img vspace="50" hspace="5" src="S2FunBingham_06.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% The Spherical Bingham Distribution
+%
+%%
+% The Bingham distribution on the sphere is an antipodal symmetric
+% distribution (Bingham, 1974) with a probabiliy density function given by
+%
+% $$p_{b}(\hat{x}\vert AKA^T) = \frac{1}{F(\kappa_{1},\kappa_{2},\kappa_{3})}exp (\hat{x}^T AZA^T \hat{x})$$
+%
+% where $A$ is an orthognal covariance matrix, and $Z$ a concentration matrix
+% with $diag(\kappa_{1},\kappa_{2},\kappa_{3})$ with
+% $\kappa_{1} < \kappa_{2} < \kappa_{3}$.
+%
+% In mtex $Z$ is given by |Z = [k1,k2,k3]| with |k3 = 0| and $A$ is given by three
+% orthognal vectors.
+%
+% <https://www.jstor.org/stable/2958339 Bingham, C., An Antipodally Symmetric Distribution on the Sphere, The Annals of Statistics Vol. 2, No. 6 (Nov., 1974), pp. 1201-1225>
+
+% A simple example:
+Z = [-10 -4 0]
+a = rotation.rand(1).*vector3d([xvector yvector zvector])
+bs2 = BinghamS2(Z,a);
+plot(bs2)
+
+%% Meaning of $Z$
+% $k1 = k2$ defines a rotationally symmetric point maximum and $k2 = 0$ defines
+% a girdle distribution.
+close
+kappa = [0 4 8 12 24];
+mtexFig = newMtexFigure('layout',[length(kappa) length(kappa)]);
+for k2 = kappa
+  for k1 = kappa
+    if k1 >= k2
+      bs=BinghamS2([-k1 -k2 0]);
+      plot(bs,'colorRange',[0,25],'TR',[{'$\kappa_1 :$'} ; num2str(k1)],'BR',[{'$\kappa_2 :$'} ; num2str(k2)])
+%       mtexTitle(['$\kappa_1 :$' num2str(k1)  '  ' '$\kappa_2 :$' num2str(k2)],'FontSize',14)
+      nextAxis
+    else
+      nextAxis
+    end
+  end
+end
+CLim(mtexFig,'equal')
+mtexFig.drawNow;
+
+%% Drawing a random sample of the Bingham distribution
+
+close
+v = bs2.discreteSample(500)
+plot(bs2)
+hold on
+plot(v,'MarkerFaceColor','k')
+hold off
+
+
+%% Estimating a spherical Bingham distribution from discrete data
+%
+% Given arbitrarily scattered data |v| on the sphere we can estimate the
+% best fitting Bingham distribution by
+
+% estimate a Bingham distribution
+bs = BinghamS2.fit(v,'confElli',0.9)
+
+%%
+% Lets plot the fitted distribution with the data
+
+plot(bs)
+hold on
+plot(v,'MarkerFaceColor','Black')
+hold off
+
+%%
+% Under the assumption of sufficiently many and sufficently concetrated
+% data we may also estimate a confidence ellipse for the mean direction
+% (default p = 0.95). The center of the ellipse is given by the largest
+% principle vector stored in |bs.a(3)|
+
+annotate(bs.a(3),'MarkerFaceColor','red','MarkerSize',10)
+
+%%
+% The orientation of the ellipse is specified by all the principle vectors
+% |bs.a| and the a and b axes are computed by the command |cEllipse|
+
+mtexColorMap white2black
+
+% annotate the ellipse
+ellipse(rotation('matrix',bs.a.xyz'),bs.cEllipse(1),bs.cEllipse(2), ...
+    'linewidth',2,'lineColor','r','linestyle','-.')
+
+
+##### SOURCE END #####
+--></body></html>

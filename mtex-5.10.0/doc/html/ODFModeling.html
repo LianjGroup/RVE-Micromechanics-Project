@@ -1,0 +1,161 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ODF Modeling</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ODFModeling.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ODF Modeling</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">The Uniform ODF</a></li><li><a href="#3">Combining model ODFs</a></li></ul></div><p>ODFs are functions on the rotation group <img src="ODFModeling_eq01113541437488883686.png" alt="$SO(3)$">. Therefore we construct them by the class <tt><a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt>.</p><p>MTEX provides a very simple way to define model ODFs. Generally, there are five different ODF types in MTEX:</p><div><ul><li><a href="RadialODFs.html#1">uniform ODFs</a></li><li><a href="RadialODFs.html#2">unimodal ODFs</a></li><li><a href="RadialODFs.html#4">multimodal ODFs</a></li><li><a href="FibreODFs.html">fibre ODFs</a></li><li><a href="BinghamODFs.html">Bingham ODFs</a></li><li><a href="SO3FunHarmonicRepresentation.html">Harmonic ODFs</a></li></ul></div><p>The central idea is that MTEX allows you to calculate mixture models, by adding and subtracting arbitrary ODFs. Model ODFs may be used as references for ODFs estimated from pole figure data or EBSD data and are instrumental for simulating texture evolutions.</p><h2 id="2">The Uniform ODF</h2><p>The most simplest case of a model ODF is the uniform ODF</p><p><img src="ODFModeling_eq18087407190605744672.png" alt="$$f(g) = 1,\quad  g \in SO(3),$$"></p><p>which is everywhere identical to one. In order to define a uniform ODF one needs only to specify its crystal and specimen symmetry and to use the command <a href="uniformODF.html">uniformODF</a>.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'cubic'</span>);
+ss = specimenSymmetry(<span class="string">'orthorhombic'</span>);
+odf = uniformODF(cs,ss)
+</pre><pre class="codeoutput"> 
+odf = SO3FunRBF (m-3m &#8594; xyz (mmm))
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 1
+ 
+</pre><h2 id="3">Combining model ODFs</h2><p>All the above can be arbitrarily rotated and combined. For instance, the classical Santafe example can be defined by commands</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'cubic'</span>);
+ss = specimenSymmetry(<span class="string">'orthorhombic'</span>);
+
+psi = SO3vonMisesFisherKernel(<span class="string">'halfwidth'</span>,10*degree);
+mod1 = orientation.byMiller([1,2,2],[2,2,1],cs,ss);
+
+odf =  0.73 * uniformODF(cs,ss) + 0.27 * unimodalODF(mod1,psi)
+
+close <span class="string">all</span>
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,0,cs)],<span class="string">'antipodal'</span>)
+</pre><pre class="codeoutput"> 
+odf = SO3FunRBF (m-3m &#8594; xyz (mmm))
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 0.73
+ 
+  &lt;strong&gt;unimodal component&lt;/strong&gt;
+  kernel: van Mises Fisher, halfwidth 10&deg;
+  center: 1 orientations
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2  weight
+  116.565 48.1897 26.5651    0.27
+ 
+</pre><img vspace="50" hspace="5" src="ODFModeling_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ODF Modeling
+%
+%%
+%
+% ODFs are functions on the rotation group $SO(3)$. Therefore we construct 
+% them by the class |<SO3Fun.SO3Fun.html SO3Fun>|.
+%
+% MTEX provides a very simple way to define model ODFs. Generally, there
+% are five different ODF types in MTEX:
+%
+% * <RadialODFs.html#1 uniform ODFs>
+% * <RadialODFs.html#2 unimodal ODFs>
+% * <RadialODFs.html#4 multimodal ODFs>
+% * <FibreODFs.html fibre ODFs>
+% * <BinghamODFs.html Bingham ODFs>
+% * <SO3FunHarmonicRepresentation.html Harmonic ODFs>
+%
+% The central idea is that MTEX allows you to calculate mixture models, by
+% adding and subtracting arbitrary ODFs. Model ODFs may be used as
+% references for ODFs estimated from pole figure data or EBSD data and are
+% instrumental for simulating texture evolutions.
+%
+%
+%% The Uniform ODF
+%
+% The most simplest case of a model ODF is the uniform ODF
+%
+% $$f(g) = 1,\quad  g \in SO(3),$$
+%
+% which is everywhere identical to one. In order to define a uniform ODF
+% one needs only to specify its crystal and specimen symmetry and to use
+% the command <uniformODF.html uniformODF>.
+
+cs = crystalSymmetry('cubic');
+ss = specimenSymmetry('orthorhombic');
+odf = uniformODF(cs,ss)
+
+%% Combining model ODFs
+% All the above can be arbitrarily rotated and combined. For instance, the
+% classical Santafe example can be defined by commands
+
+cs = crystalSymmetry('cubic');
+ss = specimenSymmetry('orthorhombic');
+
+psi = SO3vonMisesFisherKernel('halfwidth',10*degree);
+mod1 = orientation.byMiller([1,2,2],[2,2,1],cs,ss);
+
+odf =  0.73 * uniformODF(cs,ss) + 0.27 * unimodalODF(mod1,psi)
+
+close all
+plotPDF(odf,[Miller(1,0,0,cs),Miller(1,1,0,cs)],'antipodal')
+
+
+
+
+##### SOURCE END #####
+--></body></html>

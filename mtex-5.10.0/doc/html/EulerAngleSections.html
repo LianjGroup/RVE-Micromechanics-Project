@@ -1,0 +1,947 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Euler Angle Sections</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EulerAngleSections.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Euler Angle Sections</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">TODO: Please help extending this section</a></li><li><a href="#7">Specimen Symmetry</a></li></ul></div><h2 id="1">TODO: Please help extending this section</h2><pre class="codeinput">cs = crystalSymmetry.load(<span class="string">'Al-Aluminum.cif'</span>)
+
+ori1 = orientation.brass(cs);
+ori2 = orientation.copper(cs);
+f = fibre.beta(cs);
+
+odf = 0.2*unimodalODF(ori1) + <span class="keyword">...</span>
+      0.3*unimodalODF(ori2) + <span class="keyword">...</span>
+      0.5*fibreODF(f)
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  mineral : Aluminum
+  symmetry: m-3m    
+  elements: 48      
+  a, b, c : 4, 4, 4 
+ 
+ 
+odf = SO3FunComposition (Aluminum &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 2 orientations
+ 
+  Bunge Euler angles in degree
+  phi1     Phi    phi2  weight
+    35      45       0     0.2
+    90 35.2644      45     0.3
+ 
+  &lt;strong&gt;fibre component&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (12 6 11) || -1,-1,4
+  weight: 0.5
+ 
+</pre><p>Plotting an ODF in two dimensional sections through the orientation space is done using the command <a href="SO3Fun.plotSection.html">plot</a>. By default the sections are at constant angles of <img src="EulerAngleSections_eq12543762679087300560.png" alt="$\varphi_2$">. The number of sections can be specified by the option <tt>'sections'</tt></p><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,9,<span class="string">'silent'</span>,<span class="string">'layout'</span>,[5 2])
+</pre><img vspace="50" hspace="5" src="EulerAngleSections_01.png" alt=""> <pre class="codeinput">annotate(ori1,<span class="string">'MarkerSize'</span>,15)
+annotate(ori2,<span class="string">'Marker'</span>,<span class="string">'v'</span>,<span class="string">'MarkerSize'</span>,15)
+
+plot(f,<span class="string">'linewidth'</span>,2,<span class="string">'add2all'</span>)
+</pre><img vspace="50" hspace="5" src="EulerAngleSections_02.png" alt=""> <p>One can also specify the <img src="EulerAngleSections_eq12543762679087300560.png" alt="$\varphi_2$"> angles of the sections explicitly</p><pre class="codeinput">plot(odf,<span class="string">'phi2'</span>,[25 30 35 40]*degree,<span class="string">'silent'</span>)
+
+annotate(ori1,<span class="string">'MarkerSize'</span>,15)
+annotate(ori2,<span class="string">'Marker'</span>,<span class="string">'v'</span>,<span class="string">'MarkerSize'</span>,15)
+
+plot(f,<span class="string">'linewidth'</span>,2,<span class="string">'add2all'</span>)
+</pre><img vspace="50" hspace="5" src="EulerAngleSections_03.png" alt=""> <p>Beside the standard phi2 sections MTEX supports also sections according to all other Euler angles.</p><div><ul><li>phi2 (default)</li><li>phi1</li><li>gamma (Matthies Euler angles)</li><li>sigma (alpha+gamma)</li></ul></div><pre class="codeinput">plotSection(odf)
+</pre><img vspace="50" hspace="5" src="EulerAngleSections_04.png" alt=""> <p>By default this command represents the ODF in the Bunge Euler angle space <img src="EulerAngleSections_eq12909771798853154886.png" alt="$\varphi_1$">, <img src="EulerAngleSections_eq14890829443655089678.png" alt="$\Phi$">, <img src="EulerAngleSections_eq12543762679087300560.png" alt="$\varphi_2$">. The range of the Euler angles depends on the crystal symmetry according to the following table</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>symmetry</p>
+         </td>
+         <td>
+               <p>1</p>
+         </td>
+         <td>
+               <p>2</p>
+         </td>
+         <td>
+               <p>222</p>
+         </td>
+         <td>
+               <p>3</p>
+         </td>
+         <td>
+               <p>32</p>
+         </td>
+         <td>
+               <p>4</p>
+         </td>
+         <td>
+               <p>422</p>
+         </td>
+         <td>
+               <p>6</p>
+         </td>
+         <td>
+               <p>622</p>
+         </td>
+         <td>
+               <p>23</p>
+         </td>
+         <td>
+               <p>432</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$\varphi_1$" class="equation" height="10px"
+                          src="0967709051_tmp_eq12909771798853154886.png"
+                          width="14px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0756796455_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0890457113_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0054732771_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0441450458_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0533712233_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0695822534_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0258522907_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0012267721_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0178378503_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0467137967_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0478022181_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$\Phi$" class="equation" height="10px"
+                          src="0875420162_tmp_eq14890829443655089678.png"
+                          width="10px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0767039558_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0412794367_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0052373821_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0474389938_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0741552752_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0214123117_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0688840490_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0574554267_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0067444654_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0464246337_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0740246700_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$\varphi_2$" class="equation" height="10px"
+                          src="0562442005_tmp_eq12543762679087300560.png"
+                          width="14px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$360^{\circ}$" class="equation" height="11px"
+                          src="0568612298_tmp_eq04205630029967935641.png"
+                          width="27px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0907523224_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0393512501_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$120^{\circ}$" class="equation" height="11px"
+                          src="0527789908_tmp_eq17452840953382729971.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$120^{\circ}$" class="equation" height="11px"
+                          src="0090208415_tmp_eq17452840953382729971.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0752034234_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0134056459_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$60^{\circ}$" class="equation" height="11px"
+                          src="0084433184_tmp_eq11270310834117044476.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$60^{\circ}$" class="equation" height="11px"
+                          src="0776515493_tmp_eq11270310834117044476.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$180^{\circ}$" class="equation" height="11px"
+                          src="0577558967_tmp_eq10346168241279137799.png"
+                          width="26px"/>
+                  </equation>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <equation>
+                     <img alt="$90^{\circ}$" class="equation" height="11px"
+                          src="0661151972_tmp_eq05331026818752462756.png"
+                          width="20px"/>
+                  </equation>
+               </p>
+         </td>
+      </tr>
+   </table>
+</p><p>Note that for the last two symmetries the three fold axis is not taken into account, i.e., each orientation appears three times within the Euler angle region. The first Euler angle is not restricted by any crystal symmetry, but only by specimen symmetry. For an arbitrary symmetry the bounds of the fundamental region can be computed by the command <a href="symmetry.fundamentalRegionEuler.html"><tt>fundamentalRegionEuler</tt></a></p><h2 id="7">Specimen Symmetry</h2><p>As we can see from the above table the first Euler angle <img src="EulerAngleSections_eq12909771798853154886.png" alt="$\varphi_1$"> ranges for all symmetries from zero to 360 degree. The only way to restrict this angle is to consider specimen symmetry. In the classical case of orthotropic specimen symmetry the range of the first Euler angle reduces to 90 degree and we obtain the common square shaped ODF section plots</p><pre class="codeinput">odf.SS = specimenSymmetry(<span class="string">'222'</span>);
+
+plot(odf,<span class="string">'sections'</span>,18,<span class="string">'layout'</span>,[5 4],<span class="keyword">...</span>
+  <span class="string">'coordinates'</span>,<span class="string">'off'</span>,<span class="string">'xlabel'</span>,<span class="string">''</span>,<span class="string">'ylabel'</span>,<span class="string">''</span>)
+</pre><img vspace="50" hspace="5" src="EulerAngleSections_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Euler Angle Sections
+%
+%% TODO: Please help extending this section
+%
+
+cs = crystalSymmetry.load('Al-Aluminum.cif')
+
+ori1 = orientation.brass(cs);
+ori2 = orientation.copper(cs);
+f = fibre.beta(cs);
+
+odf = 0.2*unimodalODF(ori1) + ...
+      0.3*unimodalODF(ori2) + ...
+      0.5*fibreODF(f)
+
+%%
+% Plotting an ODF in two dimensional sections through the orientation space
+% is done using the command <SO3Fun.plotSection.html plot>. By default the
+% sections are at constant angles of $\varphi_2$. The number of sections
+% can be specified by the option |'sections'|
+
+plot(odf,'sections',9,'silent','layout',[5 2])
+
+%%
+
+annotate(ori1,'MarkerSize',15)
+annotate(ori2,'Marker','v','MarkerSize',15)
+
+plot(f,'linewidth',2,'add2all')
+
+%%
+% One can also specify the $\varphi_2$ angles of the sections explicitly
+
+plot(odf,'phi2',[25 30 35 40]*degree,'silent')
+
+annotate(ori1,'MarkerSize',15)
+annotate(ori2,'Marker','v','MarkerSize',15)
+
+plot(f,'linewidth',2,'add2all')
+
+%%
+% Beside the standard phi2 sections MTEX supports also sections according
+% to all other Euler angles.
+%
+% * phi2 (default)
+% * phi1
+% * gamma (Matthies Euler angles)
+% * sigma (alpha+gamma)
+
+plotSection(odf)
+
+%%
+% By default this command represents the ODF in the Bunge Euler angle space
+% $\varphi_1$, $\Phi$, $\varphi_2$. The range of the Euler angles depends
+% on the crystal symmetry according to the following table
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>symmetry</p>
+%          </td>
+%          <td>
+%                <p>1</p>
+%          </td>
+%          <td>
+%                <p>2</p>
+%          </td>
+%          <td>
+%                <p>222</p>
+%          </td>
+%          <td>
+%                <p>3</p>
+%          </td>
+%          <td>
+%                <p>32</p>
+%          </td>
+%          <td>
+%                <p>4</p>
+%          </td>
+%          <td>
+%                <p>422</p>
+%          </td>
+%          <td>
+%                <p>6</p>
+%          </td>
+%          <td>
+%                <p>622</p>
+%          </td>
+%          <td>
+%                <p>23</p>
+%          </td>
+%          <td>
+%                <p>432</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$\varphi_1$" class="equation" height="10px"
+%                           src="0967709051_tmp_eq12909771798853154886.png"
+%                           width="14px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0756796455_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0890457113_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0054732771_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0441450458_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0533712233_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0695822534_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0258522907_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0012267721_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0178378503_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0467137967_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0478022181_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$\Phi$" class="equation" height="10px"
+%                           src="0875420162_tmp_eq14890829443655089678.png"
+%                           width="10px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0767039558_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0412794367_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0052373821_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0474389938_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0741552752_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0214123117_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0688840490_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0574554267_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0067444654_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0464246337_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0740246700_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$\varphi_2$" class="equation" height="10px"
+%                           src="0562442005_tmp_eq12543762679087300560.png"
+%                           width="14px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$360^{\circ}$" class="equation" height="11px"
+%                           src="0568612298_tmp_eq04205630029967935641.png"
+%                           width="27px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0907523224_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0393512501_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$120^{\circ}$" class="equation" height="11px"
+%                           src="0527789908_tmp_eq17452840953382729971.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$120^{\circ}$" class="equation" height="11px"
+%                           src="0090208415_tmp_eq17452840953382729971.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0752034234_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0134056459_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$60^{\circ}$" class="equation" height="11px"
+%                           src="0084433184_tmp_eq11270310834117044476.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$60^{\circ}$" class="equation" height="11px"
+%                           src="0776515493_tmp_eq11270310834117044476.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$180^{\circ}$" class="equation" height="11px"
+%                           src="0577558967_tmp_eq10346168241279137799.png"
+%                           width="26px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <equation>
+%                      <img alt="$90^{\circ}$" class="equation" height="11px"
+%                           src="0661151972_tmp_eq05331026818752462756.png"
+%                           width="20px"/>
+%                   </equation>
+%                </p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+% Note that for the last two symmetries the three fold axis is not taken
+% into account, i.e., each orientation appears three times within the Euler
+% angle region. The first Euler angle is not restricted by any crystal
+% symmetry, but only by specimen symmetry. For an arbitrary symmetry the
+% bounds of the fundamental region can be computed by the command
+% <symmetry.fundamentalRegionEuler.html |fundamentalRegionEuler|>
+%
+%% Specimen Symmetry
+%
+% As we can see from the above table the first Euler angle $\varphi_1$
+% ranges for all symmetries from zero to 360 degree. The only way to
+% restrict this angle is to consider specimen symmetry. In the classical
+% case of orthotropic specimen symmetry the range of the first Euler angle
+% reduces to 90 degree and we obtain the common square shaped ODF section
+% plots
+
+odf.SS = specimenSymmetry('222');
+
+plot(odf,'sections',18,'layout',[5 4],...
+  'coordinates','off','xlabel','','ylabel','')
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,611 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Grain Orientation Parameters</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_GrainOrientationParameters.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Grain Orientation Parameters</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Grain average orientation</a></li><li><a href="#4">Misorientation to the grain mean orientation</a></li><li><a href="#6">Grain orientation spread (GOS)</a></li><li><a href="#8">Grain average misorientation (GAM)</a></li><li><a href="#10">The misorientation axis (crystal dispersion axis)</a></li><li><a href="#21">TODO: Testing on Bingham distribution for a single grain</a></li></ul></div><p>In this section we discuss properties of grains that are related to the distribution of orientations within the grains, i.e.,</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>
+                  <tt>meanOrientation</tt>
+               </p>
+         </td>
+         <td>
+               <p>mean orientation</p>
+         </td>
+         <td>
+               <p>
+                  <tt>GOS</tt>
+               </p>
+         </td>
+         <td>
+               <p>grain orientation spread</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <tt>GAM</tt>
+               </p>
+         </td>
+         <td>
+               <p>grain average misorientation</p>
+         </td>
+         <td>
+               <p>
+                  <tt>GAX</tt>
+               </p>
+         </td>
+         <td>
+               <p>grain average misorientation axis</p>
+         </td>
+      </tr>
+   </table>
+</p><p>As usual, we start by importing some EBSD data and computing grains</p><pre class="codeinput">close <span class="string">all</span>; plotx2east
+
+<span class="comment">% import the data</span>
+mtexdata <span class="string">ferrite</span> <span class="string">silent</span>
+
+<span class="comment">% compute grains</span>
+[grains, ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+ebsd(grains(grains.grainSize &lt; 5)) = [];
+[grains, ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'threshold'</span>,7.5*degree);
+ebsd = ebsd.project2FundamentalRegion;
+grains = smooth(grains,5);
+
+<span class="comment">% plot the data</span>
+plot(ebsd, ebsd.orientations)
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'lineWidth'</span>,2)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_01.png" alt=""> <h2 id="2">Grain average orientation</h2><p>As by construction grains consist of pixels with similar orientation. In order to access all the orientations that belong to a specific grain we make use of the property <tt>ebsd.grainId</tt> where we have stored during grain reconstruction for every EBSD pixel to which grain it belongs. Hence, we may use <a href="EBSDSelect.html">logical indexing</a> on our EBSD variable <tt>ebsd</tt> to find all orientations that belong to a certain <tt>grainId</tt>.</p><pre class="codeinput"><span class="comment">% select a grain by x and y coordinates</span>
+grainSel = grains(42,17)
+
+<span class="comment">% all EBSD orientations within the grain</span>
+ori = ebsd(grainSel).orientations
+</pre><pre class="codeoutput"> 
+grainSel = grain2d
+ 
+ Phase  Grains  Pixels  Mineral  Symmetry  Crystal reference frame
+     0       1    1949  Ferrite       432                         
+ 
+ boundary segments: 363 (64 &micro;m)
+ inner boundary segments: 0 (0 &micro;m)
+ triple points: 15
+ 
+  Id   Phase   Pixels   phi1   Phi   phi2         GOS
+ 235       0     1949    144    41    301   0.0217034
+ 
+ 
+ori = orientation (Ferrite &#8594; xyz)
+  size: 1949 x 1
+</pre><p>We could now use the command <a href="orientation.mean"><tt>mean</tt></a> to compute the grain average orientation from these individual orientations. A more direct approach, however, is to access the property <tt>grain.meanOrientation</tt> which has been filled with the mean orientations during grain reconstruction.</p><pre class="codeinput">plot(grains, grains.meanOrientation)
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_02.png" alt=""> <h2 id="4">Misorientation to the grain mean orientation</h2><p>Once we have a reference orientation for each grain - the grain meanorientation <tt>ori_ref</tt> - we may want to analyse the deviation of the individual orientations within the grain from this reference orientation. The <i>grain reference orientation deviation</i> (GROD) is the <a href="MisorientationTheory.html">misorientation</a> between each pixel orientation to the grain mean orientation defined as</p><pre class="codeinput">mis2mean = inv(grainSel.meanOrientation) .* ori
+</pre><pre class="codeoutput"> 
+mis2mean = misorientation (Ferrite &#8594; Ferrite)
+  size: 1949 x 1
+</pre><p>While the above command computes the misorientations to the grain mean orientation just for one grain the command <a href="EBSD.calcGROD.html"><tt>calcGrod</tt></a> computes it for all grains simultaneously</p><pre class="codeinput">mis2mean = calcGROD(ebsd, grains)
+</pre><pre class="codeoutput"> 
+mis2mean = misorientation (Ferrite &#8594; Ferrite)
+  size: 59103 x 1
+</pre><h2 id="6">Grain orientation spread (GOS)</h2><p>The full misorientation to the mean orientation is often not so simple to understand. A good starting point is to just look at the misorientation angles to the grain mean orientation. The average of the misorientation angles to the grain mean orientation is called <i>grain orientation spread</i> (GOS) and can be computed by the command <a href="EBSD.grainMean.html"><tt>grainMean</tt></a> which averages arbitrary EBSD properties over grains. Here, we use it to average the misorientation angle for each grain separately.</p><pre class="codeinput"><span class="comment">% take the avarage of the misorientation angles for each grain</span>
+GOS = ebsd.grainMean(mis2mean.angle);
+
+<span class="comment">% plot it</span>
+plot(grains, GOS ./ degree)
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'GOS in degree'</span>)
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_03.png" alt=""> <p>It should be noted that the GOS is also directly available as the grain property <tt>grains.GOS</tt>.</p><p>The function <a href="EBSD.grainMean.html"><tt>grainMean</tt></a> can also be used to compute the maximum misorientation angle to the mean orientation within each grain. To achieve this we have to pass the function <tt>@max</tt> as an additional argument. Note, that you can replace this function also with any other statistics like the median, or some quantile.</p><pre class="codeinput"><span class="comment">% compute the maximum misorientation angles for each grain</span>
+MGOS = ebsd.grainMean(mis2mean.angle,@max);
+
+<span class="comment">% plot it</span>
+plot(grains, MGOS ./ degree)
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'MGOS in degree'</span>)
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_04.png" alt=""> <h2 id="8">Grain average misorientation (GAM)</h2><p>A measure that is often confused with the grain orientation spread is the grain average misorientation (GAM). The GAM is defined as the <a href="EBSDKAM.html">kernel average misorientation (KAM)</a> averaged over each grain. Hence, we can compute is by using the functions <a href="EBSD.KAM.html"><tt>ebsd.KAM</tt></a> and <a href="EBSD.grainMean.html"><tt>grainMean</tt></a>.</p><pre class="codeinput">gam = ebsd.grainMean(ebsd.KAM);
+
+plot(grains,gam./degree)
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'GAM in degree'</span>)
+setColorRange([0,3])
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_05.png" alt=""> <p>While the GOS measures global orientation gradients within a grain the GAM reflect the average local gradient.</p><h2 id="10">The misorientation axis (crystal dispersion axis)</h2><p>Under certain conditions, deformation may result in the dispersion of orientations within a grain. This can usually be the case when deformation is accommodated by slip on one dominant slip system for each grain and conditions are such, that the resulting orientation gradients are preserved in the material (as it is the case in many geomaterials deforming at moderate temperatures). In such a case, we would expect the orientations inside a grain to be aligned along a line with a specific misorientation axis to the mean orientation. Such a line is called <a href="OrientationFibre.html">fibre</a> and we can use the command <a href="fibre.fit.html"><tt>fibre.fit</tt></a> to find the best fitting fibre for a given list of orientations. Lets do this for a single grain.</p><pre class="codeinput"><span class="comment">% visualize the orientations within the selected  grain in a pole figure</span>
+figure(2)
+h = Miller({1,0,0},ebsd.CS);
+plotPDF(ebsd(grainSel).orientations,h,<span class="string">'MarkerSize'</span>,2,<span class="string">'all'</span>)
+
+<span class="comment">% fit a fibre to the orientations within the grain</span>
+[f,lambda,fit] = fibre.fit(ebsd(grainSel).orientations,<span class="string">'local'</span>);
+
+<span class="comment">% add the fibre to the pole figure</span>
+hold <span class="string">on</span>
+plotPDF(f.symmetrise,h,<span class="string">'lineColor'</span>,<span class="string">'orange'</span>,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_06.png" alt=""> <p>The function <a href="fibre.fit.html"><tt>fibre.fit</tt></a> has three output arguments. The first one <tt>f</tt> is the fittted fibre. From this we can easily detect the prominent misorientation axis in specimen coordinates by <tt>f.r</tt> and in crystal coordinates by <tt>f.h</tt>.</p><pre class="codeinput">f.r
+f.h
+
+<span class="comment">% We can see that the dispersion of directions is minimal for those</span>
+<span class="comment">% parallel to |f.r| respectively |f.h|.</span>
+hold <span class="string">on</span>
+plot(ebsd(grainSel).orientations.*f.h,<span class="string">'MarkerSize'</span>,2,<span class="string">'all'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'k'</span>,<span class="string">'antipodal'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+ans = vector3d
+ 
+ans = Miller (Ferrite)
+        h       k       l
+  -1.6922  0.1497  2.3132
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_07.png" alt=""> <p>The second output argument <tt>lambda</tt> are the eigenvalues of the orientation matrix. The largest eigenvalue indicates are localized the orientations are. The second largest eigenvalue is a measure how much the orientation distributed along the fitted fibre. The third and forth eigenvalue describe how much the orientations scatter off the fibre. The scatter off the fibre is more conveniently described in the last output argument <tt>fit</tt>, which is the mean misorientation angle of the orientations to the fitted fibre.</p><pre class="codeinput">lambda
+
+fit./degree
+</pre><pre class="codeoutput">lambda =
+    0.0001    0.0001    0.0004    0.9994
+ans =
+    0.0329
+</pre><p>Lets perform the above analysis for all large grains</p><pre class="codeinput">grainsLarge = grains(grains.grainSize &gt; 50);
+
+<span class="comment">% loop through all grains</span>
+<span class="keyword">for</span> k = 1:length(grainsLarge)
+
+  <span class="comment">% fit a fibre</span>
+  [f,lambda(k,:),fit(k)] = fibre.fit(ebsd(grainsLarge(k)).orientations,<span class="string">'local'</span>);
+
+  <span class="comment">% store the misorientation axes in crystal and specimen symmetry</span>
+  GAX_C(k) = f.h;
+  GAX_S(k) = f.r;
+
+<span class="keyword">end</span>
+</pre><p>And plot the fit, the third and the second largest eigenvalues. We clearly see how the fit is related to the third largest eigenvalue <img src="GrainOrientationParameters_eq13452859990424894934.png" alt="$\lambda_2$">.</p><pre class="codeinput">plot(grainsLarge,lambda(:,3))
+mtexTitle(<span class="string">'$\lambda_3$'</span>)
+
+nextAxis(1,2)
+plot(grainsLarge,lambda(:,2))
+mtexTitle(<span class="string">'$\lambda_2$'</span>)
+
+nextAxis(1,3)
+plot(grainsLarge,fit./degree)
+mtexTitle(<span class="string">'fit'</span>)
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_08.png" alt=""> <p><b>The crystal dispersion axes in crystal coordinates</b></p><p>In order to visualize the crystal dispersion axes we first need to define an appropriate color key for crystal directions. This can be done with the command <a href="HSVDirectionKey.html"><tt>HSVDirectionKey</tt></a>. Note, that we need to specify the option <tt>'antipodal'</tt> since for the crystal dispersion axes we can not distinguish between antipodal directions.</p><pre class="codeinput"><span class="comment">% define the color key</span>
+cKey = HSVDirectionKey(ebsd.CS,<span class="string">'antipodal'</span>);
+
+<span class="comment">% plot the color key and on top the dispersion axes</span>
+plot(cKey)
+hold <span class="string">on</span>
+plot(GAX_C.project2FundamentalRegion,<span class="string">'MarkerFaceColor'</span>,<span class="string">'black'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_09.png" alt=""> <p>Now we can use this colorkey to visualize the misorientation axes in the grain map</p><pre class="codeinput"><span class="comment">% compute colors from the misorientation axes</span>
+color = cKey.direction2color(GAX_C);
+
+<span class="comment">% plot the colored grains</span>
+plot(grainsLarge, color)
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_10.png" alt=""> <p><b>The crystal dispersion axes in specimen coordinates</b></p><p>Colorizing the crystal dispersion axes in specimen coordinates is unfortunately much more complicated. In fact, it is mathematically impossible to find a corresponding color key without color jumps. Instead MTEX visualizes axes in specimen coordinates by compass needles which are entirely gray if in the plane and get divided into black and white to indicate which end points out of the plane and which into the plane.</p><pre class="codeinput">plot(grains, GOS./degree)
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'GOS in degree'</span>)
+
+hold <span class="string">on</span>
+plot(grainsLarge, GAX_S)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_11.png" alt=""> <p>In many materials, a direct relation can be observed between the position of the crystal dispersion axis in specimen coordinates and the inferred type of flow. E.g. in many geomaterials which have undergone (close to) simple shear progressive deformation, the average of the crystal dispersion axes align parallel to the vorticity axis of flow; in pure shear progressive deformation, crystal dispersion axes form a girdle with a normal parallel to the shortening direction.</p><pre class="codeinput">plot(GAX_S,<span class="string">'antipodal'</span>,<span class="string">'MarkerSize'</span>,4)
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_12.png" alt=""> <p>to get some idea about any preferred direction, we can add contours, weighted by the fit. grains with a large mean misorientation angle will also have a more well defined direction of the dispersion axis.</p><pre class="codeinput">hold <span class="string">on</span>
+plot(GAX_S,<span class="string">'contour'</span>,<span class="string">'antipodal'</span>,<span class="string">'weights'</span>, fit,<span class="string">'contours'</span>,[1 2 3],<span class="string">'halfwidth'</span>,10*degree,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainOrientationParameters_13.png" alt=""> <p>Here we do not see this clear of a picture (maybe because this is a piece of steel which might behave differently, maybe because we do not consider a large enough number of grains) Question: if this is processed steel, which sample directions is pointing to the east?</p><h2 id="21">TODO: Testing on Bingham distribution for a single grain</h2><p>Although the orientations of an individual grain are highly concentrated, they may vary in the shape. In particular, if the grain was deformed by some process, we are interested in quantifications.</p><pre class="codeinput"><span class="comment">%cs = ebsd(grains(id)).CS;</span>
+<span class="comment">%ori = ebsd(grain_selected).orientations;</span>
+<span class="comment">%plotPDF(ori,[Miller(0,0,1,cs),Miller(0,1,1,cs),Miller(1,1,1,cs)],'antipodal')</span>
+</pre><p>Testing on the distribution shows a gentle prolatness, nevertheless we would reject the hypothesis for some level of significance, since the distribution is highly concentrated and the numerical results vague.</p><pre class="codeinput"><span class="comment">% calcBinghamODF(ori,'approximated')</span>
+</pre><pre class="codeinput"><span class="comment">%T_spherical = bingham_test(ori,'spherical','approximated');</span>
+<span class="comment">%T_prolate   = bingham_test(ori,'prolate',  'approximated');</span>
+<span class="comment">%T_oblate    = bingham_test(ori,'oblate',   'approximated');</span>
+
+<span class="comment">%[T_spherical T_prolate T_oblate]</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Grain Orientation Parameters
+%
+%%
+% In this section we discuss properties of grains that are related to the
+% distribution of orientations within the grains, i.e., 
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>
+%                   <tt>meanOrientation</tt>
+%                </p>
+%          </td>
+%          <td>
+%                <p>mean orientation</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <tt>GOS</tt>
+%                </p>
+%          </td>
+%          <td>
+%                <p>grain orientation spread</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <tt>GAM</tt>
+%                </p>
+%          </td>
+%          <td>
+%                <p>grain average misorientation</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <tt>GAX</tt>
+%                </p>
+%          </td>
+%          <td>
+%                <p>grain average misorientation axis</p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+% As usual, we start by importing some EBSD data and computing grains
+
+close all; plotx2east
+
+% import the data
+mtexdata ferrite silent
+
+% compute grains
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'));
+ebsd(grains(grains.grainSize < 5)) = [];
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'threshold',7.5*degree);
+ebsd = ebsd.project2FundamentalRegion;
+grains = smooth(grains,5);
+
+% plot the data
+plot(ebsd, ebsd.orientations)
+hold on
+plot(grains.boundary,'lineWidth',2)
+hold off
+
+%% Grain average orientation
+%
+% As by construction grains consist of pixels with similar orientation. In
+% order to access all the orientations that belong to a specific grain we
+% make use of the property |ebsd.grainId| where we have stored during grain
+% reconstruction for every EBSD pixel to which grain it belongs. Hence, we
+% may use <EBSDSelect.html logical indexing> on our EBSD variable |ebsd| to
+% find all orientations that belong to a certain |grainId|.
+
+% select a grain by x and y coordinates
+grainSel = grains(42,17)
+
+% all EBSD orientations within the grain
+ori = ebsd(grainSel).orientations
+
+%%
+% We could now use the command <orientation.mean |mean|> to compute the
+% grain average orientation from these individual orientations. A more
+% direct approach, however, is to access the property
+% |grain.meanOrientation| which has been filled with the mean orientations
+% during grain reconstruction.
+
+plot(grains, grains.meanOrientation)
+
+%% Misorientation to the grain mean orientation
+%
+% Once we have a reference orientation for each grain - the grain
+% meanorientation |ori_ref| - we may want to analyse the deviation of the
+% individual orientations within the grain from this reference orientation.
+% The _grain reference orientation deviation_ (GROD) is the
+% <MisorientationTheory.html misorientation> between each pixel orientation
+% to the grain mean orientation defined as
+
+mis2mean = inv(grainSel.meanOrientation) .* ori
+
+%%
+% While the above command computes the misorientations to the grain mean
+% orientation just for one grain the command <EBSD.calcGROD.html |calcGrod|>
+% computes it for all grains simultaneously
+
+mis2mean = calcGROD(ebsd, grains)
+
+%% Grain orientation spread (GOS)
+%
+% The full misorientation to the mean orientation is often not so simple to
+% understand. A good starting point is to just look at the misorientation
+% angles to the grain mean orientation. The average of the misorientation
+% angles to the grain mean orientation is called _grain orientation spread_
+% (GOS) and can be computed by the command <EBSD.grainMean.html
+% |grainMean|> which averages arbitrary EBSD properties over grains. Here,
+% we use it to average the misorientation angle for each grain separately.
+
+% take the avarage of the misorientation angles for each grain
+GOS = ebsd.grainMean(mis2mean.angle);
+
+% plot it
+plot(grains, GOS ./ degree)
+mtexColorbar('title','GOS in degree')
+
+%%
+% It should be noted that the GOS is also directly available as the grain
+% property |grains.GOS|. 
+%
+% The function <EBSD.grainMean.html |grainMean|> can also be used to
+% compute the maximum misorientation angle to the mean orientation within
+% each grain. To achieve this we have to pass the function |@max| as an
+% additional argument. Note, that you can replace this function also with
+% any other statistics like the median, or some quantile.
+
+% compute the maximum misorientation angles for each grain
+MGOS = ebsd.grainMean(mis2mean.angle,@max);
+
+% plot it
+plot(grains, MGOS ./ degree)
+mtexColorbar('title','MGOS in degree')
+
+%% Grain average misorientation (GAM)
+%
+% A measure that is often confused with the grain orientation spread is the
+% grain average misorientation (GAM). The GAM is defined as the
+% <EBSDKAM.html kernel average misorientation (KAM)> averaged over each
+% grain. Hence, we can compute is by using the functions <EBSD.KAM.html
+% |ebsd.KAM|> and <EBSD.grainMean.html |grainMean|>.
+
+gam = ebsd.grainMean(ebsd.KAM);
+
+plot(grains,gam./degree)
+mtexColorbar('title','GAM in degree')
+setColorRange([0,3])
+
+%%
+% While the GOS measures global orientation gradients within a grain the
+% GAM reflect the average local gradient.
+%
+%% The misorientation axis (crystal dispersion axis)
+%
+% Under certain conditions, deformation may result in the dispersion of
+% orientations within a grain. This can usually be the case when
+% deformation is accommodated by slip on one dominant slip system for each
+% grain and conditions are such, that the resulting orientation gradients
+% are preserved in the material (as it is the case in many geomaterials
+% deforming at moderate temperatures). In such a case, we would expect the
+% orientations inside a grain to be aligned along a line with a specific
+% misorientation axis to the mean orientation. Such a line is called
+% <OrientationFibre.html fibre> and we can use the command <fibre.fit.html
+% |fibre.fit|> to find the best fitting fibre for a given list of
+% orientations. Lets do this for a single grain. 
+
+% visualize the orientations within the selected  grain in a pole figure
+figure(2)
+h = Miller({1,0,0},ebsd.CS);
+plotPDF(ebsd(grainSel).orientations,h,'MarkerSize',2,'all')
+
+% fit a fibre to the orientations within the grain
+[f,lambda,fit] = fibre.fit(ebsd(grainSel).orientations,'local');
+
+% add the fibre to the pole figure
+hold on
+plotPDF(f.symmetrise,h,'lineColor','orange','linewidth',2)
+hold off
+
+
+%%
+% The function <fibre.fit.html |fibre.fit|> has three output arguments. The
+% first one |f| is the fittted fibre. From this we can easily detect the
+% prominent misorientation axis in specimen coordinates by |f.r| and in
+% crystal coordinates by |f.h|.
+
+f.r
+f.h
+
+% We can see that the dispersion of directions is minimal for those
+% parallel to |f.r| respectively |f.h|. 
+hold on
+plot(ebsd(grainSel).orientations.*f.h,'MarkerSize',2,'all','MarkerFaceColor','k','antipodal')
+hold off
+%%
+% The second output argument |lambda| are the eigenvalues of the
+% orientation matrix. The largest eigenvalue indicates are localized the
+% orientations are. The second largest eigenvalue is a measure how much the
+% orientation distributed along the fitted fibre. The third and forth
+% eigenvalue describe how much the orientations scatter off the fibre.
+% The scatter off the fibre is more conveniently described in the last
+% output argument |fit|, which is the mean misorientation angle of the
+% orientations to the fitted fibre.
+
+lambda
+
+fit./degree
+
+%%
+% Lets perform the above analysis for all large grains
+
+grainsLarge = grains(grains.grainSize > 50);
+
+% loop through all grains
+for k = 1:length(grainsLarge)
+  
+  % fit a fibre
+  [f,lambda(k,:),fit(k)] = fibre.fit(ebsd(grainsLarge(k)).orientations,'local');
+  
+  % store the misorientation axes in crystal and specimen symmetry
+  GAX_C(k) = f.h;
+  GAX_S(k) = f.r;
+    
+end
+
+%%
+% And plot the fit, the third and the second largest eigenvalues. We
+% clearly see how the fit is related to the third largest eigenvalue
+% $\lambda_2$.
+
+plot(grainsLarge,lambda(:,3))
+mtexTitle('$\lambda_3$')
+
+nextAxis(1,2)
+plot(grainsLarge,lambda(:,2))
+mtexTitle('$\lambda_2$')
+
+nextAxis(1,3)
+plot(grainsLarge,fit./degree)
+mtexTitle('fit')
+
+%%
+% *The crystal dispersion axes in crystal coordinates*
+%
+% In order to visualize the crystal dispersion axes we first need to define an
+% appropriate color key for crystal directions. This can be done with the
+% command <HSVDirectionKey.html |HSVDirectionKey|>. Note, that we need to
+% specify the option |'antipodal'| since for the crystal dispersion axes we can
+% not distinguish between antipodal directions.
+
+% define the color key
+cKey = HSVDirectionKey(ebsd.CS,'antipodal');
+
+% plot the color key and on top the dispersion axes
+plot(cKey)
+hold on
+plot(GAX_C.project2FundamentalRegion,'MarkerFaceColor','black')
+hold off
+
+%%
+% Now we can use this colorkey to visualize the misorientation axes in the
+% grain map
+
+% compute colors from the misorientation axes
+color = cKey.direction2color(GAX_C);
+
+% plot the colored grains
+plot(grainsLarge, color)
+
+%% 
+% *The crystal dispersion axes in specimen coordinates*
+%
+% Colorizing the crystal dispersion axes in specimen coordinates is
+% unfortunately much more complicated. In fact, it is mathematically
+% impossible to find a corresponding color key without color jumps. Instead
+% MTEX visualizes axes in specimen coordinates by compass needles which are
+% entirely gray if in the plane and get divided into black and white to
+% indicate which end points out of the plane and which into the plane.
+
+plot(grains, GOS./degree)
+mtexColorbar('title','GOS in degree')
+
+hold on
+plot(grainsLarge, GAX_S)
+hold off
+
+%%
+% In many materials, a direct relation can be observed between the position
+% of the crystal dispersion axis in specimen coordinates and the inferred
+% type of flow. E.g. in many geomaterials which have undergone (close to)
+% simple shear progressive deformation, the average of the crystal dispersion 
+% axes align parallel to the vorticity axis of flow; in pure shear progressive
+% deformation, crystal dispersion axes form a girdle with a normal parallel
+% to the shortening direction.
+
+plot(GAX_S,'antipodal','MarkerSize',4)
+
+%%
+% to get some idea about any preferred direction, we can add contours,
+% weighted by the fit. grains with a large mean misorientation angle will
+% also have a more well defined direction of the dispersion axis.
+hold on
+plot(GAX_S,'contour','antipodal','weights', fit,'contours',[1 2 3],'halfwidth',10*degree,'linewidth',2)
+hold off
+
+%%
+% Here we do not see this clear of a picture (maybe because this is a piece
+% of steel which might behave differently, maybe because we do not consider
+% a large enough number of grains) Question: if this is processed steel,
+% which sample directions is pointing to the east?
+%
+%% TODO: Testing on Bingham distribution for a single grain 
+% Although the orientations of an individual grain are highly concentrated,
+% they may vary in the shape. In particular, if the grain was deformed by
+% some process, we are interested in quantifications.
+
+%cs = ebsd(grains(id)).CS;
+%ori = ebsd(grain_selected).orientations;
+%plotPDF(ori,[Miller(0,0,1,cs),Miller(0,1,1,cs),Miller(1,1,1,cs)],'antipodal')
+
+%%
+% Testing on the distribution shows a gentle prolatness, nevertheless we
+% would reject the hypothesis for some level of significance, since the
+% distribution is highly concentrated and the numerical results vague.
+
+% calcBinghamODF(ori,'approximated')
+
+%%
+%
+
+%T_spherical = bingham_test(ori,'spherical','approximated');
+%T_prolate   = bingham_test(ori,'prolate',  'approximated');
+%T_oblate    = bingham_test(ori,'oblate',   'approximated');
+
+%[T_spherical T_prolate T_oblate]
+
+##### SOURCE END #####
+--></body></html>

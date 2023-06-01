@@ -1,0 +1,206 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Plotting Individual Orientations</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSDOrientationPlots.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Plotting Individual Orientations</h1><!--introduction--><p>Basics of the plot types for individual orientations data</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Scatter Pole Figure Plot</a></li><li><a href="#4">Scatter (Inverse) Pole Figure Plot</a></li><li><a href="#5">Scatter Plot in ODF Sections</a></li><li><a href="#6">Scatter Plot in Axis Angle or Rodrigues Space</a></li><li><a href="#8">Orientation plots for EBSD and grains</a></li></ul></div><p>This section gives an overview over the possibilities that MTEX offers to visualize orientation data. Let us first load a sample EBSD data set</p><pre class="codeinput">mtexdata <span class="string">forsterite</span>
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0   58485 (24%)  notIndexed                                                 
+     1  152345 (62%)  Forsterite  LightSkyBlue       mmm                         
+     2   26058 (11%)   Enstatite  DarkSeaGreen       mmm                         
+     3   9064 (3.7%)    Diopside     Goldenrod     12/m1       X||a*, Y||b*, Z||c
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p>and select all individual orientations of the Iron phase</p><pre class="codeinput">ebsd(<span class="string">'Fo'</span>).orientations
+</pre><pre class="codeoutput"> 
+ans = orientation (Forsterite &#8594; xyz)
+  size: 152345 x 1
+</pre><h2 id="3">Scatter Pole Figure Plot</h2><p>A pole figure showing scattered points of these data figure can be produced by the command <a href="orientation.plotPDF.html">plotPDF</a>.</p><pre class="codeinput">plotPDF(ebsd(<span class="string">'Fo'</span>).orientations,Miller(1,0,0,ebsd(<span class="string">'Fo'</span>).CS))
+</pre><pre class="codeoutput">  I'm plotting 1250 random orientations out of 152345 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_01.png" alt=""> <h2 id="4">Scatter (Inverse) Pole Figure Plot</h2><p>Accordingly, scatter points in inverse pole figures are produced by the command  <a href="orientation.plotIPDF.html">plotIPDF</a>.</p><pre class="codeinput">plotIPDF(ebsd(<span class="string">'Fo'</span>).orientations,xvector)
+</pre><pre class="codeoutput">  I'm plotting 12500 random orientations out of 152345 given orientations
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_02.png" alt=""> <h2 id="5">Scatter Plot in ODF Sections</h2><p>The plotting of scatter points in sections of the orientation space is carried out by the command <a href="orientation.plotSection.html">plotSection</a>. In the above examples, the number of plotted orientations was chosen automatically such that the plots not to become too crowded with points. The number of randomly chosen orientations can be specified by the option <b>points</b>.</p><pre class="codeinput">plotSection(ebsd(<span class="string">'Fo'</span>).orientations,<span class="string">'points'</span>,1000,<span class="string">'sigma'</span>,<span class="string">'sections'</span>,9)
+</pre><pre class="codeoutput">  plotting 1000 random orientations out of 152345 given orientations
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_03.png" alt=""> <h2 id="6">Scatter Plot in Axis Angle or Rodrigues Space</h2><p>Another possibility is to plot the single orientations directly into the orientation space, i.e., either in axis/angle parameterization or in Rodrigues parameterization.</p><pre class="codeinput">scatter(ebsd(<span class="string">'Fo'</span>).orientations)
+</pre><pre class="codeoutput">plot 2000 random orientations out of 152345 given orientations
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_04.png" alt=""> <p>Here, the optional option 'center' specifies the center of the unique region in the orientation space.</p><h2 id="8">Orientation plots for EBSD and grains</h2><p>Since EBSD and grain data involves single orientations, the above plotting commands are also applicable for those objects.</p><p>Let us consider some grains <a href="EBSD.calcGrains.html">reconstructed</a> from the EBSD data</p><pre class="codeinput">grains = calcGrains(ebsd);
+</pre><p>Then the scatter plot of the individual orientations of the Iron phase in the inverse pole figure is achieved by</p><pre class="codeinput">plotIPDF(ebsd(<span class="string">'Fo'</span>).orientations,xvector,<span class="string">'points'</span>,1000, <span class="string">'MarkerSize'</span>,3);
+</pre><pre class="codeoutput">  I'm plotting 1000 random orientations out of 152345 given orientations
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_05.png" alt=""> <p>In the same way, the mean orientations of grains can be visualized</p><pre class="codeinput">hold <span class="string">all</span>
+plotIPDF(grains(<span class="string">'Fo'</span>).meanOrientation,xvector,<span class="string">'points'</span>,500, <span class="string">'MarkerSize'</span>,3);
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">  I'm plotting 500 random orientations out of 4092 given orientations
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_06.png" alt=""> <p>One can also use different colors on the scatter points</p><pre class="codeinput">h = [Miller(1,0,0,ebsd(<span class="string">'Fo'</span>).CS),Miller(1,1,0,ebsd(<span class="string">'Fo'</span>).CS)];
+plotPDF(ebsd(<span class="string">'Fo'</span>).orientations,ebsd(<span class="string">'Fo'</span>).mad,h,<span class="string">'antipodal'</span>,<span class="string">'MarkerSize'</span>,4)
+</pre><pre class="codeoutput">  I'm plotting 1250 random orientations out of 152345 given orientations
+  You can specify the the number points by the option "points".
+  The option "all" ensures that all data are plotted
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_07.png" alt=""> <p>or some arbitrary data vector</p><pre class="codeinput">plotSection(grains(<span class="string">'Fo'</span>).meanOrientation,log(grains(<span class="string">'Fo'</span>).area),<span class="keyword">...</span>
+  <span class="string">'sigma'</span>,<span class="string">'sections'</span>,9,<span class="string">'MarkerSize'</span>,10);
+</pre><pre class="codeoutput">  plotting 2000 random orientations out of 4092 given orientations
+</pre><img vspace="50" hspace="5" src="EBSDOrientationPlots_08.png" alt=""> <p>See also <a href="PlotTypes_demo.html#5,">Scatter plots</a> for more information about scatter plot and <a href="SphericalProjection_demo.html,spherical">projections</a>  for more information on spherical projections.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Plotting Individual Orientations
+% Basics of the plot types for individual orientations data
+%
+%% 
+% This section gives an overview over the possibilities that MTEX offers to
+% visualize orientation data. Let us first load a sample EBSD data set
+
+mtexdata forsterite
+
+%%
+% and select all individual orientations of the Iron phase
+
+ebsd('Fo').orientations
+
+
+%% Scatter Pole Figure Plot
+% A pole figure showing scattered points of these data figure can be
+% produced by the command <orientation.plotPDF.html plotPDF>.
+
+plotPDF(ebsd('Fo').orientations,Miller(1,0,0,ebsd('Fo').CS))
+
+
+%% Scatter (Inverse) Pole Figure Plot
+% Accordingly, scatter points in inverse pole figures are produced by the
+% command  <orientation.plotIPDF.html plotIPDF>.
+
+plotIPDF(ebsd('Fo').orientations,xvector)
+
+
+%% Scatter Plot in ODF Sections
+% The plotting of scatter points in sections of the orientation space is carried out by the
+% command <orientation.plotSection.html plotSection>. In the above examples, the number
+% of plotted orientations was chosen automatically such that the
+% plots not to become too crowded with points. The number of randomly chosen orientations
+% can be specified by the option *points*.
+
+plotSection(ebsd('Fo').orientations,'points',1000,'sigma','sections',9)
+
+
+%% Scatter Plot in Axis Angle or Rodrigues Space
+% Another possibility is to plot the single orientations directly into the
+% orientation space, i.e., either in axis/angle parameterization or in Rodrigues
+% parameterization.
+
+scatter(ebsd('Fo').orientations)
+
+%%
+% Here, the optional option 'center' specifies the center of the unique
+% region in the orientation space.
+
+
+%% Orientation plots for EBSD and grains
+% Since EBSD and grain data involves single orientations, the above plotting
+% commands are also applicable for those objects.
+
+%%
+% Let us consider some grains <EBSD.calcGrains.html reconstructed> from the
+% EBSD data
+
+grains = calcGrains(ebsd);
+
+%%
+% Then the scatter plot of the individual orientations of the Iron phase in
+% the inverse pole figure is achieved by
+
+plotIPDF(ebsd('Fo').orientations,xvector,'points',1000, 'MarkerSize',3);
+
+%%
+% In the same way, the mean orientations of grains can be visualized
+
+hold all
+plotIPDF(grains('Fo').meanOrientation,xvector,'points',500, 'MarkerSize',3);
+hold off
+
+%%
+% One can also use different colors on the scatter points
+
+h = [Miller(1,0,0,ebsd('Fo').CS),Miller(1,1,0,ebsd('Fo').CS)];
+plotPDF(ebsd('Fo').orientations,ebsd('Fo').mad,h,'antipodal','MarkerSize',4)
+
+%%
+% or some arbitrary data vector
+
+plotSection(grains('Fo').meanOrientation,log(grains('Fo').area),...
+  'sigma','sections',9,'MarkerSize',10);
+  
+%%
+% See also <PlotTypes_demo.html#5, Scatter plots> for more information
+% about scatter plot and <SphericalProjection_demo.html,spherical
+% projections>  for more information on spherical projections.
+
+##### SOURCE END #####
+--></body></html>

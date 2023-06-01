@@ -1,0 +1,241 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ODF Characteristics</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ODFCharacteristics.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ODF Characteristics</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#5">Modal Orientations</a></li><li><a href="#7">Texture Characteristics</a></li><li><a href="#10">Volume Portions</a></li></ul></div><p>Let us first begin with some constructed ODFs to be analyzed below</p><p>A bimodal ODF:</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'mmm'</span>);
+odf1 = unimodalODF(orientation.byEuler(0,0,0,cs)) + <span class="keyword">...</span>
+  unimodalODF(orientation.byEuler(30*degree,0,0,cs))
+</pre><pre class="codeoutput"> 
+odf1 = SO3FunRBF (mmm &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 2 orientations
+ 
+  Bunge Euler angles in degree
+  phi1    Phi   phi2 weight
+     0      0      0      1
+    30      0      0      1
+ 
+</pre><p>A fibre ODF:</p><pre class="codeinput">f001_x = fibre(Miller(0,0,1,cs),xvector)
+
+odf2 = fibreODF(f001_x)
+</pre><pre class="codeoutput"> 
+f001_x = fibre (mmm &#8594; xyz)
+ 
+  h || r: (001) || (1,0,0)
+ 
+odf2 = SO3FunCBF (mmm &#8594; xyz)
+ 
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (001) || 1,0,0
+  weight: 1
+ 
+</pre><p>An ODF estimated from diffraction data</p><pre class="codeinput">mtexdata <span class="string">dubna</span>
+
+odf3 = calcODF(pf,<span class="string">'resolution'</span>,5*degree,<span class="string">'zero_Range'</span>)
+</pre><pre class="codeoutput"> 
+pf = PoleFigure (xyz)
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+ 
+  h = (02-21), r = 72 x 19 points
+  h = (10-10), r = 72 x 19 points
+  h = (10-11)(01-11), r = 72 x 19 points
+  h = (10-12), r = 72 x 19 points
+  h = (11-20), r = 72 x 19 points
+  h = (11-21), r = 72 x 19 points
+  h = (11-22), r = 72 x 19 points
+ 
+odf3 = SO3FunRBF (Quartz &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 19848 orientations, resolution: 5&deg;
+  weight: 1
+ 
+</pre><h2 id="5">Modal Orientations</h2><p>The modal orientation of an ODF is the crystallographic prefered orientation <tt>ori_pref</tt> of the texture. It is characterized as the maximum of the ODF. In MTEX it is returned as the second output argument of the command <a href="SO3Fun.max.html"><tt>max</tt></a></p><pre class="codeinput">[~,ori_pref] = max(odf3)
+</pre><pre class="codeoutput"> 
+ori_pref = orientation (Quartz &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  132.901 34.7499 207.041
+ 
+</pre><p>Lets mark this prefered orientation in the pole figures</p><pre class="codeinput">plotPDF(odf3,pf.allH,<span class="string">'antipodal'</span>,<span class="string">'superposition'</span>,pf.c);
+annotate(ori_pref,<span class="string">'marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'black'</span>)
+</pre><img vspace="50" hspace="5" src="ODFCharacteristics_01.png" alt=""> <h2 id="7">Texture Characteristics</h2><p>Texture characteristics are used for a rough classification of ODFs into sharp and weak ones. The two most common texture characteristics are the entropy and the texture index. The texture index of an ODF <img src="ODFCharacteristics_eq02527148203711597490.png" alt="$f$"> is defined as:</p><p><img src="ODFCharacteristics_eq04826935592097073362.png" alt="$$ t = \int_{SO(3)} f(R)^2 dR$$"></p><p>We may either compute this integral using the command <a href="SO3Fun.sum.html"><tt>sum</tt></a> directly by</p><pre class="codeinput">t = mean(odf1.*odf1)
+</pre><pre class="codeoutput">t =
+  288.5696
+</pre><p>or, more efficiently, by the command <a href="SO3Fun.norm.html"><tt>norm</tt></a></p><pre class="codeinput">t = norm(odf1)^2
+</pre><pre class="codeoutput">t =
+  288.5696
+</pre><p>The entropy of an ODF <img src="ODFCharacteristics_eq02527148203711597490.png" alt="$f$"> is defined as:</p><p><img src="ODFCharacteristics_eq14819438645522054622.png" alt="$$ H = - \int_{SO(3)} f(R) \ln f(R) dR$$"></p><pre class="codeinput">H = entropy(odf2)
+</pre><pre class="codeoutput">H =
+   -2.8402
+</pre><h2 id="10">Volume Portions</h2><p>Volume portions describes the relative volume of crystals having a certain orientation. The relative volume of crystals having a orientation close to a given orientation is computed by the command <a href="SO3Fun.volume.html"><tt>volume</tt></a> and the relative volume of crystals having a orientation close to a given fibre is computed by the command <a href="SO3Fun.fibreVolume.html"><tt>fibreVolume</tt></a></p><p>The relative volume in percent of crystals with missorientation maximum 30 degree from the preferred orientation <tt>ori_pref</tt>:</p><pre class="codeinput">V1 = volume(odf3, ori_pref, 30*degree) * 100
+</pre><pre class="codeoutput">V1 =
+   35.6773
+</pre><p>The relative volume of crystals with missorientation maximum 20 degree from the prefered fibre in percent:</p><pre class="codeinput">V2 = volume(odf2,f001_x,20*degree) * 100
+</pre><pre class="codeoutput">V2 =
+   95.2359
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ODF Characteristics
+%
+%%
+%
+% Let us first begin with some constructed ODFs to be analyzed below
+
+%%
+% A bimodal ODF:
+cs = crystalSymmetry('mmm');
+odf1 = unimodalODF(orientation.byEuler(0,0,0,cs)) + ...
+  unimodalODF(orientation.byEuler(30*degree,0,0,cs))
+
+%%
+% A fibre ODF:
+
+f001_x = fibre(Miller(0,0,1,cs),xvector)
+
+odf2 = fibreODF(f001_x)
+
+%%
+% An ODF estimated from diffraction data
+
+mtexdata dubna
+
+odf3 = calcODF(pf,'resolution',5*degree,'zero_Range')
+
+
+%% Modal Orientations
+% The modal orientation of an ODF is the crystallographic prefered
+% orientation |ori_pref| of the texture. It is characterized as the maximum
+% of the ODF. In MTEX it is returned as the second output argument of the
+% command <SO3Fun.max.html |max|>
+
+[~,ori_pref] = max(odf3)
+
+%%
+% Lets mark this prefered orientation in the pole figures
+
+plotPDF(odf3,pf.allH,'antipodal','superposition',pf.c);
+annotate(ori_pref,'marker','s','MarkerFaceColor','black')
+
+%% Texture Characteristics
+%
+% Texture characteristics are used for a rough classification of ODFs into
+% sharp and weak ones. The two most common texture characteristics are the
+% entropy and the texture index. The texture index of an ODF $f$ is defined
+% as:
+%
+% $$ t = \int_{SO(3)} f(R)^2 dR$$
+%
+% We may either compute this integral using the command <SO3Fun.sum.html
+% |sum|> directly by
+
+t = mean(odf1.*odf1)
+
+%%
+% or, more efficiently, by the command <SO3Fun.norm.html |norm|>
+
+t = norm(odf1)^2
+
+
+%%
+% The entropy of an ODF $f$ is defined as:
+%
+% $$ H = - \int_{SO(3)} f(R) \ln f(R) dR$$
+
+
+H = entropy(odf2)
+
+
+%% Volume Portions
+%
+% Volume portions describes the relative volume of crystals having a
+% certain orientation. The relative volume of crystals having a orientation
+% close to a given orientation is computed by the command
+% <SO3Fun.volume.html |volume|> and the relative volume of crystals having a
+% orientation close to a given fibre is computed by the command
+% <SO3Fun.fibreVolume.html |fibreVolume|>
+
+%%
+% The relative volume in percent of crystals with missorientation maximum
+% 30 degree from the preferred orientation |ori_pref|:
+
+V1 = volume(odf3, ori_pref, 30*degree) * 100
+
+%%
+% The relative volume of crystals with missorientation maximum 20 degree
+% from the prefered fibre in percent:
+
+V2 = volume(odf2,f001_x,20*degree) * 100
+
+
+##### SOURCE END #####
+--></body></html>

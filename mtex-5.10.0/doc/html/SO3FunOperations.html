@@ -1,0 +1,328 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Operations on Rotational Functions</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SO3FunOperations.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Operations on Rotational Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Basic arithmetic operations</a></li><li><a href="#7">Local Extrema</a></li><li><a href="#8">Integration</a></li><li><a href="#11">Differentiation</a></li><li><a href="#14">Rotating rotational functions</a></li></ul></div><p>The idea of variables of type <a href="SO3Fun.SO3Fun.html">SO3Fun</a> is to calculate with rotational functions similarly as Matlab does with vectors and matrices. In order to illustrate this we consider the following two rotational functions</p><p>An ODF determined from XRD data</p><pre class="codeinput">SO3F1 = SO3Fun.dubna
+
+plot(SO3F1,<span class="string">'sigma'</span>)
+</pre><pre class="codeoutput"> 
+SO3F1 = SO3FunRBF (Quartz &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 19848 orientations, resolution: 5&deg;
+  weight: 1
+ 
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_01.png" alt=""> <p>and an unimodal distributed ODF</p><pre class="codeinput">R = orientation.byAxisAngle(vector3d.Y,pi/4,SO3F1.CS);
+SO3F2 = SO3FunRBF(R,SO3DeLaValleePoussinKernel)
+
+plot(SO3F2,<span class="string">'sigma'</span>)
+</pre><pre class="codeoutput"> 
+SO3F2 = SO3FunRBF (Quartz &#8594; xyz)
+ 
+  &lt;strong&gt;unimodal component&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 1 orientations
+ 
+  Bunge Euler angles in degree
+  phi1    Phi   phi2 weight
+    90     45    270      1
+ 
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_02.png" alt=""> <h2 id="3">Basic arithmetic operations</h2><p>Now the sum of these two rotational functions is again a rotational function, i.e., a function of type <a href="SO3Fun.SO3Fun.html"><tt>SO3Fun</tt></a></p><pre class="codeinput">1 + 2 * SO3F1 + SO3F2
+
+plot(2 * SO3F1 + SO3F2,<span class="string">'sigma'</span>)
+</pre><pre class="codeoutput"> 
+ans = SO3FunComposition (Quartz &#8594; xyz)
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 1
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 19848 orientations, resolution: 5&deg;
+  weight: 2
+ 
+  &lt;strong&gt;unimodal component&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 1 orientations
+ 
+  Bunge Euler angles in degree
+  phi1    Phi   phi2 weight
+    90     45    270      1
+ 
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_03.png" alt=""> <p>Accordingly, one can use all basic operations like <tt>-</tt>, <tt>*</tt>, <tt>^</tt>, <tt>/</tt>, <a href="SO3Fun.min.html"><tt>min</tt></a>, <a href="SO3Fun.max.html"><tt>max</tt></a>, <a href="SO3Fun.abs.html"><tt>abs</tt></a>, <a href="SO3Fun.sqrt.html"><tt>sqrt</tt></a> to calculate with variables of type <a href="SO3Fun.SO3Fun.html">SO3Fun</a>.</p><pre class="codeinput"><span class="comment">% the maximum between two functions</span>
+plot(max(2*SO3F1,SO3F2),<span class="string">'sigma'</span>);
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_04.png" alt=""> <pre class="codeinput"><span class="comment">% the minimum between two functions</span>
+plot(min(2*SO3F1,SO3F2),<span class="string">'sigma'</span>);
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_05.png" alt=""> <p>We also can work with the pointwise <a href="SO3Fun.conj.html"><tt>conj</tt></a>, <a href="SO3Fun.exp.html"><tt>exp</tt></a> or <a href="SO3Fun.log.html"><tt>log</tt></a> of an <tt>SO3Fun</tt>.</p><p>For a given function <img src="SO3FunOperations_eq03561984902443358716.png" alt="$f\colon SO(3) \to C$"> we get a second function <img src="SO3FunOperations_eq03788548120813133703.png" alt="$g\colon SO(3) \to C$"> where <img src="SO3FunOperations_eq06396444385549924355.png" alt="$g( \bf{R}) = f(\bf R^{-1})$"> by the method <a href="SO3Fun.inv.html"><tt>inv</tt></a>, i.e.</p><pre class="codeinput">g = inv(SO3F1)
+
+SO3F1.eval(R)
+g.eval(inv(R))
+</pre><pre class="codeoutput"> 
+g = SO3FunRBF (xyz &#8594; Quartz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 19848 orientations, resolution: 5&deg;
+  weight: 1
+ 
+ans =
+    0.9040
+ans =
+    2.2873
+</pre><h2 id="7">Local Extrema</h2><p>The above mentioned functions <a href="SO3Fun.min.html"><tt>min</tt></a> and <a href="SO3Fun.max.html"><tt>max</tt></a> have very different use cases</p><div><ul><li>if a single rotational function is provided the global maximum / minimum of the function is computed</li><li>if two rotational functions are provied, a rotational function defined as the pointwise min/max between these two functions is computed</li><li>if a rotational function and a single number are passed as arguments a rotational function defined as the pointwise min/max between the function and the value is computed</li></ul></div><pre class="codeinput"><span class="comment">% * if additionally the option 'numLocal' is provided the certain number of</span>
+<span class="comment">% local minima / maxima is computed</span>
+
+plot(2 * SO3F1 + SO3F2,<span class="string">'phi2'</span>,(0:3)*30*degree)
+
+<span class="comment">% compute and mark the global maximum</span>
+[maxvalue, maxnodes] = max(2 * SO3F1 + SO3F2,<span class="string">'numLocal'</span>,2);
+annotate(maxnodes)
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_06.png" alt=""> <h2 id="8">Integration</h2><p>The surface integral of a spherical function can be computed by either <a href="SO3Fun.mean.html"><tt>mean</tt></a> or <a href="SO3Fun.sum.html"><tt>sum</tt></a>. The difference between both commands is that <a href="SO3Fun.sum.html"><tt>sum</tt></a> normalizes the integral of the identical function on the rotation group to <img src="SO3FunOperations_eq02784905801444706480.png" alt="$8 \pi^2$">, the command <a href="SO3Fun.mean.html"><tt>mean</tt></a> normalizes it to one. Compare</p><pre class="codeinput">mean(SO3F1)
+
+sum(SO3F1) / ( 8 * pi^2 )
+</pre><pre class="codeoutput">ans =
+    1.0000
+ans =
+    1.0000
+</pre><p>A practical application of integration is the computation of the <img src="SO3FunOperations_eq17227472850254837926.png" alt="$L^2$">-norm which is defined for a <img src="SO3FunOperations_eq01113541437488883686.png" alt="$SO(3)$"> function <img src="SO3FunOperations_eq02527148203711597490.png" alt="$f$"> by</p><p><img src="SO3FunOperations_eq17738082515862828962.png" alt="$$ |f|_2 = \left( \frac{1}{8\pi^2} \int_{SO(3)} | f(\bf{R}) |^2 \,\mathrm d \bf{R} \right)^{1/2} $$"></p><p>accordingly we can compute it by</p><pre class="codeinput">sqrt(mean(abs(SO3F1).^2))
+</pre><pre class="codeoutput">ans =
+    3.6542
+</pre><p>or more efficiently by the command <a href="SO3Fun.norm.html"><tt>norm</tt></a></p><pre class="codeinput">norm(SO3F1)
+</pre><pre class="codeoutput">ans =
+    3.6542
+</pre><h2 id="11">Differentiation</h2><p>The gradient of a <img src="SO3FunOperations_eq01113541437488883686.png" alt="$SO(3)$"> function in a specific point can be described by a <a href="vector3d.vector3d.html">three-dimensional vector</a> which can be computed by the command <a href="SO3Fun.grad.html"><tt>grad</tt></a></p><pre class="codeinput">grad(SO3F1,R)
+</pre><pre class="codeoutput"> 
+ans = vector3d
+</pre><p>The gradients of a <img src="SO3FunOperations_eq01113541437488883686.png" alt="$SO(3)$"> function in all points form a <img src="SO3FunOperations_eq01113541437488883686.png" alt="$SO(3)$"> vector field and are returned by the function <a href="SO3Fun.grad.html"><tt>grad</tt></a> as a variable of type <a href="SO3VectorFieldHarmonic.SO3VectorFieldHarmonic.html">SO3VectorFieldHarmonic</a>.</p><pre class="codeinput"><span class="comment">% compute the gradient as a vector field</span>
+G = grad(SO3F1)
+
+<span class="comment">% plot the gradient on top of the function</span>
+plot(SO3F1,<span class="string">'upper'</span>,<span class="string">'sigma'</span>)
+hold <span class="string">on</span>
+plot(G,<span class="string">'color'</span>,<span class="string">'black'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'resolution'</span>,5*degree)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+G = SO3VectorFieldHandle (1 &#8594; xyz)
+ 
+  plotting 2000 random orientations out of 5172 given orientations
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_07.png" alt=""> <p>We observe long arrows at the positions of big changes in intensity and almost invisible arrows in regions of constant intensity.</p><h2 id="14">Rotating rotational functions</h2><p>Rotating a <img src="SO3FunOperations_eq01113541437488883686.png" alt="$SO(3)$"> function works with the command <a href="SO3Fun.rotate.html"><tt>rotate</tt></a></p><pre class="codeinput"><span class="comment">% define a rotation</span>
+rot = rotation.byEuler(30*degree,0*degree,90*degree,<span class="string">'Bunge'</span>)
+
+<span class="comment">% plot the rotated function</span>
+plot(rotate(2 * SO3F1 + SO3F2,rot),<span class="string">'sigma'</span>)
+</pre><pre class="codeoutput"> 
+rot = rotation
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+   120    0    0
+ 
+</pre><img vspace="50" hspace="5" src="SO3FunOperations_08.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Operations on Rotational Functions
+%
+%%
+% The idea of variables of type <SO3Fun.SO3Fun.html SO3Fun> is to calculate with rotational
+% functions similarly as Matlab does with vectors and matrices. In order to
+% illustrate this we consider the following two rotational functions
+%
+% An ODF determined from XRD data
+SO3F1 = SO3Fun.dubna
+
+plot(SO3F1,'sigma')
+
+%%
+% and an unimodal distributed ODF
+
+R = orientation.byAxisAngle(vector3d.Y,pi/4,SO3F1.CS);
+SO3F2 = SO3FunRBF(R,SO3DeLaValleePoussinKernel)
+
+plot(SO3F2,'sigma')
+
+%% Basic arithmetic operations
+% Now the sum of these two rotational functions is again a rotational
+% function, i.e., a function of type <SO3Fun.SO3Fun.html |SO3Fun|>
+
+1 + 2 * SO3F1 + SO3F2
+
+plot(2 * SO3F1 + SO3F2,'sigma')
+
+%%
+% Accordingly, one can use all basic operations like |-|, |*|, |^|, |/|,
+% <SO3Fun.min.html |min|>, <SO3Fun.max.html |max|>, <SO3Fun.abs.html
+% |abs|>, <SO3Fun.sqrt.html |sqrt|> to calculate with variables of type
+% <SO3Fun.SO3Fun.html SO3Fun>.
+
+% the maximum between two functions
+plot(max(2*SO3F1,SO3F2),'sigma');
+
+
+%%
+
+% the minimum between two functions
+plot(min(2*SO3F1,SO3F2),'sigma');
+
+%%
+% We also can work with the pointwise <SO3Fun.conj.html |conj|>, 
+% <SO3Fun.exp.html |exp|> or <SO3Fun.log.html |log|> of an |SO3Fun|.
+%
+% For a given function $f\colon SO(3) \to C$ we get a second function
+% $g\colon SO(3) \to C$ where $g( \bf{R}) = f(\bf R^{-1})$ by the method 
+% <SO3Fun.inv.html |inv|>, i.e.
+
+g = inv(SO3F1)
+
+SO3F1.eval(R)
+g.eval(inv(R))
+
+%% Local Extrema
+% 
+% The above mentioned functions <SO3Fun.min.html |min|> and
+% <SO3Fun.max.html |max|> have very different use cases
+%
+% * if a single rotational function is provided the global maximum /
+% minimum of the function is computed
+% * if two rotational functions are provied, a rotational function defined
+% as the pointwise min/max between these two functions is computed
+% * if a rotational function and a single number are passed as arguments a
+% rotational function defined as the pointwise min/max between the function
+% and the value is computed
+
+% * if additionally the option 'numLocal' is provided the certain number of
+% local minima / maxima is computed
+
+plot(2 * SO3F1 + SO3F2,'phi2',(0:3)*30*degree)
+
+% compute and mark the global maximum
+[maxvalue, maxnodes] = max(2 * SO3F1 + SO3F2,'numLocal',2);
+annotate(maxnodes)
+
+%% Integration
+% The surface integral of a spherical function can be computed by either
+% <SO3Fun.mean.html |mean|> or <SO3Fun.sum.html |sum|>. The difference
+% between both commands is that <SO3Fun.sum.html |sum|> normalizes the
+% integral of the identical function on the rotation group to $8 \pi^2$, the command
+% <SO3Fun.mean.html |mean|> normalizes it to one. Compare
+
+mean(SO3F1)
+
+sum(SO3F1) / ( 8 * pi^2 )
+
+%%
+% A practical application of integration is the computation of the
+% $L^2$-norm which is defined for a $SO(3)$ function $f$ by
+%
+% $$ |f|_2 = \left( \frac{1}{8\pi^2} \int_{SO(3)} | f(\bf{R}) |^2 \,\mathrm d \bf{R} \right)^{1/2} $$
+%
+% accordingly we can compute it by
+
+sqrt(mean(abs(SO3F1).^2))
+
+%%
+% or more efficiently by the command <SO3Fun.norm.html |norm|>
+
+norm(SO3F1)
+
+%% Differentiation
+% The gradient of a $SO(3)$ function in a specific point can be described
+% by a <vector3d.vector3d.html three-dimensional vector> which
+% can be computed by the command <SO3Fun.grad.html |grad|>
+
+grad(SO3F1,R)
+
+%%
+% The gradients of a $SO(3)$ function in all points form a $SO(3)$
+% vector field and are returned by the function <SO3Fun.grad.html |grad|> 
+% as a variable of type <SO3VectorFieldHarmonic.SO3VectorFieldHarmonic.html SO3VectorFieldHarmonic>.
+
+% compute the gradient as a vector field
+G = grad(SO3F1)
+
+% plot the gradient on top of the function
+plot(SO3F1,'upper','sigma')
+hold on
+plot(G,'color','black','linewidth',2,'resolution',5*degree)
+hold off
+
+%%
+% We observe long arrows at the positions of big changes in intensity and
+% almost invisible arrows in regions of constant intensity.
+%
+%% Rotating rotational functions
+% Rotating a $SO(3)$ function works with the command <SO3Fun.rotate.html
+% |rotate|>
+
+% define a rotation
+rot = rotation.byEuler(30*degree,0*degree,90*degree,'Bunge')
+
+% plot the rotated function
+plot(rotate(2 * SO3F1 + SO3F2,rot),'sigma')
+
+##### SOURCE END #####
+--></body></html>

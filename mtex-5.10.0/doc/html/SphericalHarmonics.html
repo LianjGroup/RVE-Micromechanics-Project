@@ -1,0 +1,145 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Spherical Harmonics</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SphericalHarmonics.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Spherical Harmonics</h1><!--introduction--><!--/introduction--><p>The spherical harmonics are special functions on the 2-sphere <img src="SphericalHarmonics_eq14147325760566444950.png" alt="$S^2$">. In terms of polar coordinates <img src="SphericalHarmonics_eq15776440483712116112.png" alt="${\bf \xi} = (\sin \theta \cos \rho, \sin \theta \sin \rho, \cos \theta)$"> the spherical harmonic of degree <img src="SphericalHarmonics_eq18216620034067401164.png" alt="$m$"> and order <img src="SphericalHarmonics_eq17216086743898025322.png" alt="$l$"> is defined by</p><p><img src="SphericalHarmonics_eq11699150562562660979.png" alt="$$ Y_m^l({\bf \xi}) = \sqrt{\frac{2m+1}{4\pi}}P_m^{|l|}(\cos\rho)\mathrm e^{\mathrm i l\theta} $$"></p><p>where <img src="SphericalHarmonics_eq14719513938154418495.png" alt="$P_m^{|l|}$">, <img src="SphericalHarmonics_eq07189880969021525937.png" alt="$m \in {\bf N_0}$">, and $ l = -m, \ldots m$ denote the associated Legendre-Polynomials.</p><p>We get the function values of the spherical harmonics of degree 1 in a point v by the command <tt>sphericalY</tt>, i.e.</p><pre class="codeinput">v = vector3d.X
+sphericalY(1,v)
+</pre><pre class="codeoutput"> 
+v = vector3d
+ans =
+    0.3455    0.0000    0.3455
+</pre><p>The spherical harmonics form an orthonormal basis in <img src="SphericalHarmonics_eq02378137224457935761.png" alt="$L_2(S^2)$">. Hence we describe functions on the 2-sphere by there harmonic representation using the class <a href="S2FunHarmonicRepresentation.html">S2FunHarmonic</a>.</p><p>With that we define the spherical harmonic <img src="SphericalHarmonics_eq11200268384306006607.png" alt="$Y_1^1$"> by</p><pre class="codeinput">Y = S2FunHarmonic([0;0;0;1])
+Y.eval(v)
+</pre><pre class="codeoutput"> 
+Y = S2FunHarmonic
+  bandwidth: 1
+ 
+ans =
+    0.3455
+</pre><p>Various normalizations for the sperical harmonics are common in the literature.</p><p>Here we define the <img src="SphericalHarmonics_eq00704031345446614743.png" alt="$L_2$">-norm by</p><p><img src="SphericalHarmonics_eq10750469648622888145.png" alt="$$ \| f \|_2 = \left(\int_{\mathrm{sphere}} |f(\xi)|^2 \,\mathrm d\xi\right)^{1/2} $$"></p><p>such that $ \| 1 \|_2^2 = 1$. Take a look on the section <a href="S2FunOperations.html#5">Integration of S2Fun's</a>.</p><p>Using that definition the spherical harmonics in MTEX fulfill</p><p><img src="SphericalHarmonics_eq04174964942713008956.png" alt="$$\| Y_m^l \|_2 = 1$">$ for all <img src="SphericalHarmonics_eq06935305115507498834.png" alt="$m,l$">.</p><pre class="codeinput">norm(Y)
+</pre><pre class="codeoutput">ans =
+     1
+</pre><p>To concluse this section we plot the first ten spherical harmonics</p><pre class="codeinput">surf(S2FunHarmonic(eye(10)))
+</pre><img vspace="50" hspace="5" src="SphericalHarmonics_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Spherical Harmonics
+%
+%%
+% The spherical harmonics are special functions on the 2-sphere $S^2$.
+% In terms of polar coordinates 
+% ${\bf \xi} = (\sin \theta \cos \rho, \sin \theta \sin \rho, \cos \theta)$ the
+% spherical harmonic of degree $m$ and order $l$ is defined by
+%
+% $$ Y_m^l({\bf \xi}) = \sqrt{\frac{2m+1}{4\pi}}P_m^{|l|}(\cos\rho)\mathrm e^{\mathrm i l\theta} $$
+%
+% where $P_m^{|l|}$, $m \in {\bf N_0}$, and $ l = -m, \ldots m$ denote the
+% associated Legendre-Polynomials.
+%
+% We get the function values of the spherical harmonics of degree 1 in a 
+% point v by the command |sphericalY|, i.e.
+
+v = vector3d.X
+sphericalY(1,v)
+
+%%
+% The spherical harmonics form an orthonormal basis in $L_2(S^2)$.
+% Hence we describe functions on the 2-sphere by there harmonic
+% representation using the class <S2FunHarmonicRepresentation.html
+% S2FunHarmonic>.
+%
+% With that we define the spherical harmonic $Y_1^1$ by
+
+Y = S2FunHarmonic([0;0;0;1])
+Y.eval(v)
+
+%%
+% Various normalizations for the sperical harmonics are common in the
+% literature.
+%
+% Here we define the $L_2$-norm by
+%
+% $$ \| f \|_2 = \left(\int_{\mathrm{sphere}} |f(\xi)|^2 \,\mathrm d\xi\right)^{1/2} $$
+%
+% such that $ \| 1 \|_2^2 = 1$. Take a look on the section 
+% <S2FunOperations.html#5 Integration of S2Fun's>.
+%
+% Using that definition the spherical harmonics in MTEX fulfill
+%
+% $$\| Y_m^l \|_2 = 1$$ for all $m,l$.
+%
+
+norm(Y)
+
+%%
+% To concluse this section we plot the first ten spherical harmonics
+
+surf(S2FunHarmonic(eye(10)))
+
+
+##### SOURCE END #####
+--></body></html>

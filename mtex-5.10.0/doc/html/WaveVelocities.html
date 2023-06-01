@@ -1,0 +1,369 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Wave Velocities</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_WaveVelocities.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Wave Velocities</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">TODO</a></li><li><a href="#2">Import an Elasticity Tensor</a></li><li><a href="#3">Christoffel Tensor</a></li><li><a href="#4">Elastic Wave Velocity</a></li></ul></div><h2 id="1">TODO</h2><h2 id="2">Import an Elasticity Tensor</h2><p>Let us start by importing the elastic stiffness tensor of an Olivine crystal in reference orientation from a file.</p><pre class="codeinput">fname = fullfile(mtexDataPath,<span class="string">'tensor'</span>,<span class="string">'Olivine1997PC.GPa'</span>);
+
+cs = crystalSymmetry(<span class="string">'mmm'</span>,[4.7646 10.2296 5.9942],<span class="string">'mineral'</span>,<span class="string">'Olivin'</span>);
+
+C = stiffnessTensor.load(fname,cs)
+</pre><pre class="codeoutput"> 
+C = stiffnessTensor (Olivin)
+  unit: GPa              
+  rank: 4 (3 x 3 x 3 x 3)
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><h2 id="3">Christoffel Tensor</h2><p>The Christoffel Tensor is symmetric because of the symmetry of the elastic constants. The eigenvalues of the 3x3 Christoffel tensor are three positive values of the wave moduli which corresponds to \rho Vp^2 , \rho Vs1^2 and \rho Vs2^2 of the plane waves propagating in the direction n. The three eigenvectors of this tensor are then the polarization directions of the three waves. Because the Christoffel tensor is symmetric, the polarization vectors are perpendicular to each other.</p><pre class="codeinput"><span class="comment">% It is computed for a specific direction x by the</span>
+<span class="comment">% command &lt;tensor.ChristoffelTensor.html ChristoffelTensor&gt;.</span>
+
+T = ChristoffelTensor(C,vector3d.X)
+</pre><pre class="codeoutput"> 
+T = ChristoffelTensor (Olivin)
+  rank: 2 (3 x 3)
+ 
+ 320.5     0     0
+     0  78.7     0
+     0     0    77
+</pre><h2 id="4">Elastic Wave Velocity</h2><p>The Christoffel tensor is the basis for computing the direction dependent wave velocities of the p, s1, and s2 wave, as well as of the polarization directions. Therefore, we need also the density of the material, e.g.,</p><pre class="codeinput">rho = 3.355
+</pre><pre class="codeoutput">rho =
+    3.3550
+</pre><p>which we can write directly into the elastic stiffness tensor</p><pre class="codeinput">C = addOption(C,<span class="string">'density'</span>,rho)
+</pre><pre class="codeoutput"> 
+C = stiffnessTensor (Olivin)
+  unit   : GPa              
+  density: 3.355            
+  rank   : 4 (3 x 3 x 3 x 3)
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p>the single crystal wave velocities are now computed by the command stiffnessTensor.velocity.html <tt>velocity</tt>&gt;</p><pre class="codeinput">[vp,vs1,vs2,pp,ps1,ps2] = velocity(C)
+</pre><pre class="codeoutput"> 
+vp = S2FunTri
+ 
+ vertices: 1 x 18338
+ values:   1 x 18338
+ 
+vs1 = S2FunTri
+ 
+ vertices: 1 x 18338
+ values:   1 x 18338
+ 
+vs2 = S2FunTri
+ 
+ vertices: 1 x 18338
+ values:   1 x 18338
+pp = 
+  S2AxisFieldTri with properties:
+
+          tri: [1&times;1 S2Triangulation]
+       values: [1&times;18338 vector3d]
+     vertices: [1&times;18338 S2Grid]
+    antipodal: 0
+ps1 = 
+  S2AxisFieldTri with properties:
+
+          tri: [1&times;1 S2Triangulation]
+       values: [1&times;18338 vector3d]
+     vertices: [1&times;18338 S2Grid]
+    antipodal: 0
+ps2 = 
+  S2AxisFieldTri with properties:
+
+          tri: [1&times;1 S2Triangulation]
+       values: [1&times;18338 vector3d]
+     vertices: [1&times;18338 S2Grid]
+    antipodal: 0
+</pre><p>As output we obtain three <a href="S2FunConcept.html">spherical functions</a> <tt>vp</tt>, <tt>vs1</tt> and <tt>vs2</tt> representing the velocities of P, and fast and slow S-waves respectively in dependency of the propagation direction. The remaining three output variables <tt>pp</tt>, <tt>ps1</tt>, <tt>ps2</tt> are <a href="S2FunAxisField.html">spherical vector fields</a> representing the polarization directions of these wave as functions of the propagation direction.</p><p>In order to visualize these quantities, there are several possibilities. Let us first plot the direction dependent wave speed of the p-wave</p><pre class="codeinput">plot(vp,<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+</pre><img vspace="50" hspace="5" src="WaveVelocities_01.png" alt=""> <p>Next, we plot on the top of this plot the p-wave polarization direction.</p><pre class="codeinput">hold <span class="string">on</span>
+plot(pp)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="WaveVelocities_02.png" alt=""> <p>We may even compute with these spherical functions as width ordinary values. E.g. to visualize the speed difference between the s1 and s2 waves we do.</p><pre class="codeinput">plot(vs1-vs2,<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+
+hold <span class="string">on</span>
+plot(ps1)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="WaveVelocities_03.png" alt=""> <p>When projected to a plane the different wave speeds</p><pre class="codeinput">planeNormal = vector3d.X;
+
+<span class="comment">% options for sections</span>
+optSec = {<span class="string">'color'</span>,<span class="string">'interp'</span>,<span class="string">'linewidth'</span>,6,<span class="string">'doNotDraw'</span>};
+
+<span class="comment">% options for quiver</span>
+optQuiver = {<span class="string">'linewidth'</span>,2,<span class="string">'autoScaleFactor'</span>,0.35,<span class="string">'doNotDraw'</span>};
+optQuiverProp = {<span class="string">'color'</span>,<span class="string">'k'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'autoScaleFactor'</span>,0.25,<span class="string">'doNotDraw'</span>};
+prop = S2VectorFieldHarmonic.normal; <span class="comment">% the propagation direction</span>
+
+<span class="comment">% wave velocyties</span>
+close <span class="string">all</span>
+plotSection(vp,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vp'</span>)
+hold <span class="string">on</span>
+plotSection(vs1,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs1'</span>)
+plotSection(vs2,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs2'</span>)
+
+<span class="comment">% polarisation directions</span>
+quiverSection(vp,pp,planeNormal,<span class="string">'color'</span>,<span class="string">'c'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'pp'</span>)
+quiverSection(vs1,ps1,planeNormal,<span class="string">'color'</span>,<span class="string">'g'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps1'</span>)
+quiverSection(vs2,ps2,planeNormal,<span class="string">'color'</span>,<span class="string">'m'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps2'</span>)
+
+<span class="comment">% plot propagation directions as reference</span>
+quiverSection(vp,prop,planeNormal,optQuiverProp{:},<span class="string">'DisplayName'</span>,<span class="string">'x'</span>)
+quiverSection(vs1,prop,planeNormal,optQuiverProp{:})
+quiverSection(vs2,prop,planeNormal,optQuiverProp{:})
+hold <span class="string">off</span>
+
+axis <span class="string">off</span> <span class="string">tight</span>
+legend(<span class="string">'Vp'</span>,<span class="string">'Vs1'</span>,<span class="string">'Vs2'</span>,<span class="string">'pp'</span>,<span class="string">'ps1'</span>,<span class="string">'ps2'</span>,<span class="string">'x'</span>,<span class="string">'Location'</span>,<span class="string">'eastOutSide'</span>)
+mtexTitle(<span class="string">'Phase velocity surface (km/s)'</span>)
+
+mtexColorMap <span class="string">blue2red</span>
+mtexColorbar(<span class="string">'Title'</span>,<span class="string">'(km/s)'</span>,<span class="string">'location'</span>,<span class="string">'southOutSide'</span>)
+</pre><img vspace="50" hspace="5" src="WaveVelocities_04.png" alt=""> <p>Similarly, we can visualize the slowness surfaces (s/km)</p><pre class="codeinput"><span class="comment">% plot slowness surfaces</span>
+plotSection(1./vp,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vp'</span>)
+hold <span class="string">on</span>
+plotSection(1./vs1,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs1'</span>)
+plotSection(1./vs2,planeNormal,optSec{:},<span class="string">'DisplayName'</span>,<span class="string">'Vs2'</span>)
+
+<span class="comment">% polarisation directions</span>
+quiverSection(1./vp,pp,planeNormal,<span class="string">'color'</span>,<span class="string">'c'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'pp'</span>)
+quiverSection(1./vs1,ps1,planeNormal,<span class="string">'color'</span>,<span class="string">'g'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps1'</span>)
+quiverSection(1./vs2,ps2,planeNormal,<span class="string">'color'</span>,<span class="string">'m'</span>,optQuiver{:},<span class="string">'DisplayName'</span>,<span class="string">'ps2'</span>)
+
+<span class="comment">% plot propagation directions as reference</span>
+quiverSection(1./vp,prop,planeNormal,optQuiverProp{:},<span class="string">'DisplayName'</span>,<span class="string">'x'</span>)
+quiverSection(1./vs1,prop,planeNormal,optQuiverProp{:})
+quiverSection(1./vs2,prop,planeNormal,optQuiverProp{:})
+hold <span class="string">off</span>
+axis <span class="string">off</span> <span class="string">tight</span>
+legend(<span class="string">'Vp'</span>,<span class="string">'Vs1'</span>,<span class="string">'Vs2'</span>,<span class="string">'pp'</span>,<span class="string">'ps1'</span>,<span class="string">'ps2'</span>,<span class="string">'x'</span>,<span class="string">'Location'</span>,<span class="string">'eastOutSide'</span>)
+mtexTitle(<span class="string">'Slowness surface (km/s)'</span>)
+
+mtexColorMap <span class="string">blue2red</span>
+mtexColorbar(<span class="string">'Title'</span>,<span class="string">'(s/km)'</span>,<span class="string">'location'</span>,<span class="string">'southOutSide'</span>)
+</pre><img vspace="50" hspace="5" src="WaveVelocities_05.png" alt=""> <p>set back default colormap</p><pre class="codeinput">setMTEXpref(<span class="string">'defaultColorMap'</span>,WhiteJetColorMap)
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Wave Velocities
+%
+%% TODO
+
+%% Import an Elasticity Tensor
+% Let us start by importing the elastic stiffness tensor of an Olivine
+% crystal in reference orientation from a file.
+
+fname = fullfile(mtexDataPath,'tensor','Olivine1997PC.GPa');
+
+cs = crystalSymmetry('mmm',[4.7646 10.2296 5.9942],'mineral','Olivin');
+
+C = stiffnessTensor.load(fname,cs)
+
+%% Christoffel Tensor
+% The Christoffel Tensor is symmetric because of the symmetry of the
+% elastic constants. The eigenvalues of the 3x3 Christoffel tensor are
+% three positive values of the wave moduli which corresponds to \rho Vp^2 ,
+% \rho Vs1^2 and \rho Vs2^2 of the plane waves propagating in the direction n.
+% The three eigenvectors of this tensor are then the polarization
+% directions of the three waves. Because the Christoffel tensor is
+% symmetric, the polarization vectors are perpendicular to each other.
+
+% It is computed for a specific direction x by the
+% command <tensor.ChristoffelTensor.html ChristoffelTensor>.
+
+T = ChristoffelTensor(C,vector3d.X)
+
+%% Elastic Wave Velocity
+%
+% The Christoffel tensor is the basis for computing the direction dependent
+% wave velocities of the p, s1, and s2 wave, as well as of the polarization
+% directions. Therefore, we need also the density of the material, e.g.,
+
+rho = 3.355
+
+%%
+% which we can write directly into the elastic stiffness tensor
+C = addOption(C,'density',rho)
+
+%%
+% the single crystal wave velocities are now computed by the command
+% stiffnessTensor.velocity.html |velocity|>
+
+[vp,vs1,vs2,pp,ps1,ps2] = velocity(C)
+
+%%
+% As output we obtain three <S2FunConcept.html spherical functions>
+% |vp|, |vs1| and |vs2| representing the velocities of P, and fast
+% and slow S-waves respectively in dependency of the propagation direction.
+% The remaining three output variables |pp|, |ps1|, |ps2| are
+% <S2FunAxisField.html spherical vector fields> representing the
+% polarization directions of these wave as functions of the propagation
+% direction.
+%
+% In order to visualize these quantities, there are several possibilities.
+% Let us first plot the direction dependent wave speed of the p-wave
+
+plot(vp,'complete','upper')
+
+%%
+% Next, we plot on the top of this plot the p-wave polarization direction.
+
+hold on
+plot(pp)
+hold off
+
+%%
+% We may even compute with these spherical functions as width ordinary
+% values. E.g. to visualize the speed difference between the s1 and s2
+% waves we do.
+
+plot(vs1-vs2,'complete','upper')
+
+hold on
+plot(ps1)
+hold off
+
+%%
+% When projected to a plane the different wave speeds 
+
+planeNormal = vector3d.X;
+
+% options for sections
+optSec = {'color','interp','linewidth',6,'doNotDraw'};
+
+% options for quiver
+optQuiver = {'linewidth',2,'autoScaleFactor',0.35,'doNotDraw'};
+optQuiverProp = {'color','k','linewidth',2,'autoScaleFactor',0.25,'doNotDraw'};
+prop = S2VectorFieldHarmonic.normal; % the propagation direction
+
+% wave velocyties
+close all
+plotSection(vp,planeNormal,optSec{:},'DisplayName','Vp')
+hold on
+plotSection(vs1,planeNormal,optSec{:},'DisplayName','Vs1')
+plotSection(vs2,planeNormal,optSec{:},'DisplayName','Vs2')
+
+% polarisation directions
+quiverSection(vp,pp,planeNormal,'color','c',optQuiver{:},'DisplayName','pp')
+quiverSection(vs1,ps1,planeNormal,'color','g',optQuiver{:},'DisplayName','ps1')
+quiverSection(vs2,ps2,planeNormal,'color','m',optQuiver{:},'DisplayName','ps2')
+
+% plot propagation directions as reference
+quiverSection(vp,prop,planeNormal,optQuiverProp{:},'DisplayName','x')
+quiverSection(vs1,prop,planeNormal,optQuiverProp{:})
+quiverSection(vs2,prop,planeNormal,optQuiverProp{:})
+hold off
+
+axis off tight
+legend('Vp','Vs1','Vs2','pp','ps1','ps2','x','Location','eastOutSide')
+mtexTitle('Phase velocity surface (km/s)')
+
+mtexColorMap blue2red
+mtexColorbar('Title','(km/s)','location','southOutSide')
+
+
+%%
+% Similarly, we can visualize the slowness surfaces (s/km)
+
+% plot slowness surfaces
+plotSection(1./vp,planeNormal,optSec{:},'DisplayName','Vp')
+hold on
+plotSection(1./vs1,planeNormal,optSec{:},'DisplayName','Vs1')
+plotSection(1./vs2,planeNormal,optSec{:},'DisplayName','Vs2')
+
+% polarisation directions
+quiverSection(1./vp,pp,planeNormal,'color','c',optQuiver{:},'DisplayName','pp')
+quiverSection(1./vs1,ps1,planeNormal,'color','g',optQuiver{:},'DisplayName','ps1')
+quiverSection(1./vs2,ps2,planeNormal,'color','m',optQuiver{:},'DisplayName','ps2')
+
+% plot propagation directions as reference
+quiverSection(1./vp,prop,planeNormal,optQuiverProp{:},'DisplayName','x')
+quiverSection(1./vs1,prop,planeNormal,optQuiverProp{:})
+quiverSection(1./vs2,prop,planeNormal,optQuiverProp{:})
+hold off
+axis off tight
+legend('Vp','Vs1','Vs2','pp','ps1','ps2','x','Location','eastOutSide')
+mtexTitle('Slowness surface (km/s)')
+
+mtexColorMap blue2red
+mtexColorbar('Title','(s/km)','location','southOutSide')
+
+%%
+% set back default colormap
+
+setMTEXpref('defaultColorMap',WhiteJetColorMap)
+
+##### SOURCE END #####
+--></body></html>

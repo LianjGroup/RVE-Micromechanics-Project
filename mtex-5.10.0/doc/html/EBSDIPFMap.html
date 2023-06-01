@@ -1,0 +1,332 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Inverse Pole Figure Color Coding of Orientation Maps</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSDIPFMap.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Inverse Pole Figure Color Coding of Orientation Maps</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#7">Basic Properties</a></li><li><a href="#11">Customizing the Color Key</a></li><li><a href="#13">Laue or Enantiomorphic symmetry groups</a></li><li><a href="#15">Other inverse pole figure keys</a></li></ul></div><p>This sections explains how to colorize orientation maps. The mathematics behind the default MTEX color key is explained in detail in the paper <a href="http://dx.doi.org/10.1107/S1600576716012942">Orientations - perfectly colored</a>.</p><p>Let us first import some sample EBSD data. We shall do this at the example of olivine data.</p><pre class="codeinput">mtexdata <span class="string">olivine</span>
+ebsd(<span class="string">'olivine'</span>).CS = ebsd(<span class="string">'olivine'</span>).CS.Laue;
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations       Mineral         Color  Symmetry  Crystal reference frame
+     1   44953 (90%)       olivine  LightSkyBlue       222                         
+     2   1370 (2.8%)      Dolomite  DarkSeaGreen         3       X||a, Y||b*, Z||c*
+     3   2311 (4.6%)     Enstatite     Goldenrod       222                         
+     4   1095 (2.2%)  Chalcopyrite    LightCoral       422                         
+ 
+ Properties: ci, fit, iq, sem_signal, unknown1, unknown2, unknown3, unknown4, x, y, oldId
+ Scan unit : um
+ 
+</pre><p>In order to illustrate the orientations of the olivine crystals we first define the habitus of a olivine crystal</p><pre class="codeinput">cS = crystalShape.olivine;
+
+plot(cS,<span class="string">'colored'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_01.png" alt=""> <p>Next we represent the orientation of each grain by an appropriately rotated crystal. This is done by the following commands</p><pre class="codeinput"><span class="comment">% 1. reconstruct the grains</span>
+[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% 2. remove all very small grains</span>
+ebsd(grains(grains.grainSize &lt; 5)) = [];
+
+<span class="comment">% 3. redo grain reconstruction</span>
+[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% 4. plot the grain boundaries</span>
+plot(grains.boundary,<span class="string">'lineWidth'</span>,1.5,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+
+<span class="comment">% 5. select only very large grains</span>
+big_grains = grains(grains.grainSize &gt; 150);
+
+<span class="comment">% 6.  plot the crystals</span>
+hold <span class="string">on</span>
+plot(big_grains(<span class="string">'olivine'</span>),0.8*cS,<span class="string">'linewidth'</span>,2,<span class="string">'colored'</span>)
+hold <span class="string">off</span>
+legend <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_02.png" alt=""> <p>The idea of inverse pole figure color coding of orientation maps is to visualize the orientation of a grain by the color of the crystal face pointing towards you. In the case Olivine habitus this would lead to six different colors. We can overcome this restriction by replacing the colored crystal shape by a colored ball.</p><pre class="codeinput">close <span class="string">all</span>
+ipfKey = ipfHSVKey(ebsd(<span class="string">'olivine'</span>));
+plot(ipfKey,<span class="string">'3d'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_03.png" alt=""> <p>Next we proceed as with the crystal habitus and place a colored ball at each posiotion of the big grains and rotate it according to the meanorientation of the grain.</p><pre class="codeinput">plot(grains.boundary,<span class="string">'lineWidth'</span>,1.5,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+
+hold <span class="string">on</span>
+plot(big_grains(<span class="string">'olivine'</span>),ipfKey)
+hold <span class="string">off</span>
+legend <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_04.png" alt=""> <p>Finally, we take the color in the center of the ball as the color representing the orientation of the grain. This tranformation from a list of orientations into a list colors given as RGB values  is the central purpose of the color key <tt>ipfKey</tt> we have defined above and is done by the command <tt>ipfKey.orientation2color</tt>.</p><pre class="codeinput"><span class="comment">% this computes the colors for each orientation specified as input</span>
+colors = ipfKey.orientation2color(big_grains(<span class="string">'olivine'</span>).meanOrientation);
+
+<span class="comment">% this plots the grains colorized according to the RGB values stored in colors</span>
+plot(big_grains(<span class="string">'o'</span>),colors)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_05.png" alt=""> <h2 id="7">Basic Properties</h2><p>The interpetation of the colors becomes more simple if we plot the colored ball in stereographic projection and mark the crystallographic axes.</p><pre class="codeinput">plot(ipfKey,<span class="string">'complete'</span>,<span class="string">'upper'</span>)
+
+h = Miller({1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,0,1},{0,1,1},{1,2,0},{0,2,1},<span class="keyword">...</span>
+  ebsd(<span class="string">'olivine'</span>).CS);
+annotate(h.symmetrise,<span class="string">'labeled'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_06.png" alt=""> <p>From the colors of the grains in the map we may now deduce for each grain which crystal axis is pointing out of the plane of the specimen. Accordingly, we can associate to each grain a specific point in the color key. Let plot a colored dot for each grain orientation in the inverse pole figure that scales according to the grain area.</p><pre class="codeinput">plotIPDF(big_grains(<span class="string">'olivine'</span>).meanOrientation,colors,vector3d.Z,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,0.05*big_grains(<span class="string">'olivine'</span>).area,<span class="string">'markerEdgeColor'</span>,<span class="string">'k'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_07.png" alt=""> <p>Instead of colorizing which crystal axis is pointing out of the specimen surface we may also colorizing which crystal axis is pointing towards the rolling or folliation direction or any other specimen fixed direction. This reference direction is stored as the property <tt>inversePoleFigureDirection</tt> in the color key.</p><pre class="codeinput"><span class="comment">% set the referece direction to X</span>
+ipfKey.inversePoleFigureDirection = vector3d.X;
+
+<span class="comment">% compute the colors</span>
+colors = ipfKey.orientation2color(ebsd(<span class="string">'olivine'</span>).orientations);
+
+<span class="comment">% plot the ebsd data together with the colors</span>
+plot(ebsd(<span class="string">'o'</span>),colors)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_08.png" alt=""> <p>Note, that <tt>ipfKey.inversePoleFigureDirection</tt> may even be a vector of directions. Which is helpful for round specimen where one wants to consider the direction normal to the surface.</p><h2 id="11">Customizing the Color Key</h2><p>Orientation color keys usually provide several options to alter the alignment of colors. Let's give some examples</p><pre class="codeinput"><span class="comment">% we may interchange green and blue by setting</span>
+ipfKey.colorPostRotation = reflection(yvector);
+
+plot(ipfKey)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_09.png" alt=""> <p>or cycle of colors red, green, blue by</p><pre class="codeinput">ipfKey.colorPostRotation = rotation.byAxisAngle(zvector,120*degree);
+
+plot(ipfKey)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_10.png" alt=""> <h2 id="13">Laue or Enantiomorphic symmetry groups</h2><p>As the Euler angles provided by the EBSD measurement devices describe proper rotations only they do not include any improper symmetry operation. For this reason it is entirely justified to consider for the ipf map proper symmetries only. Lets define the corresponding color key</p><pre class="codeinput"><span class="comment">% the colore key corresponding to the purely enantiomorphic symmetry group</span>
+ipfKey = ipfHSVKey(ebsd(<span class="string">'olivine'</span>).CS.properGroup);
+plot(ipfKey)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_11.png" alt=""> <p>We oberseve that the key is twice as large and hence allows for a better distinction between different orientations.</p><pre class="codeinput">close <span class="string">all</span>
+color = ipfKey.orientation2color(ebsd(<span class="string">'olivine'</span>).orientations);
+plot(ebsd(<span class="string">'olivine'</span>),color)
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_12.png" alt=""> <h2 id="15">Other inverse pole figure keys</h2><p>Beside the default ipf color key MTEX provides the default color keys are they are used by other popular EBSD systems.</p><pre class="codeinput">plot(ipfTSLKey(ebsd(<span class="string">'olivine'</span>).CS))
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_13.png" alt=""> <pre class="codeinput">plot(ipfHKLKey(ebsd(<span class="string">'olivine'</span>).CS))
+</pre><img vspace="50" hspace="5" src="EBSDIPFMap_14.png" alt=""> <p>The user should be aware that for certain symmetry groups these color keys lead to color jumps.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Inverse Pole Figure Color Coding of Orientation Maps
+%
+%%
+% This sections explains how to colorize orientation maps. The mathematics
+% behind the default MTEX color key is explained in detail in the paper
+% <http://dx.doi.org/10.1107/S1600576716012942 Orientations - perfectly
+% colored>. 
+%
+% Let us first import some sample EBSD data. We shall do this at the
+% example of olivine data.
+
+mtexdata olivine
+ebsd('olivine').CS = ebsd('olivine').CS.Laue;
+
+%%
+% In order to illustrate the orientations of the olivine crystals we first
+% define the habitus of a olivine crystal
+
+cS = crystalShape.olivine;
+
+plot(cS,'colored')
+
+%%
+% Next we represent the orientation of each grain by an appropriately
+% rotated crystal. This is done by the following commands
+
+% 1. reconstruct the grains
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'));
+
+% 2. remove all very small grains
+ebsd(grains(grains.grainSize < 5)) = [];
+
+% 3. redo grain reconstruction
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'));
+
+% 4. plot the grain boundaries
+plot(grains.boundary,'lineWidth',1.5,'micronbar','off')
+
+% 5. select only very large grains
+big_grains = grains(grains.grainSize > 150);
+
+% 6.  plot the crystals
+hold on
+plot(big_grains('olivine'),0.8*cS,'linewidth',2,'colored')
+hold off
+legend off
+
+%%
+% The idea of inverse pole figure color coding of orientation maps is to
+% visualize the orientation of a grain by the color of the crystal face
+% pointing towards you. In the case Olivine habitus this would lead to six
+% different colors. We can overcome this restriction by replacing the
+% colored crystal shape by a colored ball. 
+
+close all
+ipfKey = ipfHSVKey(ebsd('olivine'));
+plot(ipfKey,'3d')
+
+%%
+% Next we proceed as with the crystal habitus and place a colored ball at
+% each posiotion of the big grains and rotate it according to the
+% meanorientation of the grain.
+
+plot(grains.boundary,'lineWidth',1.5,'micronbar','off')
+
+hold on
+plot(big_grains('olivine'),ipfKey)
+hold off
+legend off
+
+%%
+% Finally, we take the color in the center of the ball as the color
+% representing the orientation of the grain. This tranformation from a list
+% of orientations into a list colors given as RGB values  is the central
+% purpose of the color key |ipfKey| we have defined above and is done by
+% the command |ipfKey.orientation2color|.
+
+% this computes the colors for each orientation specified as input
+colors = ipfKey.orientation2color(big_grains('olivine').meanOrientation);
+
+% this plots the grains colorized according to the RGB values stored in colors
+plot(big_grains('o'),colors)
+
+%% Basic Properties
+%
+% The interpetation of the colors becomes more simple if we plot the
+% colored ball in stereographic projection and mark the crystallographic
+% axes.
+
+plot(ipfKey,'complete','upper')
+
+h = Miller({1,0,0},{0,1,0},{0,0,1},{1,1,0},{1,0,1},{0,1,1},{1,2,0},{0,2,1},...
+  ebsd('olivine').CS);
+annotate(h.symmetrise,'labeled','backgroundColor','w')
+
+%%
+% From the colors of the grains in the map we may now deduce for each grain
+% which crystal axis is pointing out of the plane of the specimen.
+% Accordingly, we can associate to each grain a specific point in the color
+% key. Let plot a colored dot for each grain orientation in the inverse
+% pole figure that scales according to the grain area.
+
+plotIPDF(big_grains('olivine').meanOrientation,colors,vector3d.Z,...
+  'MarkerSize',0.05*big_grains('olivine').area,'markerEdgeColor','k')
+
+%%
+% Instead of colorizing which crystal axis is pointing out of the specimen
+% surface we may also colorizing which crystal axis is pointing towards the
+% rolling or folliation direction or any other specimen fixed direction.
+% This reference direction is stored as the property
+% |inversePoleFigureDirection| in the color key.
+
+% set the referece direction to X
+ipfKey.inversePoleFigureDirection = vector3d.X;
+
+% compute the colors
+colors = ipfKey.orientation2color(ebsd('olivine').orientations);
+
+% plot the ebsd data together with the colors
+plot(ebsd('o'),colors)
+
+%%
+% Note, that |ipfKey.inversePoleFigureDirection| may even be a vector of
+% directions. Which is helpful for round specimen where one wants to
+% consider the direction normal to the surface.
+%
+%% Customizing the Color Key
+% Orientation color keys usually provide several options to alter the
+% alignment of colors. Let's give some examples
+
+% we may interchange green and blue by setting
+ipfKey.colorPostRotation = reflection(yvector);
+
+plot(ipfKey)
+
+%%
+% or cycle of colors red, green, blue by
+ipfKey.colorPostRotation = rotation.byAxisAngle(zvector,120*degree);
+
+plot(ipfKey)
+
+%% Laue or Enantiomorphic symmetry groups
+%
+% As the Euler angles provided by the EBSD measurement devices describe
+% proper rotations only they do not include any improper symmetry
+% operation. For this reason it is entirely justified to consider for the
+% ipf map proper symmetries only. Lets define the corresponding color key
+
+% the colore key corresponding to the purely enantiomorphic symmetry group
+ipfKey = ipfHSVKey(ebsd('olivine').CS.properGroup);
+plot(ipfKey)
+
+%%
+% We oberseve that the key is twice as large and hence allows for a better
+% distinction between different orientations.
+
+close all
+color = ipfKey.orientation2color(ebsd('olivine').orientations);
+plot(ebsd('olivine'),color)
+
+
+%% Other inverse pole figure keys
+%
+% Beside the default ipf color key MTEX provides the default color keys are
+% they are used by other popular EBSD systems.
+
+plot(ipfTSLKey(ebsd('olivine').CS))
+
+%%
+% 
+
+plot(ipfHKLKey(ebsd('olivine').CS))
+
+%%
+% The user should be aware that for certain symmetry groups these color
+% keys lead to color jumps.
+%
+
+##### SOURCE END #####
+--></body></html>

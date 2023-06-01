@@ -1,0 +1,461 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Importing EBSD Data</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSDImport.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Importing EBSD Data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#4">Importing EBSD data using the import wizard</a></li><li><a href="#6">The Import Script</a></li><li><a href="#8">Supported Data Formats</a></li><li><a href="#9">Writing your own interface</a></li></ul></div><p>MTEX allows you to import EBSD data from a wide variety of file format. In the most simplest case import can be done by the command <a href="EBSD.load.html">EBSD.load</a></p><pre class="codeinput">ebsd = EBSD.load([mtexEBSDPath filesep <span class="string">'twins.ctf'</span>],<span class="string">'convertEuler2SpatialReferenceFrame'</span>)
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                                 
+     1  22833 (100%)   Magnesium  LightSkyBlue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p>This command automatically detects the file format and generates a variable of type <a href="EBSD.EBSD.html">EBSD</a> which contains all the information of the EBSD data set. Let us quickly do an orientation plot of the Magnesium phase</p><pre class="codeinput">plot(ebsd(<span class="string">'Magnesium'</span>),ebsd(<span class="string">'Magnesium'</span>).orientations)
+</pre><img vspace="50" hspace="5" src="EBSDImport_01.png" alt=""> <p>The variable of type EBSD is the starting point for all further analysis, e.g., <a href="GrainReconstruction.html">grain reconstruction</a>, <a href="EBSD2ODF.html">ODF reconstruction</a>, <a href="EBSDMisorientation">misorientation analysis</a>, etc.</p><h2 id="4">Importing EBSD data using the import wizard</h2><p>In many cases however, importing EBSD data is not that straight forward as suggested above. The reason is that during the measuring process different reference systems are involved and resulting coordinates, i.e., the spatial coordinates and the Euler angles, are often not stored in a consistent way by comercials software. Please read <a href="EBSDReferenceFrame.html">EBSD Reference Systems</a> for more information about how to set up reference frames correctly.</p><p>In order to help the user to import EBSD data consistently to fixed specimen reference frame, which the user should know, MTEX provide the <a href="matlab:import_wizard('EBSD')">import wizard</a> as a graphical user interface. The <tt>import_wizard</tt> can be started either by typing into the command line</p><pre class="codeinput">import_wizard(<span class="string">'EBSD'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDImport_02.png" alt=""> <p>EBSD Data files can be also imported via the <a href="matlab:filebrowser">file browser</a> by choosing <i>Import Data</i> from the context menu of the selected file if its file extension was registered with <a href="matlab:opentoline(fullfile(mtex_path,'mtex_settings.m'),25,1)"><tt>mtex_settings.m</tt></a></p><p>The import wizard guides through the correct setup of:</p><div><ul><li><a href="CrystalSymmetries.html">crystal symmetries</a> associated with phases</li><li>specimen symmetry and plotting conventions</li></ul></div><p>The import wizard allows you to either creates directly a workspace variable of type <a href="EBSD.EBSD.html">EBSD</a> or to generates an m-file which contains all the customizations and allows you to import the data in future sessions without the import wizzard. This last option is highly recommended as the created script is also a good starting point for further analysis and data processing.</p><h2 id="6">The Import Script</h2><p>A script generated by the import wizard has approximately the following form:</p><pre class="codeinput"><span class="comment">% crystal symmetry</span>
+CS = {<span class="keyword">...</span>
+  <span class="string">'notIndexed'</span>,<span class="keyword">...</span>
+  crystalSymmetry(<span class="string">'6/mmm'</span>, [3.2 3.2 5.2], <span class="string">'X||a*'</span>, <span class="string">'Y||b'</span>, <span class="string">'Z||c*'</span>,<span class="keyword">...</span>
+  <span class="string">'mineral'</span>, <span class="string">'Magnesium'</span>, <span class="string">'color'</span>, [0.53 0.81 0.98])};
+
+<span class="comment">% plotting convention</span>
+setMTEXpref(<span class="string">'xAxisDirection'</span>,<span class="string">'east'</span>);
+setMTEXpref(<span class="string">'zAxisDirection'</span>,<span class="string">'outOfPlane'</span>);
+
+<span class="comment">% path to files</span>
+pname = mtexEBSDPath;
+
+<span class="comment">% which files to be imported</span>
+fname = [pname filesep <span class="string">'twins.ctf'</span>];
+
+<span class="comment">% create an EBSD variable containing the data</span>
+ebsd = EBSD.load(fname,CS,<span class="string">'interface'</span>,<span class="string">'ctf'</span>,<span class="keyword">...</span>
+  <span class="string">'convertEuler2SpatialReferenceFrame'</span>);
+</pre><img vspace="50" hspace="5" src="EBSDImport_03.png" alt=""> <p>Running this script imports the data into a variable named <tt>ebsd</tt>. From this point, the script can be extended to your needs, e.g:</p><pre class="codeinput">plot(ebsd)
+</pre><img vspace="50" hspace="5" src="EBSDImport_04.png" alt=""> <h2 id="8">Supported Data Formats</h2><p>MTEX supports the following EBSD data formats:</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_ang.html">.ang</a>
+               </p>
+         </td>
+         <td>
+               <p>EDAX ascii files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_brukertxt.html">.txt</a>
+               </p>
+         </td>
+         <td>
+               <p>Bruker ascii files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_crc.html">.crc</a>
+               </p>
+         </td>
+         <td>
+               <p>Oxford binary files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_csv.html">.csv</a>
+               </p>
+         </td>
+         <td>
+               <p>Oxford single orientation files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_ctf.html">.ctf</a>
+               </p>
+         </td>
+         <td>
+               <p>HKL single orientation files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_dream3d.html">.txt</a>
+               </p>
+         </td>
+         <td>
+               <p>Dream 3d single orientation files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_ang.DRex">.DRex</a>
+               </p>
+         </td>
+         <td>
+               <p>single orientation files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_h5.html">.h5, .hdf5</a>
+               </p>
+         </td>
+         <td>
+               <p>Bruker, EDAX, Dream 3d binary files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_osc.html">.osc</a>
+               </p>
+         </td>
+         <td>
+               <p>EDAX binary files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_Oxfordcsv.html">.csv</a>
+               </p>
+         </td>
+         <td>
+               <p>Oxford ascii files.</p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="loadEBSD_generic.html">.txt</a>
+               </p>
+         </td>
+         <td>
+               <p>ASCII files with Euler angles as columns.</p>
+         </td>
+      </tr>
+   </table>
+</p><p>If the data is recognized as an ASCII list of orientations, phase and spatial coordinates in the form</p><pre>alpha_1 beta_1 gamma_1 phase_1 x_1 y_1
+alpha_2 beta_2 gamma_2 phase_2 x_2 y_2
+alpha_3 beta_3 gamma_3 phase_3 x_3 y_3
+.      .       .       .       .   .
+.      .       .       .       .   .
+.      .       .       .       .   .
+alpha_M beta_M gamma_M phase_m x_m y_m</pre><p>an additional tool supports you to associated the columns with the corresponding properties.</p><h2 id="9">Writing your own interface</h2><p>In case that the EBSD format is not supported, you can write an interface by your own to import the data. Once you have written such an interface that reads data from certain data files and generates an EBSD object you can integrate this method into MTEX by copying it into the folder <tt>MTEX/qta/interfaces</tt> and rename your function <tt>loadEBSD_xxx</tt>. Then it will be automatical recognized by the import wizard. Examples how to write such an interface can be found in the directory <tt>MTEX/qta/interfaces</tt>.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Importing EBSD Data
+%
+%%
+% MTEX allows you to import EBSD data from a wide variety of file format.
+% In the most simplest case import can be done by the command
+% <EBSD.load.html EBSD.load>
+
+ebsd = EBSD.load([mtexEBSDPath filesep 'twins.ctf'],'convertEuler2SpatialReferenceFrame')
+
+%%
+% This command automatically detects the file format and generates a
+% variable of type <EBSD.EBSD.html EBSD> which contains all the
+% information of the EBSD data set. Let us quickly do an orientation plot
+% of the Magnesium phase
+
+plot(ebsd('Magnesium'),ebsd('Magnesium').orientations)
+
+%%
+% The variable of type EBSD is the starting point for all further analysis,
+% e.g., <GrainReconstruction.html grain reconstruction>, <EBSD2ODF.html ODF
+% reconstruction>, <EBSDMisorientation misorientation analysis>, etc.
+%
+%% Importing EBSD data using the import wizard
+%
+% In many cases however, importing EBSD data is not that straight forward
+% as suggested above. The reason is that during the measuring process
+% different reference systems are involved and resulting coordinates, i.e.,
+% the spatial coordinates and the Euler angles, are often not stored in a
+% consistent way by comercials software. Please read
+% <EBSDReferenceFrame.html EBSD Reference Systems> for more information
+% about how to set up reference frames correctly.
+%
+% In order to help the user to import EBSD data consistently to fixed
+% specimen reference frame, which the user should know, MTEX provide the
+% <matlab:import_wizard('EBSD') import wizard> as a graphical user
+% interface. The |import_wizard| can be started either by typing into the
+% command line
+
+import_wizard('EBSD')
+
+%%
+% EBSD Data files can be also imported via the <matlab:filebrowser file
+% browser> by choosing _Import Data_ from the context menu of the selected
+% file if its file extension was registered with
+% <matlab:opentoline(fullfile(mtex_path,'mtex_settings.m'),25,1)
+% |mtex_settings.m|>
+%
+% The import wizard guides through the correct setup of:
+%
+% * <CrystalSymmetries.html crystal symmetries> associated with phases 
+% * specimen symmetry and plotting conventions
+% 
+% The import wizard allows you to either creates directly a workspace
+% variable of type <EBSD.EBSD.html EBSD> or to generates an m-file which
+% contains all the customizations and allows you to import the data in
+% future sessions without the import wizzard. This last option is highly
+% recommended as the created script is also a good starting point for
+% further analysis and data processing.
+%
+%% The Import Script
+%
+% A script generated by the import wizard has approximately the following form:
+
+% crystal symmetry
+CS = {... 
+  'notIndexed',...
+  crystalSymmetry('6/mmm', [3.2 3.2 5.2], 'X||a*', 'Y||b', 'Z||c*',...
+  'mineral', 'Magnesium', 'color', [0.53 0.81 0.98])};
+
+% plotting convention
+setMTEXpref('xAxisDirection','east');
+setMTEXpref('zAxisDirection','outOfPlane');
+
+% path to files
+pname = mtexEBSDPath;
+
+% which files to be imported
+fname = [pname filesep 'twins.ctf'];
+
+% create an EBSD variable containing the data
+ebsd = EBSD.load(fname,CS,'interface','ctf',...
+  'convertEuler2SpatialReferenceFrame');
+
+%%
+% Running this script imports the data into a variable named
+% |ebsd|. From this point, the script can be extended to your needs, e.g:
+
+plot(ebsd)
+
+%% Supported Data Formats
+%
+% MTEX supports the following EBSD data formats:
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_ang.html">.ang</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>EDAX ascii files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_brukertxt.html">.txt</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Bruker ascii files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_crc.html">.crc</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Oxford binary files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_csv.html">.csv</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Oxford single orientation files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_ctf.html">.ctf</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>HKL single orientation files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_dream3d.html">.txt</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Dream 3d single orientation files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_ang.DRex">.DRex</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>single orientation files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_h5.html">.h5, .hdf5</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Bruker, EDAX, Dream 3d binary files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_osc.html">.osc</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>EDAX binary files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_Oxfordcsv.html">.csv</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>Oxford ascii files.</p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="loadEBSD_generic.html">.txt</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>ASCII files with Euler angles as columns.</p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+% If the data is recognized as an ASCII list of orientations, phase and spatial
+% coordinates in the form 
+%
+%  alpha_1 beta_1 gamma_1 phase_1 x_1 y_1
+%  alpha_2 beta_2 gamma_2 phase_2 x_2 y_2
+%  alpha_3 beta_3 gamma_3 phase_3 x_3 y_3
+%  .      .       .       .       .   .
+%  .      .       .       .       .   .
+%  .      .       .       .       .   .
+%  alpha_M beta_M gamma_M phase_m x_m y_m
+%
+% an additional tool supports you to associated the columns with the
+% corresponding properties.
+%
+%% Writing your own interface
+%
+% In case that the EBSD format is not supported, you can write an interface
+% by your own to import the data. Once you have written such an interface
+% that reads data from certain data files and generates an EBSD object you
+% can integrate this method into MTEX by copying it into the folder
+% |MTEX/qta/interfaces| and rename your function |loadEBSD_xxx|. Then it
+% will be automatical recognized by the import wizard. Examples how to
+% write such an interface can be found in the directory
+% |MTEX/qta/interfaces|.
+%
+
+##### SOURCE END #####
+--></body></html>

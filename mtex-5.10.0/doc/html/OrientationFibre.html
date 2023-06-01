@@ -1,0 +1,332 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Fibres of Orientations</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_OrientationFibre.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Fibres of Orientations</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#6">Fibres in pole figures and inverse pole figures</a></li><li><a href="#9">Defining a fibre by directions</a></li><li><a href="#11">Predefined fibres</a></li><li><a href="#13">Fibre ODFs</a></li><li><a href="#14">Visualize an ODF along a fibre</a></li><li><a href="#15">Compute volume of fibre portions</a></li></ul></div><p>A fibre in orientation space is essentially a line connecting two orientations and can be represented in MTEX by a single variable of type <a href="fibre.fibre.html">fibre</a>. To illustrate the definition of a fibre we first define <a href="orientation.cube.html"><tt>cube</tt></a> and <a href="orientation.goss.html"><tt>goss</tt></a> orientation</p><pre class="codeinput"><span class="comment">% define crystal and specimen symmetry</span>
+cs = crystalSymmetry(<span class="string">'432'</span>);
+ss = specimenSymmetry(<span class="string">'1'</span>);
+
+<span class="comment">% and two orientations</span>
+ori1 = orientation.cube(cs,ss);
+ori2 = orientation.goss(cs,ss);
+</pre><p>and then the fibre connecting both orientations</p><pre class="codeinput">f = fibre(ori1,ori2)
+</pre><pre class="codeoutput"> 
+f = fibre (432 &#8594; xyz)
+ 
+  h || r: (100) || (1,0,0)
+ o1 &#8594; o2: (0&deg;,0&deg;,0&deg;) &#8594; (0&deg;,45&deg;,0&deg;)
+</pre><p>Finally we plot everything into the Euler space</p><pre class="codeinput"><span class="comment">% plot the fibre</span>
+plot(f,<span class="string">'DisplayName'</span>,<span class="string">'Fibre'</span>,<span class="string">'linewidth'</span>,4,<span class="string">'linecolor'</span>,<span class="string">'green'</span>)
+
+<span class="comment">% and on top of it the orientations</span>
+hold <span class="string">on</span>
+plot(ori1,<span class="string">'DisplayName'</span>,<span class="string">'CUBE'</span>,<span class="string">'MarkerSize'</span>,12,<span class="string">'MarkerFaceColor'</span>,<span class="string">'darkred'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>)
+plot(ori2,<span class="string">'DisplayName'</span>,<span class="string">'GOSS'</span>,<span class="string">'MarkerSize'</span>,12,<span class="string">'MarkerFaceColor'</span>,<span class="string">'blue'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span>
+legend
+</pre><img vspace="50" hspace="5" src="OrientationFibre_01.png" alt=""> <p>Alternatively, we may visualize the fibre also in axis angle space</p><pre class="codeinput"><span class="comment">% plot the fibre</span>
+plot(f,<span class="string">'linecolor'</span>,<span class="string">'green'</span>,<span class="string">'linewidth'</span>,6,<span class="string">'axisAngle'</span>)
+
+<span class="comment">% and on top of it the orientations</span>
+hold <span class="string">on</span>
+plot(ori1,<span class="string">'MarkerFaceColor'</span>,<span class="string">'darkred'</span>,<span class="string">'MarkerSize'</span>,15,<span class="string">'axisAngle'</span>)
+plot(ori2,<span class="string">'MarkerFaceColor'</span>,<span class="string">'blue'</span>,<span class="string">'MarkerSize'</span>,15)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="OrientationFibre_02.png" alt=""> <p>Obviously, <tt>f</tt> is not a full fibre. Since, the orientation space has no boundary a full fibre is best thought of as a circle that passes trough two fixed orientations. In order to define the full fibre us the option <tt>'full'</tt></p><pre class="codeinput">f = fibre(ori1,ori2,<span class="string">'full'</span>)
+
+hold <span class="string">on</span>
+plot(f,<span class="string">'linecolor'</span>,<span class="string">'gold'</span>,<span class="string">'linewidth'</span>,3,<span class="string">'project2FundamentalRegion'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+f = fibre (432 &#8594; xyz)
+ 
+  h || r: (100) || (1,0,0)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_03.png" alt=""> <h2 id="6">Fibres in pole figures and inverse pole figures</h2><p>MTEX supports for fibres all the plotting options that are available for orientations. This included <a href="OrientationPoleFigure.html">pole figures</a> and <a href="OrientationInversePoleFigure.html">inverse pole figures</a> using the commands <a href="fibre.plotPDF.html"><tt>plotPDF</tt></a> and <a href="fibre.plotIPDF.html"><tt>plotIPDF</tt></a>.</p><pre class="codeinput">plotPDF(f,Miller({1,1,0},{1,1,1},cs),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,<span class="string">'orange'</span>)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_04.png" alt=""> <p>An important difference to orientation plots is that fibres are not automatically symmetrised when plotted. To achieve this use the command <a href="fibre.symmetrise.html"><tt>symmetrise</tt></a>.</p><pre class="codeinput">plotPDF(f.symmetrise,Miller({1,1,0},{2,1,0},{1,1,1},cs),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,<span class="string">'orange'</span>)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_05.png" alt=""> <p>Inverse pole figures are by default restricted to the fundamental sector. You may use the option <tt>'complete'</tt> to plot the entire sphere.</p><pre class="codeinput"><span class="comment">% an inverse pole figure plot</span>
+r = [vector3d(1,1,0),vector3d(2,1,0),vector3d(1,1,1)];
+plotIPDF(f.symmetrise,r,<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,<span class="string">'orange'</span>)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_06.png" alt=""> <h2 id="9">Defining a fibre by directions</h2><p>Alternatively, a fibre can also be defined by a pair of a crystal and a specimen direction. In this case it consists of all orientations that alignes the crystal direction parallel to the specimen direction. As an example we define the fibre of all orientations such that the c-axis (001) is parallel to the z-axis by</p><pre class="codeinput">f = fibre(Miller(0,0,1,cs),vector3d.Z)
+
+plot(f,<span class="string">'linecolor'</span>,<span class="string">'gold'</span>,<span class="string">'linewidth'</span>,4,<span class="string">'project2FundamentalRegion'</span>,<span class="string">'axisAngle'</span>)
+</pre><pre class="codeoutput"> 
+f = fibre (432 &#8594; xyz)
+ 
+  h || r: (001) || (0,0,1)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_07.png" alt=""> <p>If both directions of type Miller the fibre corresponds to all misorientations which have these two direcetion parallel.</p><p>Finally, a fibre can be defined by an initial orientation <tt>ori1</tt> and a direction <tt>h</tt>, i.e., all orientations <tt>ori</tt> of this fibre satisfy</p><pre class="language-matlab">ori * h = ori1 * h
+</pre><p>The following code defines a fibre that passes through the cube orientation and rotates about the (111) axis.</p><pre class="codeinput">f = fibre(ori1,Miller(1,1,1,cs))
+
+plot(f,<span class="string">'linecolor'</span>,<span class="string">'darkred'</span>,<span class="string">'linewidth'</span>,4,<span class="string">'project2FundamentalRegion'</span>,<span class="string">'axisAngle'</span>)
+</pre><pre class="codeoutput"> 
+f = fibre (432 &#8594; xyz)
+ 
+  h || r: (111) || (1,1,1)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_08.png" alt=""> <h2 id="11">Predefined fibres</h2><p>MTEX includes also a list of predefined fibres, e.g., alpha, beta, gamma, epsilon, eta, tau and theta fibres. Those can be defined by</p><pre class="codeinput">ss = specimenSymmetry(<span class="string">'orthorhombic'</span>);
+beta = fibre.beta(cs,ss,<span class="string">'full'</span>)
+</pre><pre class="codeoutput"> 
+beta = fibre (432 &#8594; xyz (mmm))
+ 
+  h || r: (12 6 11) || (1,1,4)
+ o1 &#8594; o2: (0&deg;,35.3&deg;,45&deg;) &#8594; (0&deg;,35.3&deg;,45&deg;)
+</pre><p>Lets plot an overview of all predefined fibres with respect to orthorhombic specimen symmetry</p><pre class="codeinput">plot(fibre.alpha(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(1),<span class="string">'DisplayName'</span>,<span class="string">'alpha'</span>)
+hold <span class="string">on</span>
+plot(fibre.beta(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(2),<span class="string">'DisplayName'</span>,<span class="string">'beta'</span>)
+plot(fibre.gamma(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(3),<span class="string">'DisplayName'</span>,<span class="string">'gamma'</span>)
+plot(fibre.epsilon(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(4),<span class="string">'DisplayName'</span>,<span class="string">'epsilon'</span>)
+plot(fibre.eta(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(5),<span class="string">'DisplayName'</span>,<span class="string">'eta'</span>)
+plot(fibre.tau(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(6),<span class="string">'DisplayName'</span>,<span class="string">'tau'</span>)
+plot(fibre.theta(cs,ss,<span class="string">'full'</span>),<span class="string">'linewidth'</span>,3,<span class="string">'lineColor'</span>,ind2color(7),<span class="string">'DisplayName'</span>,<span class="string">'theta'</span>)
+hold <span class="string">off</span>
+legend(<span class="string">'Location'</span>,<span class="string">'best'</span>)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_09.png" alt=""> <h2 id="13">Fibre ODFs</h2><p>Note, that it is straight forward to define a corresponding fibre ODF by the command <a href="fibreODF.html"><tt>fibreODF</tt></a></p><pre class="codeinput">odf = fibreODF(beta,<span class="string">'halfwidth'</span>,10*degree)
+
+<span class="comment">% and plot it in 3d</span>
+plot3d(odf)
+
+<span class="comment">% this adds the fibre to the plots</span>
+hold <span class="string">on</span>
+plot(beta.symmetrise,<span class="string">'lineColor'</span>,<span class="string">'b'</span>,<span class="string">'linewidth'</span>,4)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+odf = SO3FunCBF (432 &#8594; xyz (mmm))
+ 
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  fibre : (12 6 11) || 1,1,4
+  weight: 1
+ 
+</pre><img vspace="50" hspace="5" src="OrientationFibre_10.png" alt=""> <h2 id="14">Visualize an ODF along a fibre</h2><p>We may also visualize an ODF along a fibre</p><pre class="codeinput">plot(odf,fibre.eta(cs,ss),<span class="string">'linewidth'</span>,2)
+</pre><img vspace="50" hspace="5" src="OrientationFibre_11.png" alt=""> <h2 id="15">Compute volume of fibre portions</h2><p>or compute the volume of an ODF in a tube around a fibre using the command <a href="SO3Fun.volume.html"><tt>volume</tt></a></p><pre class="codeinput">100 * volume(odf,beta,10*degree)
+</pre><pre class="codeoutput">ans =
+   100
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Fibres of Orientations
+%
+%% 
+% A fibre in orientation space is essentially a line connecting two
+% orientations and can be represented in MTEX by a single variable of type
+% <fibre.fibre.html fibre>. To illustrate the definition of a fibre we
+% first define <orientation.cube.html |cube|> and <orientation.goss.html
+% |goss|> orientation
+
+% define crystal and specimen symmetry
+cs = crystalSymmetry('432');
+ss = specimenSymmetry('1');
+
+% and two orientations
+ori1 = orientation.cube(cs,ss);
+ori2 = orientation.goss(cs,ss);
+
+%%
+% and then the fibre connecting both orientations
+
+f = fibre(ori1,ori2)
+
+%%
+% Finally we plot everything into the Euler space
+
+% plot the fibre
+plot(f,'DisplayName','Fibre','linewidth',4,'linecolor','green')
+
+% and on top of it the orientations
+hold on
+plot(ori1,'DisplayName','CUBE','MarkerSize',12,'MarkerFaceColor','darkred','MarkerEdgeColor','k')
+plot(ori2,'DisplayName','GOSS','MarkerSize',12,'MarkerFaceColor','blue','MarkerEdgeColor','k')
+hold off
+legend
+
+%%
+% Alternatively, we may visualize the fibre also in axis angle space
+
+% plot the fibre
+plot(f,'linecolor','green','linewidth',6,'axisAngle')
+
+% and on top of it the orientations
+hold on
+plot(ori1,'MarkerFaceColor','darkred','MarkerSize',15,'axisAngle')
+plot(ori2,'MarkerFaceColor','blue','MarkerSize',15)
+hold off
+
+%%
+% Obviously, |f| is not a full fibre. Since, the orientation space has no
+% boundary a full fibre is best thought of as a circle that passes trough
+% two fixed orientations. In order to define the full fibre us the option
+% |'full'|
+
+f = fibre(ori1,ori2,'full')
+
+hold on
+plot(f,'linecolor','gold','linewidth',3,'project2FundamentalRegion')
+hold off
+
+
+%% Fibres in pole figures and inverse pole figures
+%
+% MTEX supports for fibres all the plotting options that are available for
+% orientations. This included <OrientationPoleFigure.html pole figures> and
+% <OrientationInversePoleFigure.html inverse pole figures> using the
+% commands <fibre.plotPDF.html |plotPDF|> and <fibre.plotIPDF.html
+% |plotIPDF|>.
+
+plotPDF(f,Miller({1,1,0},{1,1,1},cs),'linewidth',3,'lineColor','orange')
+
+%%
+% An important difference to orientation plots is that fibres are not
+% automatically symmetrised when plotted. To achieve this use the command
+% <fibre.symmetrise.html |symmetrise|>.
+
+plotPDF(f.symmetrise,Miller({1,1,0},{2,1,0},{1,1,1},cs),'linewidth',3,'lineColor','orange')
+
+%%
+% Inverse pole figures are by default restricted to the fundamental sector.
+% You may use the option |'complete'| to plot the entire sphere.
+
+% an inverse pole figure plot
+r = [vector3d(1,1,0),vector3d(2,1,0),vector3d(1,1,1)];
+plotIPDF(f.symmetrise,r,'linewidth',3,'lineColor','orange')
+
+%% Defining a fibre by directions
+%
+% Alternatively, a fibre can also be defined by a pair of a crystal and a
+% specimen direction. In this case it consists of all orientations that
+% alignes the crystal direction parallel to the specimen direction. As an
+% example we define the fibre of all orientations such that the c-axis
+% (001) is parallel to the z-axis by
+
+f = fibre(Miller(0,0,1,cs),vector3d.Z)
+
+plot(f,'linecolor','gold','linewidth',4,'project2FundamentalRegion','axisAngle')
+
+
+%%
+% If both directions of type Miller the fibre corresponds to all
+% misorientations which have these two direcetion parallel.
+%
+% Finally, a fibre can be defined by an initial orientation |ori1| and a
+% direction |h|, i.e., all orientations |ori| of this fibre satisfy
+%
+%   ori * h = ori1 * h
+%
+% The following code defines a fibre that passes through the cube
+% orientation and rotates about the (111) axis.
+
+f = fibre(ori1,Miller(1,1,1,cs))
+
+plot(f,'linecolor','darkred','linewidth',4,'project2FundamentalRegion','axisAngle')
+
+%% Predefined fibres
+% MTEX includes also a list of predefined fibres, e.g., alpha, beta, gamma,
+% epsilon, eta, tau and theta fibres. Those can be defined by
+
+ss = specimenSymmetry('orthorhombic');
+beta = fibre.beta(cs,ss,'full')
+
+%%
+% Lets plot an overview of all predefined fibres with respect to
+% orthorhombic specimen symmetry
+
+plot(fibre.alpha(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(1),'DisplayName','alpha')
+hold on
+plot(fibre.beta(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(2),'DisplayName','beta')
+plot(fibre.gamma(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(3),'DisplayName','gamma')
+plot(fibre.epsilon(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(4),'DisplayName','epsilon')
+plot(fibre.eta(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(5),'DisplayName','eta')
+plot(fibre.tau(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(6),'DisplayName','tau')
+plot(fibre.theta(cs,ss,'full'),'linewidth',3,'lineColor',ind2color(7),'DisplayName','theta')
+hold off
+legend('Location','best')
+
+%% Fibre ODFs
+% Note, that it is straight forward to define a corresponding fibre ODF by
+% the command <fibreODF.html |fibreODF|>
+
+odf = fibreODF(beta,'halfwidth',10*degree)
+
+% and plot it in 3d
+plot3d(odf)
+
+% this adds the fibre to the plots
+hold on
+plot(beta.symmetrise,'lineColor','b','linewidth',4)
+hold off
+
+%% Visualize an ODF along a fibre
+% We may also visualize an ODF along a fibre
+
+plot(odf,fibre.eta(cs,ss),'linewidth',2)
+
+
+%% Compute volume of fibre portions
+% or compute the volume of an ODF in a tube around a fibre using the
+% command <SO3Fun.volume.html |volume|>
+
+100 * volume(odf,beta,10*degree)
+
+
+##### SOURCE END #####
+--></body></html>

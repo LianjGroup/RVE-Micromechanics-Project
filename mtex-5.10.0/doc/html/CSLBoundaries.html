@@ -1,0 +1,414 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>CSL Boundaries</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_CSLBoundaries.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>CSL Boundaries</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">Detecting CSL Boundaries</a></li><li><a href="#4">Mark triple points</a></li><li><a href="#5">Merging grains with common CSL(3) boundary</a></li><li><a href="#7">Misorientations in the 3d fundamental zone</a></li><li><a href="#8">Analyzing the misorientation distribution function</a></li></ul></div><p>In this section we consider the analysis of CSL boundaries. Therefore lets start by importing some Iron data and reconstructing the grain structure.</p><pre class="codeinput">mtexdata <span class="string">csl</span>
+plotx2east
+
+<span class="comment">% grain segementation</span>
+[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% grain smoothing</span>
+grains = smooth(grains,5);
+
+<span class="comment">% plot the result</span>
+plot(grains,grains.meanOrientation)
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase   Orientations  Mineral         Color  Symmetry  Crystal reference frame
+    -1  154107 (100%)     iron  LightSkyBlue      m-3m                         
+ 
+ Properties: ci, error, iq, x, y
+ Scan unit : um
+ 
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_01.png" alt=""> <p>Next we plot image quality as it makes the grain boundaries visible. and overlay it with the orientation map</p><pre class="codeinput">plot(ebsd,log(ebsd.prop.iq),<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+mtexColorMap <span class="string">black2white</span>
+CLim(gcm,[.5,5])
+
+<span class="comment">% the option 'FaceAlpha',0.4 makes the plot a bit transluent</span>
+hold <span class="string">on</span>
+plot(grains,grains.meanOrientation,<span class="string">'FaceAlpha'</span>,0.4,<span class="string">'linewidth'</span>,3)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_02.png" alt=""> <h2 id="3">Detecting CSL Boundaries</h2><p>In order to detect CSL boundaries within the data set we first restrict the grain boundaries to iron to iron phase transitions and check then the boundary misorientations to be a CSL(3) misorientation with threshold of 3 degree.</p><pre class="codeinput"><span class="comment">% restrict to iron to iron phase transition</span>
+gB = grains.boundary(<span class="string">'iron'</span>,<span class="string">'iron'</span>)
+
+<span class="comment">% select CSL(3) grain boundaries</span>
+gB3 = gB(angle(gB.misorientation,CSL(3,ebsd.CS)) &lt; 3*degree);
+
+<span class="comment">% overlay CSL(3) grain boundaries with the existing plot</span>
+hold <span class="string">on</span>
+plot(gB3,<span class="string">'lineColor'</span>,<span class="string">'gold'</span>,<span class="string">'linewidth'</span>,3,<span class="string">'DisplayName'</span>,<span class="string">'CSL 3'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+gB = grainBoundary
+ 
+ Segments    length  mineral 1  mineral 2
+    20356  16364 &micro;m       iron       iron
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_03.png" alt=""> <h2 id="4">Mark triple points</h2><p>Next we want to mark all triple points with at least 2 CSL boundaries</p><pre class="codeinput"><span class="comment">% logical list of CSL boundaries</span>
+isCSL3 = grains.boundary.isTwinning(CSL(3,ebsd.CS),3*degree);
+
+<span class="comment">% logical list of triple points with at least 2 CSL boundaries</span>
+tPid = sum(isCSL3(grains.triplePoints.boundaryId),2)&gt;=2;
+
+<span class="comment">% plot these triple points</span>
+hold <span class="string">on</span>
+plot(grains.triplePoints(tPid),<span class="string">'color'</span>,<span class="string">'red'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'MarkerSize'</span>,8)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_04.png" alt=""> <h2 id="5">Merging grains with common CSL(3) boundary</h2><p>Next we merge all grains together which have a common CSL(3) boundary. This is done with the command <a href="grain2d.merge.html">merge</a>.</p><pre class="codeinput"><span class="comment">% this merges the grains</span>
+[mergedGrains,parentIds] = merge(grains,gB3);
+
+<span class="comment">% overlay the boundaries of the merged grains with the previous plot</span>
+hold <span class="string">on</span>
+plot(mergedGrains.boundary,<span class="string">'linecolor'</span>,<span class="string">'w'</span>,<span class="string">'linewidth'</span>,3)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_05.png" alt=""> <p>Finaly, we check for all other types of CSL boundaries and overlay them with our plot.</p><pre class="codeinput">delta = 5*degree;
+gB5 = gB(gB.isTwinning(CSL(5,ebsd.CS),delta));
+gB7 = gB(gB.isTwinning(CSL(7,ebsd.CS),delta));
+gB9 = gB(gB.isTwinning(CSL(9,ebsd.CS),delta));
+gB11 = gB(gB.isTwinning(CSL(11,ebsd.CS),delta));
+
+hold <span class="string">on</span>
+plot(gB5,<span class="string">'lineColor'</span>,<span class="string">'b'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'DisplayName'</span>,<span class="string">'CSL 5'</span>)
+hold <span class="string">on</span>
+plot(gB7,<span class="string">'lineColor'</span>,<span class="string">'g'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'DisplayName'</span>,<span class="string">'CSL 7'</span>)
+hold <span class="string">on</span>
+plot(gB9,<span class="string">'lineColor'</span>,<span class="string">'m'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'DisplayName'</span>,<span class="string">'CSL 9'</span>)
+hold <span class="string">on</span>
+plot(gB11,<span class="string">'lineColor'</span>,<span class="string">'c'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'DisplayName'</span>,<span class="string">'CSL 11'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_06.png" alt=""> <h2 id="7">Misorientations in the 3d fundamental zone</h2><p>We can also look at the boundary misorienations in the 3 dimensional fundamental orientation zone.</p><pre class="codeinput"><span class="comment">% compute the boundary of the fundamental zone</span>
+oR = fundamentalRegion(ebsd.CS,ebsd.CS,<span class="string">'antipodal'</span>);
+close <span class="string">all</span>
+plot(oR)
+
+<span class="comment">% plot 500 random misorientations in the 3d fundamenal zone</span>
+mori = discreteSample(gB.misorientation,500);
+hold <span class="string">on</span>
+plot(mori.project2FundamentalRegion)
+hold <span class="string">off</span>
+
+<span class="comment">% mark the CSL(3) misorientation</span>
+hold <span class="string">on</span>
+csl3 = CSL(3,ebsd.CS);
+plot(csl3.project2FundamentalRegion(<span class="string">'antipodal'</span>) ,<span class="string">'MarkerColor'</span>,<span class="string">'r'</span>,<span class="string">'DisplayName'</span>,<span class="string">'CSL 3'</span>,<span class="string">'MarkerSize'</span>,20)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_07.png" alt=""> <h2 id="8">Analyzing the misorientation distribution function</h2><p>In order to analyze more quantitatively the boundary misorientation distribution we can compute the so called misorientation distribution function. The option <tt>antipodal</tt> is applied since we want to identify <tt>mori</tt> and <tt>inv(mori)</tt>.</p><pre class="codeinput">mdf = calcDensity(gB.misorientation,<span class="string">'halfwidth'</span>,5*degree,<span class="string">'bandwidth'</span>,48)
+</pre><pre class="codeoutput"> 
+mdf = SO3FunHarmonic (iron &#8594; iron)
+  antipodal: true
+  isReal: true
+  bandwidth: 48
+  weight: 1
+ 
+</pre><p>Next we can visualize the misorientation distribution function in axis angle sections.</p><pre class="codeinput">plot(mdf,<span class="string">'axisAngle'</span>,(25:5:60)*degree,<span class="string">'colorRange'</span>,[0 15])
+
+annotate(CSL(3,ebsd.CS),<span class="string">'label'</span>,<span class="string">'$CSL_3$'</span>,<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)
+annotate(CSL(5,ebsd.CS),<span class="string">'label'</span>,<span class="string">'$CSL_5$'</span>,<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)
+annotate(CSL(7,ebsd.CS),<span class="string">'label'</span>,<span class="string">'$CSL_7$'</span>,<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)
+annotate(CSL(9,ebsd.CS),<span class="string">'label'</span>,<span class="string">'$CSL_9$'</span>,<span class="string">'backgroundcolor'</span>,<span class="string">'w'</span>)
+
+drawNow(gcm)
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_08.png" alt=""> <p>The MDF can be now used to compute prefered misorientations</p><pre class="codeinput">[~,mori] = max(mdf,<span class="string">'numLocal'</span>,2)
+</pre><pre class="codeoutput"> 
+mori = misorientation (iron &#8594; iron)
+  size: 2 x 1
+  antipodal:         true
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  116.523 48.2466 206.627
+  134.977 37.7233  225.02
+ 
+</pre><p>and their volumes in percent</p><pre class="codeinput">100 * volume(gB.misorientation,CSL(3,ebsd.CS),2*degree)
+
+100 * volume(gB.misorientation,CSL(9,ebsd.CS),2*degree)
+</pre><pre class="codeoutput">ans =
+   40.9904
+ans =
+    2.0338
+</pre><p>or to plot the MDF along certain fibres</p><pre class="codeinput">omega = linspace(0,60*degree);
+fibre100 = orientation.byAxisAngle(xvector,omega,mdf.CS,mdf.SS)
+fibre111 = orientation.byAxisAngle(vector3d(1,1,1),omega,mdf.CS,mdf.SS)
+fibre101 = orientation.byAxisAngle(vector3d(1,0,1),omega,mdf.CS,mdf.SS)
+
+close <span class="string">all</span>
+plot(omega ./ degree,mdf.eval(fibre100),<span class="string">'LineWidth'</span>,2)
+hold <span class="string">on</span>
+plot(omega ./ degree,mdf.eval(fibre111),<span class="string">'LineWidth'</span>,2)
+plot(omega ./ degree,mdf.eval(fibre101),<span class="string">'LineWidth'</span>,2)
+hold <span class="string">off</span>
+legend(<span class="string">'100'</span>,<span class="string">'111'</span>,<span class="string">'101'</span>)
+xlabel(<span class="string">'misorientation angle'</span>);
+ylabel(<span class="string">'mrd'</span>);
+</pre><pre class="codeoutput"> 
+fibre100 = misorientation (iron &#8594; iron)
+  size: 1 x 100
+ 
+fibre111 = misorientation (iron &#8594; iron)
+  size: 1 x 100
+ 
+fibre101 = misorientation (iron &#8594; iron)
+  size: 1 x 100
+</pre><img vspace="50" hspace="5" src="CSLBoundaries_09.png" alt=""> <p>or to evaluate it in an misorientation directly</p><pre class="codeinput">mori = orientation.byEuler(15*degree,28*degree,14*degree,mdf.CS,mdf.CS)
+
+mdf.eval(mori)
+
+mdf.eval(csl3)
+</pre><pre class="codeoutput"> 
+mori = misorientation (iron &#8594; iron)
+ 
+  Bunge Euler angles in degree
+  phi1  Phi phi2
+    15   28   14
+ 
+ans =
+    1.5276
+ans =
+   54.2486
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% CSL Boundaries
+%
+%%
+% In this section we consider the analysis of CSL boundaries. Therefore
+% lets start by importing some Iron data and reconstructing the grain
+% structure.
+
+mtexdata csl
+plotx2east
+
+% grain segementation
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'));
+
+% grain smoothing
+grains = smooth(grains,5);
+
+% plot the result
+plot(grains,grains.meanOrientation)
+
+%%
+% Next we plot image quality as it makes the grain boundaries visible.
+% and overlay it with the orientation map
+
+plot(ebsd,log(ebsd.prop.iq),'figSize','large')
+mtexColorMap black2white
+CLim(gcm,[.5,5])
+
+% the option 'FaceAlpha',0.4 makes the plot a bit transluent
+hold on
+plot(grains,grains.meanOrientation,'FaceAlpha',0.4,'linewidth',3)
+hold off
+
+%% Detecting CSL Boundaries
+% In order to detect CSL boundaries within the data set we first restrict
+% the grain boundaries to iron to iron phase transitions and check then the
+% boundary misorientations to be a CSL(3) misorientation with threshold of
+% 3 degree.
+
+% restrict to iron to iron phase transition
+gB = grains.boundary('iron','iron')
+
+% select CSL(3) grain boundaries
+gB3 = gB(angle(gB.misorientation,CSL(3,ebsd.CS)) < 3*degree);
+
+% overlay CSL(3) grain boundaries with the existing plot
+hold on
+plot(gB3,'lineColor','gold','linewidth',3,'DisplayName','CSL 3')
+hold off
+
+%% Mark triple points
+% Next we want to mark all triple points with at least 2 CSL boundaries
+
+% logical list of CSL boundaries
+isCSL3 = grains.boundary.isTwinning(CSL(3,ebsd.CS),3*degree);
+
+% logical list of triple points with at least 2 CSL boundaries
+tPid = sum(isCSL3(grains.triplePoints.boundaryId),2)>=2;
+
+% plot these triple points
+hold on
+plot(grains.triplePoints(tPid),'color','red','linewidth',2,'MarkerSize',8)
+hold off
+
+%% Merging grains with common CSL(3) boundary
+% Next we merge all grains together which have a common CSL(3) boundary.
+% This is done with the command <grain2d.merge.html merge>.
+
+% this merges the grains
+[mergedGrains,parentIds] = merge(grains,gB3);
+
+% overlay the boundaries of the merged grains with the previous plot
+hold on
+plot(mergedGrains.boundary,'linecolor','w','linewidth',3)
+hold off
+
+%%
+% Finaly, we check for all other types of CSL boundaries and overlay them
+% with our plot.
+
+delta = 5*degree;
+gB5 = gB(gB.isTwinning(CSL(5,ebsd.CS),delta));
+gB7 = gB(gB.isTwinning(CSL(7,ebsd.CS),delta));
+gB9 = gB(gB.isTwinning(CSL(9,ebsd.CS),delta));
+gB11 = gB(gB.isTwinning(CSL(11,ebsd.CS),delta));
+
+hold on
+plot(gB5,'lineColor','b','linewidth',2,'DisplayName','CSL 5')
+hold on
+plot(gB7,'lineColor','g','linewidth',2,'DisplayName','CSL 7')
+hold on
+plot(gB9,'lineColor','m','linewidth',2,'DisplayName','CSL 9')
+hold on
+plot(gB11,'lineColor','c','linewidth',2,'DisplayName','CSL 11')
+hold off
+
+%% Misorientations in the 3d fundamental zone
+% We can also look at the boundary misorienations in the 3 dimensional
+% fundamental orientation zone.
+
+% compute the boundary of the fundamental zone
+oR = fundamentalRegion(ebsd.CS,ebsd.CS,'antipodal');
+close all
+plot(oR)
+
+% plot 500 random misorientations in the 3d fundamenal zone
+mori = discreteSample(gB.misorientation,500);
+hold on
+plot(mori.project2FundamentalRegion)
+hold off
+
+% mark the CSL(3) misorientation
+hold on
+csl3 = CSL(3,ebsd.CS);
+plot(csl3.project2FundamentalRegion('antipodal') ,'MarkerColor','r','DisplayName','CSL 3','MarkerSize',20)
+hold off
+
+%% Analyzing the misorientation distribution function
+% In order to analyze more quantitatively the boundary misorientation
+% distribution we can compute the so called misorientation distribution
+% function. The option |antipodal| is applied since we want to identify
+% |mori| and |inv(mori)|.
+
+mdf = calcDensity(gB.misorientation,'halfwidth',5*degree,'bandwidth',48)
+
+%%
+% Next we can visualize the misorientation distribution function in axis
+% angle sections.
+
+plot(mdf,'axisAngle',(25:5:60)*degree,'colorRange',[0 15])
+
+annotate(CSL(3,ebsd.CS),'label','$CSL_3$','backgroundcolor','w')
+annotate(CSL(5,ebsd.CS),'label','$CSL_5$','backgroundcolor','w')
+annotate(CSL(7,ebsd.CS),'label','$CSL_7$','backgroundcolor','w')
+annotate(CSL(9,ebsd.CS),'label','$CSL_9$','backgroundcolor','w')
+
+drawNow(gcm)
+
+%%
+% The MDF can be now used to compute prefered misorientations
+
+[~,mori] = max(mdf,'numLocal',2)
+
+%%
+% and their volumes in percent
+
+100 * volume(gB.misorientation,CSL(3,ebsd.CS),2*degree)
+
+100 * volume(gB.misorientation,CSL(9,ebsd.CS),2*degree)
+
+
+%%
+% or to plot the MDF along certain fibres
+
+omega = linspace(0,60*degree);
+fibre100 = orientation.byAxisAngle(xvector,omega,mdf.CS,mdf.SS)
+fibre111 = orientation.byAxisAngle(vector3d(1,1,1),omega,mdf.CS,mdf.SS)
+fibre101 = orientation.byAxisAngle(vector3d(1,0,1),omega,mdf.CS,mdf.SS)
+
+close all
+plot(omega ./ degree,mdf.eval(fibre100),'LineWidth',2)
+hold on
+plot(omega ./ degree,mdf.eval(fibre111),'LineWidth',2)
+plot(omega ./ degree,mdf.eval(fibre101),'LineWidth',2)
+hold off
+legend('100','111','101')
+xlabel('misorientation angle'); 
+ylabel('mrd');
+
+%%
+% or to evaluate it in an misorientation directly
+
+mori = orientation.byEuler(15*degree,28*degree,14*degree,mdf.CS,mdf.CS)
+
+mdf.eval(mori)
+
+mdf.eval(csl3)
+
+##### SOURCE END #####
+--></body></html>

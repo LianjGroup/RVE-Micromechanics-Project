@@ -1,0 +1,278 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Annotations</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_Annotations.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Annotations</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Colorbars</a></li><li><a href="#4">Annotating Directions, Orientations, Fibres</a></li><li><a href="#9">Legends</a></li></ul></div><h2 id="1">Colorbars</h2><p>Unlike the common Matlab command <tt>colorbar</tt> the MTEX command <a href="mtexColorbar.html">mtexColorbar</a> allows you to add a colorbar to all subplots in a figure.</p><pre class="codeinput"><span class="comment">% this defines some model ODFs</span>
+cs = crystalSymmetry(<span class="string">'-3m'</span>);
+mod1 = orientation.byEuler(30*degree,40*degree,10*degree,cs);
+mod2 = orientation.byEuler(10*degree,80*degree,70*degree,cs);
+odf = 0.7*unimodalODF(mod1) + 0.3*unimodalODF(mod2);
+
+<span class="comment">% plot some pole figurs</span>
+plotPDF(odf,Miller({1,0,0},{1,1,1},cs))
+
+<span class="comment">% and add a colorbar to each pole figure</span>
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="Annotations_01.png" alt=""> <p>Executing the command <a href="mtexColorbar.html">mtexColorbar</a> twice deletes the colorbar. You can also have a horizontal colorbar at the bottom of the figure by setting the option <tt>location</tt> to <tt>southOutside</tt>. Further, we can set a title to the colorbar to describe the unit.</p><pre class="codeinput"><span class="comment">% delete vertical colorbar</span>
+mtexColorbar
+
+<span class="comment">% add horizontal colorbars</span>
+mtexColorbar(<span class="string">'location'</span>,<span class="string">'southOutSide'</span>,<span class="string">'title'</span>,<span class="string">'mrd'</span>)
+</pre><img vspace="50" hspace="5" src="Annotations_02.png" alt=""> <p>If color range is set to equal in an MTEX figure only one colorbar is added (see. <a href="ColorMaps.html">Color Coding</a>).</p><pre class="codeinput">mtexColorbar       <span class="comment">% delete colorbar</span>
+CLim(gcm,<span class="string">'equal'</span>); <span class="comment">% set equal color range to all plots</span>
+mtexColorbar       <span class="comment">% create a new colorbar</span>
+</pre><img vspace="50" hspace="5" src="Annotations_03.png" alt=""> <h2 id="4">Annotating Directions, Orientations, Fibres</h2><p>Pole figures and inverse pole figures are much better readable if they include specimen or crystal directions. Using the MTEX command <a href="annotate.html">annotate</a> one can easily add <a href="vector3d.vector3d.html">specimen coordinate axes</a> to a pole figure plot.</p><pre class="codeinput">annotate(zvector,<span class="string">'label'</span>,{<span class="string">'Z'</span>},<span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="Annotations_04.png" alt=""> <p>The command <a href="annotate.html">annotate</a> allows also to mark <a href="Miller.Miller.html">crystal directions</a> in inverse pole figures.</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'antipodal'</span>,<span class="string">'marginx'</span>,10)
+mtexColorMap <span class="string">white2black</span>
+
+annotate([Miller(1,0,0,cs),Miller(1,1,0,cs),Miller(0,0,1,cs),Miller(2,-1,0,cs)],<span class="keyword">...</span>
+  <span class="string">'all'</span>,<span class="string">'labeled'</span>,<span class="string">'BackgroundColor'</span>,<span class="string">'w'</span>)
+</pre><img vspace="50" hspace="5" src="Annotations_05.png" alt=""> <p>One can also mark specific orientations in pole figures or in inverse pole figures.</p><pre class="codeinput">plotIPDF(odf,[xvector,zvector],<span class="string">'antipodal'</span>)
+mtexColorMap <span class="string">white2black</span>
+annotate(mod1,<span class="keyword">...</span>
+    <span class="string">'marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerSize'</span>,6,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>,<span class="keyword">...</span>
+    <span class="string">'label'</span>,<span class="string">'A'</span>,<span class="string">'color'</span>,<span class="string">'w'</span>)
+
+annotate(mod2,<span class="keyword">...</span>
+    <span class="string">'marker'</span>,<span class="string">'s'</span>,<span class="string">'MarkerSize'</span>,6,<span class="string">'MarkerFaceColor'</span>,<span class="string">'g'</span>,<span class="keyword">...</span>
+    <span class="string">'label'</span>,<span class="string">'B'</span>)
+
+drawNow(gcm,<span class="string">'figSize'</span>,<span class="string">'normal'</span>)
+</pre><img vspace="50" hspace="5" src="Annotations_06.png" alt=""> <p>as well as in ODF plots</p><pre class="codeinput">plot(odf,<span class="string">'sigma'</span>)
+mtexColorMap <span class="string">white2black</span>
+annotate(mod1,<span class="keyword">...</span>
+    <span class="string">'MarkerSize'</span>,15,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>)
+
+annotate(mod2,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,15,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'b'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>)
+</pre><img vspace="50" hspace="5" src="Annotations_07.png" alt=""> <p>or orientation scatter plots</p><pre class="codeinput">ori = odf.discreteSample(200);
+scatter(ori);
+annotate(mod1,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,10,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'r'</span>)
+annotate(mod2,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,10,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'g'</span>,<span class="string">'MarkerFaceColor'</span>,<span class="string">'g'</span>)
+</pre><img vspace="50" hspace="5" src="Annotations_08.png" alt=""> <h2 id="9">Legends</h2><p>If you have multiple data in one plot then it makes sense to add a legend saying which color / symbol correspond to which data set. The key is to use the option <b>DisplayName</b> available for all plotting commands to include the resulting graphical object into the legend and give it a name.</p><pre class="codeinput">plotPDF(odf,Miller({1,0,0},{1,1,1},cs))
+plot(ori,<span class="string">'MarkerFaceColor'</span>,<span class="string">'k'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'black'</span>,<span class="string">'add2all'</span>,<span class="keyword">...</span>
+  <span class="string">'DisplayName'</span>,<span class="string">'randomSample'</span>)
+
+f = fibre(Miller({1,1,-2,1},cs),vector3d.Y);
+plot(f,<span class="string">'color'</span>,<span class="string">'red'</span>,<span class="string">'linewidth'</span>,2,<span class="string">'add2all'</span>,<span class="string">'DisplayName'</span>,<span class="string">'fibre'</span>)
+
+legend <span class="string">show</span>
+</pre><img vspace="50" hspace="5" src="Annotations_09.png" alt=""> <p>The following example compares the Fourier coefficients of the fibre ODF with the Fourier coefficients of an unimodal ODF.</p><pre class="codeinput">close <span class="string">all</span>
+plotSpektra(FourierODF(odf,32),<span class="string">'DisplayName'</span>,<span class="string">'Unimodal ODF'</span>)
+hold <span class="string">all</span>
+fodf = fibreODF(Miller(1,0,0,cs),zvector);
+plotSpektra(FourierODF(fodf,32),<span class="string">'DisplayName'</span>,<span class="string">'Fibre ODF'</span>);
+hold <span class="string">off</span>
+legend <span class="string">show</span>
+</pre><img vspace="50" hspace="5" src="Annotations_10.png" alt=""> <p>Adding a Spherical Grid</p><p>Sometimes it is useful to have a spherical grid in your plot to make the projection easier to understand or if you need to know some angular relationships. For this reason, there is the option <b>grid</b>, which enables the grid and the option <b>grid_res</b>, which allows to specify the spacing of the grid lines.</p><pre class="codeinput">plotPDF(odf,[Miller(1,0,0,cs),Miller(0,0,1,cs)],<span class="string">'grid'</span>,<span class="string">'grid_res'</span>,15*degree,<span class="string">'antipodal'</span>);
+mtexColorMap <span class="string">white2black</span>
+</pre><img vspace="50" hspace="5" src="Annotations_11.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Annotations
+%
+%% Colorbars
+%
+% Unlike the common Matlab command |colorbar| the MTEX command
+% <mtexColorbar.html mtexColorbar> allows you to add a colorbar to all
+% subplots in a figure.
+
+% this defines some model ODFs
+cs = crystalSymmetry('-3m');
+mod1 = orientation.byEuler(30*degree,40*degree,10*degree,cs);
+mod2 = orientation.byEuler(10*degree,80*degree,70*degree,cs);
+odf = 0.7*unimodalODF(mod1) + 0.3*unimodalODF(mod2);
+
+% plot some pole figurs
+plotPDF(odf,Miller({1,0,0},{1,1,1},cs))
+
+% and add a colorbar to each pole figure
+mtexColorbar
+
+%%
+% Executing the command <mtexColorbar.html mtexColorbar> twice deletes the
+% colorbar. You can also have a horizontal colorbar at the bottom of the
+% figure by setting the option |location| to |southOutside|. Further, we can
+% set a title to the colorbar to describe the unit.
+
+% delete vertical colorbar
+mtexColorbar
+
+% add horizontal colorbars
+mtexColorbar('location','southOutSide','title','mrd')
+
+%%
+% If color range is set to equal in an MTEX figure only one colorbar is
+% added (see. <ColorMaps.html Color Coding>).
+
+mtexColorbar       % delete colorbar
+CLim(gcm,'equal'); % set equal color range to all plots
+mtexColorbar       % create a new colorbar
+
+
+%% Annotating Directions, Orientations, Fibres
+%
+% Pole figures and inverse pole figures are much better readable if they
+% include specimen or crystal directions. Using the MTEX command
+% <annotate.html annotate> one can easily add <vector3d.vector3d.html
+% specimen coordinate axes> to a pole figure plot.
+
+annotate(zvector,'label',{'Z'},'BackgroundColor','w')
+
+%%
+% The command <annotate.html annotate> allows also to mark
+% <Miller.Miller.html crystal directions> in inverse pole figures.
+
+plotIPDF(odf,[xvector,zvector],'antipodal','marginx',10)
+mtexColorMap white2black
+
+annotate([Miller(1,0,0,cs),Miller(1,1,0,cs),Miller(0,0,1,cs),Miller(2,-1,0,cs)],...
+  'all','labeled','BackgroundColor','w')
+
+%%
+% One can also mark specific orientations in pole figures or in inverse
+% pole figures.
+
+plotIPDF(odf,[xvector,zvector],'antipodal')
+mtexColorMap white2black
+annotate(mod1,...
+    'marker','s','MarkerSize',6,'MarkerFaceColor','r',...
+    'label','A','color','w')
+
+annotate(mod2,...
+    'marker','s','MarkerSize',6,'MarkerFaceColor','g',...
+    'label','B')
+
+drawNow(gcm,'figSize','normal')
+
+%%
+% as well as in ODF plots
+
+plot(odf,'sigma')
+mtexColorMap white2black
+annotate(mod1,...
+    'MarkerSize',15,'MarkerEdgeColor','r','MarkerFaceColor','none')
+
+annotate(mod2,...
+  'MarkerSize',15,'MarkerEdgeColor','b','MarkerFaceColor','none')
+
+%%
+% or orientation scatter plots
+
+ori = odf.discreteSample(200);
+scatter(ori);
+annotate(mod1,...
+  'MarkerSize',10,'MarkerEdgeColor','r','MarkerFaceColor','r')
+annotate(mod2,...
+  'MarkerSize',10,'MarkerEdgeColor','g','MarkerFaceColor','g')
+
+
+%% Legends
+%
+% If you have multiple data in one plot then it makes sense to add a legend
+% saying which color / symbol correspond to which data set. The key is to
+% use the option *DisplayName* available for all plotting commands to
+% include the resulting graphical object into the legend and give it a
+% name.
+
+plotPDF(odf,Miller({1,0,0},{1,1,1},cs))
+plot(ori,'MarkerFaceColor','k','MarkerEdgeColor','black','add2all',...
+  'DisplayName','randomSample')
+
+f = fibre(Miller({1,1,-2,1},cs),vector3d.Y);
+plot(f,'color','red','linewidth',2,'add2all','DisplayName','fibre')
+
+legend show
+
+%%
+%
+% The following example compares the Fourier coefficients of the fibre ODF
+% with the Fourier coefficients of an unimodal ODF.
+
+close all
+plotSpektra(FourierODF(odf,32),'DisplayName','Unimodal ODF')
+hold all
+fodf = fibreODF(Miller(1,0,0,cs),zvector);
+plotSpektra(FourierODF(fodf,32),'DisplayName','Fibre ODF');
+hold off
+legend show
+
+%%
+% Adding a Spherical Grid
+%
+% Sometimes it is useful to have a spherical grid in your plot to make the
+% projection easier to understand or if you need to know some angular relationships.
+% For this reason, there is the option *grid*, which enables the grid and the
+% option *grid_res*, which allows to specify the spacing of the grid lines.
+
+plotPDF(odf,[Miller(1,0,0,cs),Miller(0,0,1,cs)],'grid','grid_res',15*degree,'antipodal');
+mtexColorMap white2black
+
+##### SOURCE END #####
+--></body></html>

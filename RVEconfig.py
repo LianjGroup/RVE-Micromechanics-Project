@@ -33,6 +33,8 @@ def main_config():
 
     simulationIO = globalConfig["simulationIO"]
 
+    skipSimulationRVEGeneration = globalConfig["skipSimulationRVEGeneration"]
+
     # The project path folder
     projectPath = os.getcwd()
     # The logging path
@@ -133,6 +135,7 @@ def main_config():
         'material': material,
         'numberOfRVE': numberOfRVE,
         'simulationIO': simulationIO,
+        'skipSimulationRVEGeneration': skipSimulationRVEGeneration,
         'RVEgroupsUnparsed': RVEgroupsUnparsed,
         'RVEgroups': RVEgroups,
         'properties': properties

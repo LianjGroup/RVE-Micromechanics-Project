@@ -1,44 +1,12 @@
 % code for automatic RVE evaluation
-dim = 64; % number of layers in RVE
-mesh = 10; % mesh size in micro meters
-num_RVEs = 15; % number of RVEs that csc code has generated
+dim = 20; % number of layers in RVE
+mesh = 10; % mesh size in micrometers
+num_RVEs = 5; % number of RVEs that csc code has generated
 best_delta = 100000; % set to a high number, this will be replaced by the deviation of the best performing RVE
 exp_d = 41.6804; % experimental average grain diameter based on EVSD analysis
 exp_asp = 0.6796; % experimental average grain aspect ratio based on EVSD analysis
 
-%% Slice RVE and create files w number of layers. 
-
-% create 64 txt files for 64 layers
-% outermost loop to get layers for all RVEs
-
-for i = 1:num_RVEs
-   %location for the full RVE .txt file with information about all layers
-    fileread = "\\home.org.aalto.fi\yadava4\data\Documents\MATLAB\mtex-5.9.0\mtex-5.9.0\AScI\Automatic_RVE\" + num2str(i) + "\postProc\steel.txt";
-
-    lines = readlines(fileread);
-
-
-    % create folder and write smaller .txt files in it
-    mkdir(['\\home.org.aalto.fi\yadava4\data\Documents\MATLAB\mtex-5.9.0\mtex-5.9.0\AScI\Automatic_RVE\' num2str(i) '\layers']);
-    % inner loop 1 for loop 64 times for 64 layers  
-    for j=1:dim % writing to file
-        filewrite = "\\home.org.aalto.fi\yadava4\data\Documents\MATLAB\mtex-5.9.0\mtex-5.9.0\AScI\Automatic_RVE\" + num2str(i) + "\layers\layer" + num2str(j) + "_RVE" + num2str(i) + ".txt"
-        fid = fopen(filewrite, 'w');
-        % inner loop 2 for loop dim*dim times
-        for k=(1 + (j-1)*dim*dim):(dim*dim + (j-1)*dim*dim)
-            fprintf(fid, lines(k)+'\n'); 
-        end
-    fclose(fid);
-    end
-end
-
-%fid = fopen('layer1.txt', 'w');
-
-%i= 1;
-
 %% analyse each layer and save data in array
-
-
 
 export_name = '\\home.org.aalto.fi\yadava4\data\Documents\MATLAB\mtex-5.9.0\mtex-5.9.0\AScI\Automatic_RVE\RVE_analysis_data.txt'; % this is where the RVE evaluation information is exported
 fid = fopen(export_name, 'w');

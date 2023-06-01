@@ -1,0 +1,386 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Plotting</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_GrainSpatialPlots.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Plotting</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Phase maps</a></li><li><a href="#5">Orientation Maps</a></li><li><a href="#8">Plotting arbitrary properties</a></li><li><a href="#11">Colorizing circular properties</a></li><li><a href="#12">Plotting the orientation within a grain</a></li><li><a href="#14">Visualizing directions</a></li><li><a href="#15">Labeling Grains</a></li></ul></div><p>We start by importing some EBSD data and reconstructing some grains</p><pre class="codeinput"><span class="comment">% import a demo data set</span>
+mtexdata <span class="string">forsterite</span> <span class="string">silent</span>
+plotx2east
+
+<span class="comment">% consider only indexed data for grain segmentation</span>
+ebsd = ebsd(<span class="string">'indexed'</span>);
+
+<span class="comment">% perform grain segmentation</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd);
+</pre><h2 id="2">Phase maps</h2><p>When using the <a href="grain2d.plot.html"><tt>plot</tt></a> command without additional argument the associated color is defined by color stored in the crystal symmetry for each phase</p><pre class="codeinput">close <span class="string">all</span>
+plot(grains)
+
+grains(<span class="string">'Fo'</span>).CS.color
+</pre><pre class="codeoutput">ans =
+    0.5294    0.8078    0.9804
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_01.png" alt=""> <p>Accodingly, changing the color stored in the crystal symmetry changes the color in the map</p><pre class="codeinput">grains(<span class="string">'Fo'</span>).CS.color = str2rgb(<span class="string">'salmon'</span>)
+plot(grains)
+</pre><pre class="codeoutput"> 
+grains = grain2d
+ 
+ Phase  Grains  Pixels     Mineral  Symmetry  Crystal reference frame
+     1    1080  152345  Forsterite       mmm                         
+     2     515   26058   Enstatite       mmm                         
+     3    1496    9064    Diopside     12/m1       X||a*, Y||b*, Z||c
+ 
+ boundary segments: 43918 (2.1e+06 &micro;m)
+ inner boundary segments: 266 (12018 &micro;m)
+ triple points: 3417
+ 
+ Properties: meanRotation, GOS
+ 
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_02.png" alt=""> <p>The color can also been specified directly by using the option <tt>FaceColor</tt>. Note, that this requires the color to be specified by RGB values.</p><pre class="codeinput"><span class="comment">% detect the largest grain</span>
+[~,id] = max(grains.area);
+
+<span class="comment">% plot the grain in dark black with some transperency</span>
+hold <span class="string">on</span>
+plot(grains(id),<span class="string">'FaceColor'</span>,<span class="string">'darkgray'</span>,<span class="string">'FaceAlpha'</span>,0.5)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_03.png" alt=""> <h2 id="5">Orientation Maps</h2><p>Coloring grains according to their mean orientations is very similar to EBSD maps colored by orientations. The most important thing is that the misorientation can only extracte from grains of the same phase.</p><pre class="codeinput"><span class="comment">% the implicite way</span>
+plot(grains(<span class="string">'Fo'</span>),grains(<span class="string">'fo'</span>).meanOrientation)
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_04.png" alt=""> <p>This implicte way gives no control about how the color is computed from the meanorientation. When using the explicite way by defining a orientation to color map</p><pre class="codeinput"><span class="comment">% this defines a ipf color key</span>
+ipfKey = ipfColorKey(grains(<span class="string">'Fo'</span>));
+</pre><p>we can set the inverse pole figure direction and many other properties</p><pre class="codeinput">ipfKey.inversePoleFigureDirection = xvector;
+
+<span class="comment">% compute the colors from the meanorientations</span>
+color = ipfKey.orientation2color(grains(<span class="string">'Fo'</span>).meanOrientation);
+
+<span class="comment">% and use them for plotting</span>
+plot(grains(<span class="string">'fo'</span>),color)
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_05.png" alt=""> <h2 id="8">Plotting arbitrary properties</h2><p>As we have seen in the previous section the <tt>plot</tt> command accepts as second argument any list of RGB values specifying a color. Instead of RGB values the second argument can also be a list of values which are then transformed by a colormap into color.</p><p>As an example we colorize the grains according to their aspect ratio.</p><pre class="codeinput">plot(grains,grains.aspectRatio)
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_06.png" alt=""> <p>we see that we have a very alongated grain which makes it difficult to distinguesh the aspect ration of the other grains. A solution for this is to specify the values of the aspect ration which should maped to the top and bottom color of the colormap</p><pre class="codeinput">CLim(gcm,[1 5])
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_07.png" alt=""> <h2 id="11">Colorizing circular properties</h2><p>Sometimes the property we want to display is a circular, e.g., the direction of the grain alongation. In this case it is important to use a circular colormap which assign the same color to high values and low values. In the case of the direction of the grain alongation the angles 0 and 180 should get the same color since they represent the same direction.</p><pre class="codeinput"><span class="comment">% consider only alongated grains</span>
+alongated_grains = grains(grains.aspectRatio &gt; 1.5);
+
+<span class="comment">% get the grain alongation</span>
+dir = alongated_grains.principalComponents;
+
+<span class="comment">% transfer this into degree and project it into the interval [0,180]</span>
+dir = mod(dir./degree,180);
+
+<span class="comment">% plot the direction</span>
+plot(alongated_grains,dir,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+
+<span class="comment">% change the default colormap to a circular one</span>
+mtexColorMap <span class="string">HSV</span>
+
+<span class="comment">% display the colormap</span>
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_08.png" alt=""> <h2 id="12">Plotting the orientation within a grain</h2><p>In order to plot the orientations of EBSD data within certain grains one first has to extract the EBSD data that belong to the specific grains.</p><pre class="codeinput"><span class="comment">% let have a look at the bigest grain</span>
+[~,id] = max(grains.area)
+
+<span class="comment">% and select the corresponding EBSD data</span>
+ebsd_maxGrain = ebsd(ebsd.grainId == id)
+
+<span class="comment">% the previous command is equivalent to the more simpler</span>
+ebsd_maxGrain = ebsd(grains(id));
+</pre><pre class="codeoutput">id =
+   931
+ 
+ebsd_maxGrain = EBSD
+ 
+ Phase  Orientations     Mineral   Color  Symmetry  Crystal reference frame
+     1   2683 (100%)  Forsterite  Salmon       mmm                         
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+</pre><pre class="codeinput"><span class="comment">% compute the color out of the orientations</span>
+color = ipfKey.orientation2color(ebsd_maxGrain.orientations);
+
+<span class="comment">% plot it</span>
+plot(ebsd_maxGrain, color,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+
+<span class="comment">% plot the grain boundary on top</span>
+hold <span class="string">on</span>
+plot(grains(id).boundary,<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_09.png" alt=""> <h2 id="14">Visualizing directions</h2><p>We may also visualize directions by arrows placed at the center of the grains.</p><pre class="codeinput"><span class="comment">% load some single phase data set</span>
+mtexdata <span class="string">csl</span>
+
+<span class="comment">% compute and plot grains</span>
+[grains,ebsd.grainId] = calcGrains(ebsd);
+plot(grains,grains.meanOrientation,<span class="string">'micronbar'</span>,<span class="string">'off'</span>,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+
+<span class="comment">% next we want to visualize the direction of the 100 axis</span>
+dir = grains.meanOrientation * Miller(1,0,0,grains.CS);
+
+<span class="comment">% the lenght of the vectors should depend on the grain diameter</span>
+len = 0.25*grains.diameter;
+
+<span class="comment">% arrows are plotted using the command quiver. We need to switch of auto</span>
+<span class="comment">% scaling of the arrow length</span>
+hold <span class="string">on</span>
+quiver(grains,len.*dir,<span class="string">'autoScale'</span>,<span class="string">'off'</span>,<span class="string">'color'</span>,<span class="string">'black'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase   Orientations  Mineral         Color  Symmetry  Crystal reference frame
+    -1  154107 (100%)     iron  LightSkyBlue      m-3m                         
+ 
+ Properties: ci, error, iq, x, y
+ Scan unit : um
+ 
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_10.png" alt=""> <h2 id="15">Labeling Grains</h2><p>In the above example the vectors are centered at the centroids of the grains. Other elements</p><pre class="codeinput"><span class="comment">% only the very big grains</span>
+big_grains = grains(grains.grainSize&gt;1000);
+
+<span class="comment">% plot them</span>
+plot(big_grains,big_grains.meanOrientation,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+
+<span class="comment">% plot on top their ids</span>
+text(big_grains,int2str(big_grains.id))
+</pre><img vspace="50" hspace="5" src="GrainSpatialPlots_11.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Plotting
+%
+%%
+% We start by importing some EBSD data and reconstructing some grains
+
+% import a demo data set
+mtexdata forsterite silent
+plotx2east
+
+% consider only indexed data for grain segmentation
+ebsd = ebsd('indexed');
+
+% perform grain segmentation
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd);
+
+%% Phase maps
+% When using the <grain2d.plot.html |plot|> command without additional
+% argument the associated color is defined by color stored in the crystal
+% symmetry for each phase
+
+close all
+plot(grains)
+
+grains('Fo').CS.color
+
+%%
+% Accodingly, changing the color stored in the crystal symmetry changes the
+% color in the map
+
+grains('Fo').CS.color = str2rgb('salmon')
+plot(grains)
+
+%%
+% The color can also been specified directly by using the option
+% |FaceColor|. Note, that this requires the color to be specified by RGB
+% values.
+
+% detect the largest grain
+[~,id] = max(grains.area);
+
+% plot the grain in dark black with some transperency
+hold on
+plot(grains(id),'FaceColor','darkgray','FaceAlpha',0.5)
+hold off
+
+
+%% Orientation Maps
+% Coloring grains according to their mean orientations is very similar to
+% EBSD maps colored by orientations. The most important thing is that the
+% misorientation can only extracte from grains of the same phase.
+
+% the implicite way
+plot(grains('Fo'),grains('fo').meanOrientation)
+
+%%
+% This implicte way gives no control about how the color is computed from
+% the meanorientation. When using the explicite way by defining a
+% orientation to color map
+
+% this defines a ipf color key
+ipfKey = ipfColorKey(grains('Fo'));
+
+%%
+% we can set the inverse pole figure direction and many other properties
+
+ipfKey.inversePoleFigureDirection = xvector;
+
+% compute the colors from the meanorientations
+color = ipfKey.orientation2color(grains('Fo').meanOrientation);
+
+% and use them for plotting
+plot(grains('fo'),color)
+
+%% Plotting arbitrary properties
+% As we have seen in the previous section the |plot| command accepts as
+% second argument any list of RGB values specifying a color. Instead of RGB
+% values the second argument can also be a list of values which are then
+% transformed by a colormap into color.
+%
+%%
+% As an example we colorize the grains according to their aspect ratio.
+
+plot(grains,grains.aspectRatio)
+
+%%
+% we see that we have a very alongated grain which makes it difficult to
+% distinguesh the aspect ration of the other grains. A solution for this is
+% to specify the values of the aspect ration which should maped to the
+% top and bottom color of the colormap
+
+CLim(gcm,[1 5])
+
+%% Colorizing circular properties
+% Sometimes the property we want to display is a circular, e.g., the
+% direction of the grain alongation. In this case it is important to use a
+% circular colormap which assign the same color to high values and low
+% values. In the case of the direction of the grain alongation the angles 0
+% and 180 should get the same color since they represent the same
+% direction.
+
+% consider only alongated grains
+alongated_grains = grains(grains.aspectRatio > 1.5);
+
+% get the grain alongation
+dir = alongated_grains.principalComponents;
+
+% transfer this into degree and project it into the interval [0,180]
+dir = mod(dir./degree,180);
+
+% plot the direction
+plot(alongated_grains,dir,'micronbar','off')
+
+% change the default colormap to a circular one
+mtexColorMap HSV
+
+% display the colormap
+mtexColorbar
+
+%% Plotting the orientation within a grain
+% In order to plot the orientations of EBSD data within certain grains one
+% first has to extract the EBSD data that belong to the specific grains.
+
+% let have a look at the bigest grain
+[~,id] = max(grains.area)
+
+% and select the corresponding EBSD data
+ebsd_maxGrain = ebsd(ebsd.grainId == id)
+
+% the previous command is equivalent to the more simpler 
+ebsd_maxGrain = ebsd(grains(id));
+
+%%
+
+% compute the color out of the orientations
+color = ipfKey.orientation2color(ebsd_maxGrain.orientations);
+
+% plot it
+plot(ebsd_maxGrain, color,'micronbar','off')
+
+% plot the grain boundary on top
+hold on
+plot(grains(id).boundary,'linewidth',2)
+hold off
+
+%% Visualizing directions
+% 
+% We may also visualize directions by arrows placed at the center of the
+% grains.
+
+% load some single phase data set
+mtexdata csl
+
+% compute and plot grains
+[grains,ebsd.grainId] = calcGrains(ebsd);
+plot(grains,grains.meanOrientation,'micronbar','off','figSize','large')
+
+% next we want to visualize the direction of the 100 axis
+dir = grains.meanOrientation * Miller(1,0,0,grains.CS);
+
+% the lenght of the vectors should depend on the grain diameter
+len = 0.25*grains.diameter;
+
+% arrows are plotted using the command quiver. We need to switch of auto
+% scaling of the arrow length
+hold on
+quiver(grains,len.*dir,'autoScale','off','color','black')
+hold off
+
+%% Labeling Grains
+% In the above example the vectors are centered at the centroids of the
+% grains. Other elements 
+
+% only the very big grains
+big_grains = grains(grains.grainSize>1000);
+
+% plot them
+plot(big_grains,big_grains.meanOrientation,'micronbar','off')
+
+% plot on top their ids
+text(big_grains,int2str(big_grains.id))
+
+##### SOURCE END #####
+--></body></html>

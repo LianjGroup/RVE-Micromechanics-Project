@@ -1,0 +1,233 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Magnetic Anisotropy</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_MagneticAnisotropy.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Magnetic Anisotropy</h1><!--introduction--><p>by Dr. Marco Witte, Salzgitter Mannesmann Forschung, March 2020.</p><p>The magnetocrystalline anisotropy energy Ea is necessary to rotate all magnetic moments towards the direction of an external field (saturation). This texture dependent propterty is of special interest for electrical steels.</p><p>This example script is based on the followin literature: * Wu et al. (2017): Journal of Magnetism and Magnetic Materials 444: 211&#8211;217. * Bunge, H.-J. (2013): Texture analysis in materials science: mathematical methods. * Bunge, H. J. (1989): Texture and magnetic properties. Textures and microstructures, 11. * Szpunar, J. (1989): Texture, Stress, and Microstructure 11, 2-4: 93-105. * Landgraf et al.(2003): Journal of Magnetism and Magnetic Materials 254&#8211;255: 364&#8211;66.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Define Parameters</a></li><li><a href="#2">Calculate anisotropy energy for different external magnetic field directions in sheet plane</a></li></ul></div><h2 id="1">Define Parameters</h2><pre class="codeinput"><span class="comment">% alloy content of Si and Al in wt.%</span>
+x_Si = 3;
+x_Al = 1;
+
+<span class="comment">% magnetic anisotropy constant</span>
+K1 = 4.77 - 0.21256*x_Si - 0.03816*x_Al;
+
+<span class="comment">% magnetic saturation J_S depends on alloy composition</span>
+J_S = 2.162 - 0.043*x_Si - 0.0625*x_Al;
+
+<span class="comment">% crystal symmetry</span>
+CS = crystalSymmetry(<span class="string">'m-3m'</span>);
+SS = specimenSymmetry(<span class="string">'-1'</span>);
+
+<span class="comment">% define an odf - here with Goss orientation, as desired for grain oriented</span>
+<span class="comment">% electrical steel</span>
+odf = unimodalODF(orientation(<span class="string">'Euler'</span>,0,45*degree,0,CS,SS),CS,SS);
+
+<span class="comment">% simulate random orientations from the ODF</span>
+oris = discreteSample(odf,10000);
+</pre><h2 id="2">Calculate anisotropy energy for different external magnetic field directions in sheet plane</h2><p>Due to the rotation of an electrical motor the field direction is changing constantly inside the sheet plane.</p><pre class="codeinput"><span class="comment">% rotation from 0 - 90 degree</span>
+rot_mag = 0:10:90;
+
+<span class="comment">% initialize variable for storage</span>
+E_a = zeros(length(rot_mag),length(oris));
+
+<span class="comment">% loop over all rotations</span>
+<span class="keyword">for</span> j = 1:length(rot_mag)
+
+  <span class="comment">%rotate orientations</span>
+  rot = rotation(<span class="string">'axis'</span>,zvector,<span class="string">'angle'</span>,rot_mag(j)*degree);
+  ori_rot = rot*oris;
+
+  <span class="comment">%Determine uvw of orientations (makes loop necessary)</span>
+  ori_uvw = inv(ori_rot)*Miller(1,0,0,crystalSymmetry(<span class="string">'1'</span>));
+
+  <span class="comment">%direction cosines with direction &lt;100&gt; of easy magnetization</span>
+  cos_val_1 = cos(angle(Miller(1,0,0,CS),ori_uvw,<span class="string">'noSymmetry'</span>));
+  cos_val_2 = cos(angle(Miller(0,1,0,CS),ori_uvw,<span class="string">'noSymmetry'</span>));
+  cos_val_3 = cos(angle(Miller(0,0,1,CS),ori_uvw,<span class="string">'noSymmetry'</span>));
+
+  <span class="comment">%calculate magnetic anisotropy energy</span>
+  E_a(j,:) = K1*(cos_val_1.^2.*cos_val_2.^2 + <span class="keyword">...</span>
+    cos_val_2.^2.*cos_val_3.^2 + cos_val_1.^2.*cos_val_3.^2);
+
+<span class="keyword">end</span>
+
+<span class="comment">% calculate magentization J_50 at H = 5000 A/m (J_50 is suposed to depend</span>
+<span class="comment">% only on stexture</span>
+J_50 = J_S*(1-0.19*mean(E_a,2));
+
+<span class="comment">%plot results</span>
+figure
+plot(rot_mag,mean(E_a,2))
+ylabel(<span class="string">'magnetic anisotropy energy [10^4J/m^3]'</span>)
+xlabel(<span class="string">'angle of external field to RD [&deg;]'</span>)
+grid <span class="string">on</span>
+title([<span class="string">'Mean magnetic anisotropy energy = '</span> num2str(mean(mean(E_a)),<span class="string">'%.2f'</span>) <span class="string">' 10^4J/m^3.'</span>],<span class="string">'fontsize'</span>,14)
+
+figure
+plot(rot_mag,mean(J_50,2))
+ylabel(<span class="string">'magnetic polarization [T]'</span>)
+xlabel(<span class="string">'angle of external field to RD [&deg;]'</span>)
+grid <span class="string">on</span>
+title([<span class="string">'Mean magnetic anisotropy energy = '</span> num2str(mean(mean(J_50)),<span class="string">'%.2f'</span>) <span class="string">' T.'</span>],<span class="string">'fontsize'</span>,14)
+</pre><img vspace="50" hspace="5" src="MagneticAnisotropy_01.png" alt=""> <img vspace="50" hspace="5" src="MagneticAnisotropy_02.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Magnetic Anisotropy
+%
+% by Dr. Marco Witte, Salzgitter Mannesmann Forschung, March 2020.
+%
+% The magnetocrystalline anisotropy energy Ea is necessary to rotate all
+% magnetic moments towards the direction of an external field (saturation).
+% This texture dependent propterty is of special interest for electrical
+% steels.
+%
+% This example script is based on the followin literature:
+% * Wu et al. (2017): Journal of Magnetism and Magnetic Materials 444:
+% 211–217.
+% * Bunge, H.-J. (2013): Texture analysis in materials science:
+% mathematical methods.
+% * Bunge, H. J. (1989): Texture and magnetic properties. Textures and
+% microstructures, 11.
+% * Szpunar, J. (1989): Texture, Stress, and Microstructure 11, 2-4:
+% 93-105.
+% * Landgraf et al.(2003): Journal of Magnetism and Magnetic Materials
+% 254–255: 364–66.
+
+%% Define Parameters
+
+% alloy content of Si and Al in wt.%
+x_Si = 3;
+x_Al = 1;
+
+% magnetic anisotropy constant
+K1 = 4.77 - 0.21256*x_Si - 0.03816*x_Al;
+
+% magnetic saturation J_S depends on alloy composition
+J_S = 2.162 - 0.043*x_Si - 0.0625*x_Al;
+
+% crystal symmetry
+CS = crystalSymmetry('m-3m');
+SS = specimenSymmetry('-1');
+
+% define an odf - here with Goss orientation, as desired for grain oriented
+% electrical steel
+odf = unimodalODF(orientation('Euler',0,45*degree,0,CS,SS),CS,SS);
+
+% simulate random orientations from the ODF 
+oris = discreteSample(odf,10000); 
+ 
+%% Calculate anisotropy energy for different external magnetic field directions in sheet plane
+%
+% Due to the rotation of an electrical motor the field direction is
+% changing constantly inside the sheet plane.
+
+% rotation from 0 - 90 degree
+rot_mag = 0:10:90;
+
+% initialize variable for storage
+E_a = zeros(length(rot_mag),length(oris));
+
+% loop over all rotations
+for j = 1:length(rot_mag)
+    
+  %rotate orientations
+  rot = rotation('axis',zvector,'angle',rot_mag(j)*degree);
+  ori_rot = rot*oris;
+  
+  %Determine uvw of orientations (makes loop necessary)
+  ori_uvw = inv(ori_rot)*Miller(1,0,0,crystalSymmetry('1'));
+  
+  %direction cosines with direction <100> of easy magnetization
+  cos_val_1 = cos(angle(Miller(1,0,0,CS),ori_uvw,'noSymmetry'));
+  cos_val_2 = cos(angle(Miller(0,1,0,CS),ori_uvw,'noSymmetry'));
+  cos_val_3 = cos(angle(Miller(0,0,1,CS),ori_uvw,'noSymmetry'));
+  
+  %calculate magnetic anisotropy energy
+  E_a(j,:) = K1*(cos_val_1.^2.*cos_val_2.^2 + ...
+    cos_val_2.^2.*cos_val_3.^2 + cos_val_1.^2.*cos_val_3.^2);
+  
+end
+
+% calculate magentization J_50 at H = 5000 A/m (J_50 is suposed to depend
+% only on stexture
+J_50 = J_S*(1-0.19*mean(E_a,2));
+
+%plot results
+figure
+plot(rot_mag,mean(E_a,2))
+ylabel('magnetic anisotropy energy [10^4J/m^3]')
+xlabel('angle of external field to RD [°]')
+grid on
+title(['Mean magnetic anisotropy energy = ' num2str(mean(mean(E_a)),'%.2f') ' 10^4J/m^3.'],'fontsize',14)
+
+figure
+plot(rot_mag,mean(J_50,2))
+ylabel('magnetic polarization [T]')
+xlabel('angle of external field to RD [°]')
+grid on
+title(['Mean magnetic anisotropy energy = ' num2str(mean(mean(J_50)),'%.2f') ' T.'],'fontsize',14)
+
+##### SOURCE END #####
+--></body></html>

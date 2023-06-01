@@ -1,0 +1,224 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Grain Boundary Tutorial</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_BoundaryTutorial.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Grain Boundary Tutorial</h1><!--introduction--><p>A quick guide to grain boundary analysis</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Grain boundaries generation</a></li><li><a href="#4">Properties of grain boundaries</a></li></ul></div><h2 id="1">Grain boundaries generation</h2><p>To work with grain boundaries we need some ebsd data and have to detect grains within the data set.</p><pre class="codeinput"><span class="comment">% load some example data</span>
+mtexdata <span class="string">twins</span>
+
+<span class="comment">% detect grains</span>
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd(<span class="string">'indexed'</span>))
+
+<span class="comment">% smooth them</span>
+grains = grains.smooth
+
+<span class="comment">% visualize the grains</span>
+plot(grains,grains.meanOrientation)
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                                 
+     1  22833 (100%)   Magnesium  LightSkyBlue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+ 
+grains = grain2d
+ 
+ Phase  Grains  Pixels    Mineral  Symmetry  Crystal reference frame
+     1     121   22833  Magnesium     6/mmm       X||a*, Y||b, Z||c*
+ 
+ boundary segments: 3825 (1152 &micro;m)
+ inner boundary segments: 4 (1.2 &micro;m)
+ triple points: 114
+ 
+ Properties: meanRotation, GOS
+ 
+ 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                                 
+     1  22833 (100%)   Magnesium  LightSkyBlue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+ 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                                 
+     1  22833 (100%)   Magnesium  LightSkyBlue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y, grainId, mis2mean
+ Scan unit : um
+ 
+ 
+grains = grain2d
+ 
+ Phase  Grains  Pixels    Mineral  Symmetry  Crystal reference frame
+     1     121   22833  Magnesium     6/mmm       X||a*, Y||b, Z||c*
+ 
+ boundary segments: 3825 (1020 &micro;m)
+ inner boundary segments: 4 (0.99 &micro;m)
+ triple points: 114
+ 
+ Properties: meanRotation, GOS
+ 
+</pre><img vspace="50" hspace="5" src="BoundaryTutorial_01.png" alt=""> <p>Now we can extract from the grains its boundary and save it to a seperate variable</p><pre class="codeinput">gB = grains.boundary
+</pre><pre class="codeoutput"> 
+gB = grainBoundary
+ 
+ Segments  length   mineral 1  mineral 2
+      606  183 &micro;m  notIndexed  Magnesium
+     3219  837 &micro;m   Magnesium  Magnesium
+</pre><p>The output tells us that we have 3219 Magnesium to Magnesium boundary segments and 606 boundary segements where the grains are cutted by the scanning boundary. To restrict the grain boundaries to a specific phase transistion you shall do</p><pre class="codeinput">gB_MgMg = gB(<span class="string">'Magnesium'</span>,<span class="string">'Magnesium'</span>)
+</pre><pre class="codeoutput"> 
+gB_MgMg = grainBoundary
+ 
+ Segments  length  mineral 1  mineral 2
+     3219  837 &micro;m  Magnesium  Magnesium
+</pre><h2 id="4">Properties of grain boundaries</h2><p>A variable of type grain boundary contains the following properties</p><div><ul><li>misorientation</li><li>direction</li><li>segLength</li></ul></div><p>These can be used to colorize the grain boundaries. By the following command we plot the grain boundaries colorized by the misorientation angle</p><pre class="codeinput">plot(gB_MgMg,gB_MgMg.misorientation.angle./degree,<span class="string">'linewidth'</span>,2)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="BoundaryTutorial_02.png" alt=""> <pre class="codeinput">hold <span class="string">on</span>
+plot(gB(<span class="string">'notIndexed'</span>),<span class="string">'lineColor'</span>,<span class="string">'blue'</span>,<span class="string">'linewith'</span>,5)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="BoundaryTutorial_03.png" alt=""> <pre class="codeinput">grains.innerBoundary
+</pre><pre class="codeoutput"> 
+ans = grainBoundary
+ 
+ Segments   length  mineral 1  mineral 2
+        4  0.99 &micro;m  Magnesium  Magnesium
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Grain Boundary Tutorial
+% A quick guide to grain boundary analysis
+%
+%% Grain boundaries generation
+%
+% To work with grain boundaries we need some ebsd data and have to detect
+% grains within the data set. 
+
+% load some example data
+mtexdata twins
+
+% detect grains
+[grains,ebsd.grainId,ebsd.mis2mean] = calcGrains(ebsd('indexed'))
+
+% smooth them
+grains = grains.smooth
+
+% visualize the grains
+plot(grains,grains.meanOrientation)
+
+%%
+% Now we can extract from the grains its boundary and save it to a seperate
+% variable
+
+gB = grains.boundary
+
+%%
+% The output tells us that we have 3219 Magnesium to Magnesium boundary
+% segments and 606 boundary segements where the grains are cutted by the
+% scanning boundary. To restrict the grain boundaries to a specific phase
+% transistion you shall do
+
+gB_MgMg = gB('Magnesium','Magnesium')
+
+%% Properties of grain boundaries
+%
+% A variable of type grain boundary contains the following properties
+%
+% * misorientation
+% * direction
+% * segLength
+%
+% These can be used to colorize the grain boundaries. By the following
+% command we plot the grain boundaries colorized by the misorientation
+% angle
+
+plot(gB_MgMg,gB_MgMg.misorientation.angle./degree,'linewidth',2)
+mtexColorbar
+
+%%
+
+
+
+hold on
+plot(gB('notIndexed'),'lineColor','blue','linewith',5)
+hold off
+
+
+%%
+
+grains.innerBoundary
+
+##### SOURCE END #####
+--></body></html>

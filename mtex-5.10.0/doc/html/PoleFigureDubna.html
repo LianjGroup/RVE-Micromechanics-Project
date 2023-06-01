@@ -1,0 +1,353 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Orientation Density Functions</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_PoleFigureDubna.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Orientation Density Functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Extract information from imported pole figure data</a></li><li><a href="#4">Manipulate pole figure data</a></li><li><a href="#7">PDF - to - ODF Reconstruction</a></li><li><a href="#13">Error Analysis</a></li><li><a href="#16">Exercises</a></li></ul></div><p>This example demonstrates the most important MTEX tools for analysing Pole Figure Data.</p><pre class="codeinput"><span class="comment">% specify crystal and specimen symmetry</span>
+CS = crystalSymmetry(<span class="string">'-3m'</span>,[4.9 4.9 5.4]);
+SS = specimenSymmetry;
+
+<span class="comment">% specify file names</span>
+fname = {<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(10-10)_amp.cnv'</span>),<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(10-11)(01-11)_amp.cnv'</span>),<span class="keyword">...</span>
+  fullfile(mtexDataPath,<span class="string">'PoleFigure'</span>,<span class="string">'dubna'</span>,<span class="string">'Q(11-22)_amp.cnv'</span>)};
+
+<span class="comment">% specify crystal directions</span>
+h = {Miller(1,0,-1,0,CS),<span class="keyword">...</span>
+     [Miller(0,1,-1,1,CS),Miller(1,0,-1,1,CS)],<span class="keyword">...</span><span class="comment"> % superposed pole figures</span>
+     Miller(1,1,-2,2,CS)};
+
+<span class="comment">% specify structure coefficients</span>
+c = {1,[0.52 ,1.23],1};
+
+<span class="comment">% import data</span>
+pf = PoleFigure.load(fname,h,CS,SS,<span class="string">'interface'</span>,<span class="string">'dubna'</span>,<span class="string">'superposition'</span>,c);
+
+plot(pf)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_01.png" alt=""> <h2 id="2">Extract information from imported pole figure data</h2><p><b>Get raw data</b></p><p>Data stored in a <a href="PoleFigure.PoleFigure.html">PoleFigure</a> variable can be extracted by</p><pre class="codeinput">I = pf.intensities; <span class="comment">% intensities</span>
+h = pf.h;            <span class="comment">% Miller indice</span>
+r = pf.r;            <span class="comment">% specimen directions</span>
+</pre><p><b>Basic Statistics</b></p><p>There are also some basic statics on pole figure intensities</p><pre class="codeinput">min(pf)
+max(pf)
+isOutlier(pf);
+</pre><pre class="codeoutput">ans =
+     0     0     0
+ans =
+   1.0e+03 *
+    0.0898    1.3600    0.9620
+</pre><h2 id="4">Manipulate pole figure data</h2><pre class="codeinput">pf_modified = pf(pf.r.theta &lt; 70*degree | pf.r.theta &gt; 75*degree)
+
+plot(pf_modified)
+</pre><pre class="codeoutput"> 
+pf_modified = PoleFigure (xyz)
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+ 
+  h = (10-10), r = 1 x 1224 points
+  h = (01-11)(10-11), r = 1 x 1224 points
+  h = (11-22), r = 1 x 1224 points
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_02.png" alt=""> <pre class="codeinput">rot = rotation.byAxisAngle(xvector-yvector,25*degree);
+pf_modified = rotate(pf,rot)
+
+plot(pf_modified)
+</pre><pre class="codeoutput"> 
+pf_modified = PoleFigure (xyz)
+  crystal symmetry : -3m1, X||a*, Y||b, Z||c*
+ 
+  h = (10-10), r = 72 x 19 points
+  h = (01-11)(10-11), r = 72 x 19 points
+  h = (11-22), r = 72 x 19 points
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_03.png" alt=""> <h2 id="7">PDF - to - ODF Reconstruction</h2><pre class="codeinput">rec = calcODF(pf,<span class="string">'RESOLUTION'</span>,10*degree,<span class="string">'iter_max'</span>,6)
+
+plotPDF(rec,h)
+mtexColorbar
+</pre><pre class="codeoutput"> 
+rec = SO3FunRBF (-3m1 &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 2472 orientations, resolution: 10&deg;
+  weight: 1
+ 
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_04.png" alt=""> <pre class="codeinput">odf = SantaFe
+
+<span class="comment">% define specimen directions</span>
+r = regularS2Grid(<span class="string">'antipodal'</span>)
+</pre><pre class="codeoutput"> 
+odf = SO3FunRBF (m-3m &#8594; xyz (222))
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 0.73
+ 
+  &lt;strong&gt;unimodal component&lt;/strong&gt;
+  kernel: van Mises Fisher, halfwidth 10&deg;
+  center: 1 orientations
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2  weight
+  296.565 48.1897 26.5651    0.27
+ 
+ 
+r = S2Grid
+ size: 72 x 19
+ antipodal: true
+</pre><p>define crystal directions</p><pre class="codeinput">h = [Miller(1,0,0,odf.CS),Miller(1,1,0,odf.CS),Miller(1,1,1,odf.CS)];
+</pre><p>simulate pole figure data</p><pre class="codeinput">pf_SantaFe = calcPoleFigure(SantaFe,h,r);
+</pre><p>estimate an ODF with ghost correction</p><pre class="codeinput">rec = calcODF(pf_SantaFe,<span class="string">'RESOLUTION'</span>,10*degree,<span class="string">'background'</span>,10)
+
+plot(rec,<span class="string">'sections'</span>,6)
+</pre><pre class="codeoutput"> 
+rec = SO3FunRBF (m-3m &#8594; xyz (222))
+ 
+  &lt;strong&gt;uniform component&lt;/strong&gt;
+  weight: 0.73
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 150 orientations, resolution: 10&deg;
+  weight: 0.27
+ 
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_05.png" alt=""> <p>without ghost correction</p><pre class="codeinput">rec_ng = calcODF(pf_SantaFe,<span class="string">'RESOLUTION'</span>,10*degree,<span class="string">'background'</span>,10,<span class="string">'NoGhostCorrection'</span>)
+
+plot(rec_ng,<span class="string">'sections'</span>,6)
+</pre><pre class="codeoutput"> 
+rec_ng = SO3FunRBF (m-3m &#8594; xyz (222))
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 150 orientations, resolution: 10&deg;
+  weight: 1
+ 
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_06.png" alt=""> <h2 id="13">Error Analysis</h2><pre class="codeinput">calcError(pf_SantaFe,rec)
+calcError(pf_SantaFe,rec_ng)
+</pre><pre class="codeoutput">ans =
+    0.0202    0.0261    0.0240
+ans =
+    0.0358    0.0283    0.0252
+</pre><p><b>Difference plot</b></p><pre class="codeinput">plotDiff(pf_SantaFe,rec)
+</pre><img vspace="50" hspace="5" src="PoleFigureDubna_07.png" alt=""> <p><b>ODF error</b></p><pre class="codeinput">calcError(SantaFe,rec)
+calcError(SantaFe,rec_ng)
+</pre><pre class="codeoutput">ans =
+    0.0312
+ans =
+    0.0893
+</pre><h2 id="16">Exercises</h2><p>3)</p><p>a) Load the pole figure data of a quartz specimen from: data/dubna!</p><p>b) Inspect the raw data. Are there noticeable problems?</p><p>c) Compute an ODF from the pole figure data.</p><p>d) Plot some pole figures of that ODF and compare them to the measured pole figures.</p><p>e) Compute the RP errors for each pole figure.</p><p>f) Plot the difference between the raw data and the calculated pole figures. What do you observe?</p><p>g) Remove the erroneous values from the pole figure data and repeat the ODF calculation. How do the RP error change?</p><p>h) Vary the number of pole figures used for the ODF calculation. What is the minimum set of pole figures needed to obtain a meaningful ODF?</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Orientation Density Functions
+%
+%%
+% This example demonstrates the most important MTEX tools for analysing
+% Pole Figure Data.
+
+% specify crystal and specimen symmetry
+CS = crystalSymmetry('-3m',[4.9 4.9 5.4]);
+SS = specimenSymmetry;
+
+% specify file names
+fname = {...
+  fullfile(mtexDataPath,'PoleFigure','dubna','Q(10-10)_amp.cnv'),...
+  fullfile(mtexDataPath,'PoleFigure','dubna','Q(10-11)(01-11)_amp.cnv'),...
+  fullfile(mtexDataPath,'PoleFigure','dubna','Q(11-22)_amp.cnv')};
+
+% specify crystal directions
+h = {Miller(1,0,-1,0,CS),...
+     [Miller(0,1,-1,1,CS),Miller(1,0,-1,1,CS)],... % superposed pole figures
+     Miller(1,1,-2,2,CS)};
+
+% specify structure coefficients
+c = {1,[0.52 ,1.23],1};
+
+% import data
+pf = PoleFigure.load(fname,h,CS,SS,'interface','dubna','superposition',c);
+
+plot(pf)
+mtexColorbar
+
+%% Extract information from imported pole figure data
+%
+% *Get raw data*
+%
+% Data stored in a <PoleFigure.PoleFigure.html PoleFigure>
+% variable can be extracted by
+
+I = pf.intensities; % intensities
+h = pf.h;            % Miller indice
+r = pf.r;            % specimen directions
+
+%%
+% *Basic Statistics*
+%
+% There are also some basic statics on pole figure intensities
+
+min(pf)
+max(pf)
+isOutlier(pf);
+
+%% Manipulate pole figure data
+%
+%%
+
+pf_modified = pf(pf.r.theta < 70*degree | pf.r.theta > 75*degree)
+
+plot(pf_modified)
+
+%%
+rot = rotation.byAxisAngle(xvector-yvector,25*degree);
+pf_modified = rotate(pf,rot)
+
+plot(pf_modified)
+
+%% PDF - to - ODF Reconstruction
+
+
+rec = calcODF(pf,'RESOLUTION',10*degree,'iter_max',6)
+
+plotPDF(rec,h)
+mtexColorbar
+
+%%
+%
+odf = SantaFe
+
+% define specimen directions
+r = regularS2Grid('antipodal')
+
+%%
+% define crystal directions
+h = [Miller(1,0,0,odf.CS),Miller(1,1,0,odf.CS),Miller(1,1,1,odf.CS)];
+
+%%
+% simulate pole figure data
+pf_SantaFe = calcPoleFigure(SantaFe,h,r);
+
+%%
+% estimate an ODF with ghost correction
+rec = calcODF(pf_SantaFe,'RESOLUTION',10*degree,'background',10)
+
+plot(rec,'sections',6)
+
+%%
+% without ghost correction
+rec_ng = calcODF(pf_SantaFe,'RESOLUTION',10*degree,'background',10,'NoGhostCorrection')
+
+plot(rec_ng,'sections',6)
+
+
+%% Error Analysis
+
+
+calcError(pf_SantaFe,rec)
+calcError(pf_SantaFe,rec_ng)
+
+%%
+% *Difference plot*
+
+plotDiff(pf_SantaFe,rec)
+
+
+%%
+% *ODF error*
+
+calcError(SantaFe,rec)
+calcError(SantaFe,rec_ng)
+
+%% Exercises
+%
+% 3)
+%
+% a) Load the pole figure data of a quartz specimen from: data/dubna!
+
+%%
+% b) Inspect the raw data. Are there noticeable problems?
+
+%%
+% c) Compute an ODF from the pole figure data.
+
+%%
+% d) Plot some pole figures of that ODF and compare them to the measured
+% pole figures.
+
+%%
+% e) Compute the RP errors for each pole figure.
+
+%%
+% f) Plot the difference between the raw data and the calculated pole
+% figures. What do you observe?
+
+%%
+% g) Remove the erroneous values from the pole figure data and repeat the
+% ODF calculation. How do the RP error change?
+
+%%
+% h) Vary the number of pole figures used for the ODF calculation. What is
+% the minimum set of pole figures needed to obtain a meaningful ODF?
+
+
+
+##### SOURCE END #####
+--></body></html>

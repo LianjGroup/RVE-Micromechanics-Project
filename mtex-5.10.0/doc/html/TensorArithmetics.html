@@ -1,0 +1,330 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Tensor Arithmetics</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_TensorArithmetics.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Tensor Arithmetics</h1><!--introduction--><p>MTEX offers powerful functionalities to calculate with tensors and lists of tensors without the need of many nested loops.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Basic algebra</a></li><li><a href="#2">Tensor Products</a></li><li><a href="#11">Determinant</a></li><li><a href="#12">Rotating a tensor</a></li></ul></div><h2 id="1">Basic algebra</h2><p>First of all, all basic operations like <tt>*</tt>, <tt>.*</tt>, <tt>+</tt>, <tt>-</tt>, <tt>.^</tt> known from linear algebra work also on lists of tensors.</p><pre class="codeinput">T1 = tensor.rand(<span class="string">'rank'</span>,2);
+T2 = tensor.rand(<span class="string">'rank'</span>,2);
+
+<span class="comment">% addition and multiplication</span>
+T = T1 + 2 * T2;
+
+<span class="comment">% pointwise product</span>
+T = T1 .* T2;
+</pre><h2 id="2">Tensor Products</h2><p>Tensor product are the canonical way how tensors interact with each other. As an example consider a rank 4 stiffness tensor</p><pre class="codeinput">C = stiffnessTensor.load(fullfile(mtexDataPath,<span class="string">'tensor'</span>,<span class="string">'Olivine1997PC.GPa'</span>))
+</pre><pre class="codeoutput"> 
+C = stiffnessTensor (xyz)
+  unit: GPa              
+  rank: 4 (3 x 3 x 3 x 3)
+ 
+  tensor in Voigt matrix representation:
+ 320.5  68.2  71.6     0     0     0
+  68.2 196.5  76.8     0     0     0
+  71.6  76.8 233.5     0     0     0
+     0     0     0    64     0     0
+     0     0     0     0    77     0
+     0     0     0     0     0  78.7
+</pre><p>Then by Hooks law the stiffness tensor acts on a strain tensor, e.g.,</p><pre class="codeinput">eps = strainTensor(diag([1 0 -1]))
+</pre><pre class="codeoutput"> 
+eps = strainTensor (xyz)
+  type: Lagrange 
+  rank: 2 (3 x 3)
+ 
+  1  0  0
+  0  0  0
+  0  0 -1
+</pre><p>according to the formula</p><p><img src="TensorArithmetics_eq13049402305978623660.png" alt="$$\sigma_{ij} =\sum_{k,l} C_{ijkl} \epsilon_{kl}$$"></p><p>and turns it into the stress tensor <img src="TensorArithmetics_eq09992033592989221171.png" alt="$\sigma$">. In MTEX such tensor products can be computed in its most general form by the command <a href="EinsteinSum.html">EinsteinSum</a>.</p><pre class="codeinput">sigma = EinsteinSum(C,[1 2 -1 -2],eps,[-1 -2])
+</pre><pre class="codeoutput"> 
+sigma = tensor (xyz)
+  rank: 2 (3 x 3)
+ 
+  248.9      0      0
+      0  -8.65      0
+      0      0 -161.9
+</pre><p>here the negative numbers indicate the indices which are summed up. Each pair of equal negative numbers corresponds to one sum. The positive numbers indicate the order of the dimensions of the resulting tensor. Accordingly we can compute the outer product</p><p><img src="TensorArithmetics_eq17987241443523510383.png" alt="$$ (a \otimes b)_{ij} = a_i b_j $$"></p><p>beween two rank one tensors</p><pre class="codeinput">a = tensor([1;2;3],<span class="string">'rank'</span>,1);
+b = tensor([0;2;1],<span class="string">'rank'</span>,1);
+</pre><p>by the command</p><pre class="codeinput">EinsteinSum(a,1,b,2)
+</pre><pre class="codeoutput"> 
+ans = tensor (xyz)
+  rank: 2 (3 x 3)
+ 
+ 0 2 1
+ 0 4 2
+ 0 6 3
+</pre><p>and the inner product</p><p><img src="TensorArithmetics_eq09367502320105233607.png" alt="$$ a \cdot b = \sum_i a_i b_i $$"></p><p>by</p><pre class="codeinput">EinsteinSum(a,-1,b,-1)
+</pre><pre class="codeoutput">ans =
+     7
+</pre><p>As a final example we consider the linear compressibility in a certain direction <tt>v</tt> which can be computed by the formula</p><p><img src="TensorArithmetics_eq09781475205123705258.png" alt="$$ c = \sum_{i,j,k} S_{ijkk} v_i v_j $$"></p><p>where <img src="TensorArithmetics_eq00916128309242773877.png" alt="$C = S^{-1}$"> is the inverse of the comcompliance thensor, i.e. the stiffness tensor</p><pre class="codeinput">v = xvector;
+S = inv(C)
+c = EinsteinSum(C,[-1 -2 -3 -3],v,-1,v,-2)
+</pre><pre class="codeoutput"> 
+S = complianceTensor (xyz)
+  unit            : 1/GPa            
+  rank            : 4 (3 x 3 x 3 x 3)
+  doubleConvention: true             
+ 
+  tensor in Voigt matrix representation: *10^-4
+  34.85  -9.08   -7.7      0      0      0
+  -9.08  60.76  -17.2      0      0      0
+   -7.7  -17.2  50.85      0      0      0
+      0      0      0 156.25      0      0
+      0      0      0      0 129.87      0
+      0      0      0      0      0 127.06
+c =
+  460.2500
+</pre><p>Here we used the <a href="tensor.inv.html">inv</a> to compute the inverse of any rank 2 or rank 4 tensor. There are shortcuts in MTEX for specific tensor products. E.g. the relation between stress and strain can be more compactly written as a <a href="tensor.colon.html">edouble dot product</a></p><pre class="codeinput">C * eps
+C : eps
+</pre><pre class="codeoutput"> 
+ans = stressTensor (xyz)
+  rank: 2 (3 x 3)
+ 
+  248.9      0      0
+      0  -8.65      0
+      0      0 -161.9
+ 
+ans = stressTensor (xyz)
+  rank: 2 (3 x 3)
+ 
+  248.9      0      0
+      0  -8.65      0
+      0      0 -161.9
+</pre><p>The double dot product between two rank two tensors is essentially their inner product and can be equivalently computed from the <tt><a href="tensor.trace.html">trace</a></tt> of their matrix product</p><pre class="codeinput">T1 : T2
+trace(T1 * T2')
+trace(T1' * T2)
+</pre><pre class="codeoutput">ans =
+    1.7258
+ans =
+    1.7258
+ans =
+    1.7258
+</pre><h2 id="11">Determinant</h2><p>For rank two tensors we can compute the determinant of the tensor by the command <a href="tensor.det.html"><tt>det</tt></a></p><pre class="codeinput">det(T1)
+</pre><pre class="codeoutput">ans =
+   -0.0354
+</pre><h2 id="12">Rotating a tensor</h2><p>Rotation a tensor is done by the command <a href="tensor.rotate.html"><tt>rotate</tt></a>. Let's define a rotation</p><pre class="codeinput">r = rotation.byEuler(45*degree,0*degree,0*degree);
+</pre><p>Then the rotated tensor is given by</p><pre class="codeinput">Trot = rotate(T1,r);
+plot(Trot)
+</pre><img vspace="50" hspace="5" src="TensorArithmetics_01.png" alt=""> <p>Here is another example from Nye (Physical Properties of Crystals, p.120-121) for a third-rank tensor</p><pre class="codeinput">P = [ 0 0 0 .17 0   0;
+      0 0 0 0   .17 0;
+      0 0 0 0   0   5.17]*10^-11;
+
+T = tensor(P,<span class="string">'rank'</span>,3,<span class="string">'propertyname'</span>,<span class="string">'piezoelectric modulus'</span>)
+
+r = rotation.byAxisAngle(zvector,-45*degree);
+T = rotate(T,r)
+</pre><pre class="codeoutput"> 
+T = tensor (xyz)
+  propertyname: piezoelectric modulus
+  rank        : 3 (3 x 3 x 3)        
+ 
+  tensor in compact matrix form: *10^-12
+    0    0    0  1.7    0    0
+    0    0    0    0  1.7    0
+    0    0    0    0    0 51.7
+ 
+T = tensor (xyz)
+  propertyname: piezoelectric modulus
+  rank        : 3 (3 x 3 x 3)        
+ 
+  tensor in compact matrix form: *10^-12
+     0     0     0     0   1.7     0
+     0     0     0  -1.7     0     0
+  51.7 -51.7     0     0     0     0
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Tensor Arithmetics
+%
+% MTEX offers powerful functionalities to calculate with tensors and lists
+% of tensors without the need of many nested loops. 
+% 
+%% Basic algebra
+%
+% First of all, all basic operations like |*|, |.*|, |+|, |-|, |.^| known
+% from linear algebra work also on lists of tensors.
+
+T1 = tensor.rand('rank',2);
+T2 = tensor.rand('rank',2);
+
+% addition and multiplication
+T = T1 + 2 * T2;
+
+% pointwise product
+T = T1 .* T2;
+
+%% Tensor Products
+% 
+% Tensor product are the canonical way how tensors interact with each
+% other. As an example consider a rank 4 stiffness tensor
+
+C = stiffnessTensor.load(fullfile(mtexDataPath,'tensor','Olivine1997PC.GPa'))
+
+%%
+% Then by Hooks law the stiffness tensor acts on a strain tensor, e.g.,
+
+eps = strainTensor(diag([1 0 -1]))
+
+%%
+% according to the formula
+%
+% $$\sigma_{ij} =\sum_{k,l} C_{ijkl} \epsilon_{kl}$$
+%
+% and turns it into the stress tensor $\sigma$. In MTEX such tensor
+% products can be computed in its most general form by the command
+% <EinsteinSum.html EinsteinSum>.
+
+sigma = EinsteinSum(C,[1 2 -1 -2],eps,[-1 -2])
+
+%%
+% here the negative numbers indicate the indices which are summed up.
+% Each pair of equal negative numbers corresponds to one sum. The
+% positive numbers indicate the order of the dimensions of the resulting
+% tensor. Accordingly we can compute the outer product 
+%
+% $$ (a \otimes b)_{ij} = a_i b_j $$
+%
+% beween two rank one tensors
+
+a = tensor([1;2;3],'rank',1);
+b = tensor([0;2;1],'rank',1);
+
+%%
+% by the command
+
+EinsteinSum(a,1,b,2)
+
+%%
+% and the inner product 
+%
+% $$ a \cdot b = \sum_i a_i b_i $$
+%
+% by
+
+EinsteinSum(a,-1,b,-1)
+
+%%
+% As a final example we consider the linear compressibility in a certain
+% direction |v| which can be computed by the formula
+%
+% $$ c = \sum_{i,j,k} S_{ijkk} v_i v_j $$
+%
+% where $C = S^{-1}$ is the inverse of the comcompliance thensor, i.e. the
+% stiffness tensor
+
+v = xvector;
+S = inv(C)
+c = EinsteinSum(C,[-1 -2 -3 -3],v,-1,v,-2)
+
+%%
+% Here we used the <tensor.inv.html inv> to compute the inverse of any rank
+% 2 or rank 4 tensor. There are shortcuts in MTEX for specific tensor
+% products. E.g. the relation between stress and strain can be more
+% compactly written as a <tensor.colon.html edouble dot product>
+
+C * eps
+C : eps
+
+%% 
+% The double dot product between two rank two tensors is essentially their
+% inner product and can be equivalently computed from the
+% |<tensor.trace.html trace>| of their matrix product
+
+T1 : T2
+trace(T1 * T2')
+trace(T1' * T2)
+
+%% Determinant
+% For rank two tensors we can compute the determinant of the tensor by the
+% command <tensor.det.html |det|>
+
+det(T1)
+
+%% Rotating a tensor
+% Rotation a tensor is done by the command <tensor.rotate.html |rotate|>.
+% Let's define a rotation
+
+r = rotation.byEuler(45*degree,0*degree,0*degree);
+
+%%
+% Then the rotated tensor is given by
+
+Trot = rotate(T1,r);
+plot(Trot)
+
+%%
+% Here is another example from Nye (Physical Properties of Crystals,
+% p.120-121) for a third-rank tensor
+
+P = [ 0 0 0 .17 0   0;
+      0 0 0 0   .17 0;
+      0 0 0 0   0   5.17]*10^-11;
+
+T = tensor(P,'rank',3,'propertyname','piezoelectric modulus')
+
+r = rotation.byAxisAngle(zvector,-45*degree);
+T = rotate(T,r)
+
+##### SOURCE END #####
+--></body></html>

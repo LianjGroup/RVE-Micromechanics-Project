@@ -1,0 +1,197 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ODF Export</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_ODFExport.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>ODF Export</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Define an Model ODF</a></li><li><a href="#3">Save as .mat file</a></li><li><a href="#5">Export as an generic ASCII file</a></li><li><a href="#7">Export an ODF to an MTEX ASCII File</a></li><li><a href="#8">Export to VPSC format</a></li></ul></div><p>MTEX support the following formats for storing and importing of ODFs:</p><div><ul><li>.mat file - lossless, specific for MTEX, binary format</li><li>MTEX file - lossless, specific for MTEX, ASCII format</li><li>VPSC file - not lossless, ASCII format</li><li>.txt file - not lossless, ASCII format</li></ul></div><h2 id="2">Define an Model ODF</h2><p>We will demonstrate the the import and export of ODFs at the following sample ODF which is defined as the superposition of several model ODFs.</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'cubic'</span>);
+mod1 = orientation.byAxisAngle(xvector,45*degree,cs);
+mod2 = orientation.byAxisAngle(yvector,65*degree,cs);
+model_odf = 0.5*uniformODF(cs) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(1,0,0,cs),xvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(0,1,0,cs),yvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*fibreODF(Miller(0,0,1,cs),zvector,<span class="string">'halfwidth'</span>,10*degree) + <span class="keyword">...</span>
+  0.05*unimodalODF(mod1,<span class="string">'halfwidth'</span>,15*degree) + <span class="keyword">...</span>
+  0.3*unimodalODF(mod2,<span class="string">'halfwidth'</span>,25*degree);
+plot(model_odf,<span class="string">'sections'</span>,6,<span class="string">'silent'</span>)
+</pre><img vspace="50" hspace="5" src="ODFExport_01.png" alt=""> <h2 id="3">Save as .mat file</h2><p>The most simplest way to store an ODF is to store the corresponding variable odf as any other MATLAB variable.</p><pre class="codeinput"><span class="comment">% the filename</span>
+fname = fullfile(mtexDataPath, <span class="string">'ODF'</span>, <span class="string">'odf.mat'</span>);
+save(fname,<span class="string">'model_odf'</span>)
+</pre><p>Importing a .mat file is done simply by</p><pre class="codeinput">load(fname)
+</pre><h2 id="5">Export as an generic ASCII file</h2><p>By default and ODF is exported in an ASCII file which consists of a large table with four columns, where the first three column describe the Euler angles of a regular 5&deg; grid in the orientation space and the fourth column contains the value of the ODF at this specific position.</p><pre class="codeinput"><span class="comment">% the filename</span>
+fname = fullfile(mtexDataPath, <span class="string">'ODF'</span>, <span class="string">'odf.txt'</span>);
+
+<span class="comment">% export the ODF</span>
+export(model_odf,fname,<span class="string">'Bunge'</span>)
+</pre><p>Other Euler angle conventions or other resolutions can by specified by options to <a href="SO3Fun.export.html">export</a>. Even more control you have, if you specify the grid in the orientation space directly.</p><pre class="codeinput"><span class="comment">% define a equispaced grid in orientation space with resolution of 5 degree</span>
+S3G = equispacedSO3Grid(cs,<span class="string">'resolution'</span>,5*degree);
+
+<span class="comment">% export the ODF by values at these locations</span>
+export(model_odf,fname,S3G,<span class="string">'Bunge'</span>,<span class="string">'generic'</span>)
+</pre><h2 id="7">Export an ODF to an MTEX ASCII File</h2><p>Using the options <b>MTEX</b> the ODF is exported to an ASCII file which contains descriptions of all components of the ODF in a human readable fassion. This format can be imported by MTEX without loss.</p><pre class="codeinput"><span class="comment">% the filename</span>
+fname = [mtexDataPath <span class="string">'/ODF/odf.mtex'</span>];
+
+<span class="comment">% export the ODF</span>
+export(model_odf,fname,<span class="string">'Bunge'</span>,<span class="string">'interface'</span>,<span class="string">'mtex'</span>)
+</pre><h2 id="8">Export to VPSC format</h2><p>TODO!!!</p><pre class="codeinput">fname = [mtexDataPath <span class="string">'/ODF/odfvpsc.txt'</span>];
+
+export(model_odf,fname,<span class="string">'VPSC'</span>)
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% ODF Export
+%
+%%
+% MTEX support the following formats for storing and importing of ODFs:
+%
+% * .mat file - lossless, specific for MTEX, binary format
+% * MTEX file - lossless, specific for MTEX, ASCII format
+% * VPSC file - not lossless, ASCII format
+% * .txt file - not lossless, ASCII format
+%
+%
+%% Define an Model ODF
+%
+% We will demonstrate the the import and export of ODFs at the following
+% sample ODF which is defined as the superposition of several model ODFs.
+
+cs = crystalSymmetry('cubic');
+mod1 = orientation.byAxisAngle(xvector,45*degree,cs);
+mod2 = orientation.byAxisAngle(yvector,65*degree,cs);
+model_odf = 0.5*uniformODF(cs) + ...
+  0.05*fibreODF(Miller(1,0,0,cs),xvector,'halfwidth',10*degree) + ...
+  0.05*fibreODF(Miller(0,1,0,cs),yvector,'halfwidth',10*degree) + ...
+  0.05*fibreODF(Miller(0,0,1,cs),zvector,'halfwidth',10*degree) + ...
+  0.05*unimodalODF(mod1,'halfwidth',15*degree) + ...
+  0.3*unimodalODF(mod2,'halfwidth',25*degree);
+plot(model_odf,'sections',6,'silent')
+
+%% Save as .mat file
+%
+% The most simplest way to store an ODF is to store the corresponding
+% variable odf as any other MATLAB variable. 
+
+% the filename
+fname = fullfile(mtexDataPath, 'ODF', 'odf.mat');
+save(fname,'model_odf')
+
+%%
+%
+% Importing a .mat file is done simply by
+
+load(fname)
+
+
+%% Export as an generic ASCII file
+%
+% By default and ODF is exported in an ASCII file which consists of a large
+% table with four columns, where the first three column describe the Euler
+% angles of a regular 5° grid in the orientation space and the fourth
+% column contains the value of the ODF at this specific position.
+
+% the filename
+fname = fullfile(mtexDataPath, 'ODF', 'odf.txt');
+
+% export the ODF
+export(model_odf,fname,'Bunge')
+
+%%
+% Other Euler angle conventions or other resolutions can by specified by
+% options to <SO3Fun.export.html export>. Even more control you have,
+% if you specify the grid in the orientation space directly.
+
+% define a equispaced grid in orientation space with resolution of 5 degree
+S3G = equispacedSO3Grid(cs,'resolution',5*degree);
+
+% export the ODF by values at these locations
+export(model_odf,fname,S3G,'Bunge','generic')
+
+
+
+%% Export an ODF to an MTEX ASCII File
+% Using the options *MTEX* the ODF is exported to an ASCII file which contains
+% descriptions of all components of the ODF in a human readable fassion.
+% This format can be imported by MTEX without loss.
+
+% the filename
+fname = [mtexDataPath '/ODF/odf.mtex'];
+
+% export the ODF
+export(model_odf,fname,'Bunge','interface','mtex')
+
+%%  Export to VPSC format
+%
+% TODO!!!
+
+fname = [mtexDataPath '/ODF/odfvpsc.txt'];
+
+export(model_odf,fname,'VPSC')
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

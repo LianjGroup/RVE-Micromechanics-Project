@@ -1,0 +1,258 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Grain Boundary Smoothing</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_GrainSmoothing.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Grain Boundary Smoothing</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#5">Effect of smoothing iterations</a></li></ul></div><p>EBSD data is usually acquired on a regular grid. Hence, even over a finite number of grid points, all possible grain boundary directions can not be uniquely represented.  One way of overcoming this problem - and also allowing to compute grid-independent curvatures and grain boundary directions - is the interpolation of grain boundary coordinates using <a href="grain2d.smooth.html"><tt>grains.smooth</tt></a>.</p><p>Proper smoothing has an influence on measures such as total grain boundary length, grain boundary curvature, triple point angles or grain boundary directions among others.</p><p>While we used <a href="grain2d.smooth.html"><tt>grains.smooth</tt></a> before, here we will illustrate the different options.</p><pre class="codeinput">mtexdata <span class="string">csl</span>
+[grains, ebsd.grainId] = ebsd.calcGrains;
+ebsd(grains(grains.grainSize&lt;2))=[];
+grains = ebsd.calcGrains;
+
+<span class="comment">% the data was accquired on a regular grid;</span>
+plot(ebsd,ebsd.orientations,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+hold <span class="string">on</span>
+plot(grains.boundary(<span class="string">'indexed'</span>),<span class="string">'linewidth'</span>,5,<span class="string">'linecolor'</span>,<span class="string">'YellowGreen'</span>)
+hold <span class="string">off</span>
+axis([313 353 140 156])
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase   Orientations  Mineral         Color  Symmetry  Crystal reference frame
+    -1  154107 (100%)     iron  LightSkyBlue      m-3m                         
+ 
+ Properties: ci, error, iq, x, y
+ Scan unit : um
+ 
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_01.png" alt=""> <p>With the default parameters we have the following result</p><pre class="codeinput"><span class="comment">% smooth the grains with default paramters</span>
+grains_smooth = smooth(grains);
+
+hold <span class="string">on</span>
+plot(grains_smooth.boundary(<span class="string">'indexed'</span>),<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_02.png" alt=""> <p>The grain boundary boundaries look noew a little bit more smooth and the total grain boundary length is reasonable reduced.</p><pre class="codeinput">sum(grains.boundary(<span class="string">'indexed'</span>).segLength)
+sum(grains_smooth.boundary(<span class="string">'indexed'</span>).segLength)
+</pre><pre class="codeoutput">ans =
+   1.9639e+04
+ans =
+   1.7416e+04
+</pre><p>However, if we look at the frequnecy distribution of grain boundary segments, we find that some angle are over-represented which is due to the fact that without any additional input argument, <a href="grain2d.smooth.html"><tt>grains.smooth</tt></a> performs just a single iteration</p><pre class="codeinput">histogram(grains_smooth.boundary(<span class="string">'indexed'</span>).direction, <span class="keyword">...</span>
+  <span class="string">'weights'</span>,grains_smooth.boundary(<span class="string">'indexed'</span>).segLength,180)
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_03.png" alt=""> <h2 id="5">Effect of smoothing iterations</h2><p>If we specify a larger number of iterations, we can see that the scatting around 0 and 90 degree decreases.</p><pre class="codeinput">iter = [1 5 10 25];
+color = copper(length(iter)+1);
+plot(grains.boundary,<span class="string">'linewidth'</span>,1,<span class="string">'linecolor'</span>,<span class="string">'Fuchsia'</span>)
+d={};
+<span class="keyword">for</span> i = 1:length(iter)
+  grains_smooth = smooth(grains,iter(i));
+  hold <span class="string">on</span>
+  plot(grains_smooth.boundary(<span class="string">'i'</span>,<span class="string">'i'</span>),<span class="string">'linewidth'</span>,2,<span class="string">'linecolor'</span>,color(i,:))
+  d{i} = grains_smooth.boundary(<span class="string">'i'</span>,<span class="string">'i'</span>).direction;
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+axis([313 353 140 156])
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_04.png" alt=""> <p>We can compare the histogram of the grain boundary directions of the entire map.</p><pre class="codeinput">figure
+<span class="keyword">for</span> i=1:length(d)
+  subplot(2,2,i)
+  histogram(d{i}, <span class="string">'weights'</span>,norm(d{i}),180)
+<span class="keyword">end</span>
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_05.png" alt=""> <p>Note that we are still stuck with many segments at 0 and 90 degree positions which is due to the boundaries in question being too short for the sample size to deviate from the grid.</p><p><a href="grain2d.smooth.html"><tt>grains.smooth</tt></a> usually keeps the triple junction positions locked. However, sometimes it is necessary (todo) to allow triple junctions to move.</p><pre class="codeinput">plot(grains.boundary,<span class="string">'linewidth'</span>,1,<span class="string">'linecolor'</span>,<span class="string">'Fuchsia'</span>)
+<span class="keyword">for</span> i = 1:length(iter)
+  grains_smooth = smooth(grains,iter(i),<span class="string">'moveTriplePoints'</span>);
+  hold <span class="string">on</span>
+  plot(grains_smooth.boundary(<span class="string">'i'</span>,<span class="string">'i'</span>),<span class="string">'linewidth'</span>,2,<span class="string">'linecolor'</span>,color(i,:))
+  d{i} = grains_smooth.boundary(<span class="string">'i'</span>,<span class="string">'i'</span>).direction;
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+axis([313 353 140 156])
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_06.png" alt=""> <p>Comparing the grain boundary direction histograms shows that we suppressed the gridding effect even a little more.</p><pre class="codeinput">figure
+<span class="keyword">for</span> i=1:length(d)
+   subplot(2,2,i)
+   histogram(d{i}, <span class="string">'weights'</span>,norm(d{i}),180)
+<span class="keyword">end</span>
+</pre><img vspace="50" hspace="5" src="GrainSmoothing_07.png" alt=""> <p>Be careful since this allows small grains to shrink with increasing number of smoothing iterations</p><p>Todo: different smoothing algorithms and 2nd order</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Grain Boundary Smoothing
+%
+%%
+% EBSD data is usually acquired on a regular grid. Hence, even over a finite
+% number of grid points, all possible grain boundary directions can not be 
+% uniquely represented.  One way of overcoming this problem - and also
+% allowing to compute grid-independent curvatures and grain boundary
+% directions - is the interpolation of grain boundary coordinates using 
+% <grain2d.smooth.html |grains.smooth|>.
+%
+% Proper smoothing has an influence on measures such as total grain
+% boundary length, grain boundary curvature, triple point angles or grain
+% boundary directions among others.
+% 
+% While we used <grain2d.smooth.html |grains.smooth|> before, here we will
+% illustrate the different options.
+ 
+mtexdata csl
+[grains, ebsd.grainId] = ebsd.calcGrains;
+ebsd(grains(grains.grainSize<2))=[];
+grains = ebsd.calcGrains;
+ 
+% the data was accquired on a regular grid;
+plot(ebsd,ebsd.orientations,'micronbar','off')
+hold on
+plot(grains.boundary('indexed'),'linewidth',5,'linecolor','YellowGreen')
+hold off
+axis([313 353 140 156])
+
+
+%%
+% With the default parameters we have the following result
+
+% smooth the grains with default paramters
+grains_smooth = smooth(grains);
+ 
+hold on
+plot(grains_smooth.boundary('indexed'),'linewidth',2)
+hold off
+
+ 
+%%
+% The grain boundary boundaries look noew a little bit more smooth and the
+% total grain boundary length is reasonable reduced.
+ 
+sum(grains.boundary('indexed').segLength)
+sum(grains_smooth.boundary('indexed').segLength)
+ 
+%%
+% However, if we look at the frequnecy distribution of grain boundary
+% segments, we find that some angle are over-represented which is due to
+% the fact that without any additional input argument, <grain2d.smooth.html
+% |grains.smooth|> performs just a single iteration
+
+histogram(grains_smooth.boundary('indexed').direction, ...
+  'weights',grains_smooth.boundary('indexed').segLength,180)
+
+%% Effect of smoothing iterations
+% If we specify a larger number of iterations, we can see that the scatting
+% around 0 and 90 degree decreases.
+
+iter = [1 5 10 25];
+color = copper(length(iter)+1);
+plot(grains.boundary,'linewidth',1,'linecolor','Fuchsia')
+d={};
+for i = 1:length(iter)
+  grains_smooth = smooth(grains,iter(i));
+  hold on
+  plot(grains_smooth.boundary('i','i'),'linewidth',2,'linecolor',color(i,:))
+  d{i} = grains_smooth.boundary('i','i').direction;
+end
+hold off
+axis([313 353 140 156])
+
+%%
+% We can compare the histogram of the grain boundary directions of the
+% entire map.
+
+figure
+for i=1:length(d)
+  subplot(2,2,i)
+  histogram(d{i}, 'weights',norm(d{i}),180)
+end
+
+%%
+% Note that we are still stuck with many segments at 0 and 90 degree
+% positions which is due to the boundaries in question being too short for
+% the sample size to deviate from the grid.
+%
+% <grain2d.smooth.html |grains.smooth|> usually keeps the triple junction
+% positions locked. However, sometimes it is necessary (todo) to allow
+% triple junctions to move.
+ 
+plot(grains.boundary,'linewidth',1,'linecolor','Fuchsia')
+for i = 1:length(iter)
+  grains_smooth = smooth(grains,iter(i),'moveTriplePoints');
+  hold on
+  plot(grains_smooth.boundary('i','i'),'linewidth',2,'linecolor',color(i,:))
+  d{i} = grains_smooth.boundary('i','i').direction;
+end
+hold off
+axis([313 353 140 156])
+
+%%
+% Comparing the grain boundary direction histograms shows that we
+% suppressed the gridding effect even a little more.
+
+figure
+for i=1:length(d)
+   subplot(2,2,i)
+   histogram(d{i}, 'weights',norm(d{i}),180)
+end
+
+%%
+% Be careful since this allows small grains to shrink with increasing
+% number of smoothing iterations
+%
+% Todo: different smoothing algorithms and 2nd order 
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,488 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Ellipse Based Shape Parameters</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EllipseBasedParameters.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Ellipse Based Shape Parameters</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Fit Ellipses</a></li><li><a href="#4">Long and Short Axes</a></li><li><a href="#5">Shape perfered orientation</a></li><li><a href="#8"><b>Shortest Caliper Distribution</b></a></li><li><a href="#11">Characteristic Shape</a></li></ul></div><p>In this section we discuss geometric properties of grains that are related to ellipses fitted to the grains. Additionally to the orientation <tt>omega</tt>, and the lengths <tt>a</tt>, <tt>b</tt> of the long axis and short axes that are computed by the command <a href="grain2d.fitEllipse.html"><tt>[omega,a,b] = grains.fitEllipse</tt></a>  the following properties based on the fitted ellipses are avaiable.</p><p>
+   <table class="usertable">
+      <tr>
+         <td>
+               <p>
+                  <a href="grain2d.longAxis.html">
+                     <tt>longAxis</tt>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>long axis as <a href="vector3d.vector3d.html">vector3d</a>
+               </p>
+         </td>
+         <td>
+               <p>
+                  <a href="grain2d.shortAxis.html">
+                     <tt>shortAxis</tt>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>short axis as <a href="vector3d.vector3d.html">vector3d</a>
+               </p>
+         </td>
+      </tr>
+      <tr>
+         <td>
+               <p>
+                  <a href="grain2d.centroid.html">
+                     <tt>centroid</tt>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>midpoint</p>
+         </td>
+         <td>
+               <p>
+                  <a href="grain2d.aspectRatio.html">
+                     <tt>aspectRatio</tt>
+                  </a>
+               </p>
+         </td>
+         <td>
+               <p>long axis / short axis</p>
+         </td>
+      </tr>
+   </table>
+</p><p>In order to demonstrate these properties we start by reconstructing the grain structure from a sample EBSD data set.</p><pre class="codeinput"><span class="comment">% load sample EBSD data set</span>
+mtexdata <span class="string">forsterite</span> <span class="string">silent</span>
+
+<span class="comment">% reconstruct grains and smooth them</span>
+[grains, ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,5*degree);
+ebsd(grains(grains.grainSize&lt;10)) = [];
+[grains, ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'angle'</span>,5*degree);
+grains(grains.isBoundary) = [];
+
+grains=smooth(grains(<span class="string">'indexed'</span>),10,<span class="string">'moveTriplePoints'</span>);
+
+<span class="comment">% plot the grains</span>
+plot(grains,<span class="string">'micronbar'</span>,<span class="string">'off'</span>,<span class="string">'lineWidth'</span>,2)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_01.png" alt=""> <h2 id="2">Fit Ellipses</h2><p>The basic command for fitting ellipses is <a href="grain2d.fitEllipse"><tt>fitEllipse</tt></a></p><pre class="codeinput">[omega,a,b] = grains.fitEllipse;
+
+plotEllipse(grains.centroid,a,b,omega,<span class="string">'lineColor'</span>,<span class="string">'w'</span>,<span class="string">'linewidth'</span>,2)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_02.png" alt=""> <p>The returned variable <tt>omega</tt> is the angle describing the rotation of the ellipses and <tt>a</tt> and <tt>b</tt> are the length of the longest and shortest half axis. The midpoints of the ellipses can be computed by the command <a href="grain2d.centroid.html"><tt>grains.centroid</tt></a>.  Note, that the ellipses are scaled such that the area of the ellipse coincides with the actual grain area. Alternatively, one can also scale the ellipse to fit the boundary length by using the option <tt>boundary</tt>.</p><h2 id="4">Long and Short Axes</h2><p>The direction of the long and the short axis of the fitted ellipse can be obtained by the comands <a href="grain2d.longAxis.html"><tt>grains.longAxis</tt></a> and <a href="grain2d.shortAxis.html"><tt>grains.shortAxis</tt></a>. These directions are only well defined if the fitted ellipse is not to close to a perfect circle. A measure for how distinct the ellipse is from a perfect circle is the <a href="grain2d.aspectRatio.html">aspect ratio</a> which is defined as the quotient <img src="EllipseBasedParameters_eq11164950641107392086.png" alt="$a/b$"> between the longest and the shortest axis. For a perfect circle the apect ratio is <img src="EllipseBasedParameters_eq02136768035765927026.png" alt="$1$"> and increases to infinity when the ellipse becomes more and more elongated.</p><p>Lets colorize the grains by their apect ratio and plot on top the long axis directions:</p><pre class="codeinput"><span class="comment">% visualize the aspect ratio</span>
+plot(grains,grains.aspectRatio,<span class="string">'linewidth'</span>,2,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+setColorRange([0,4])
+mtexColorbar(<span class="string">'title'</span>,<span class="string">'aspect ratio'</span>)
+
+<span class="comment">% and on top the long axes</span>
+hold <span class="string">on</span>
+quiver(grains,grains.longAxis,<span class="string">'Color'</span>,<span class="string">'white'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_03.png" alt=""> <h2 id="5">Shape perfered orientation</h2><p>If we look at grains, we might wonder if there is a characteristic difference in the grain shape fabric between e.g. Forsterite and Enstatite. In contrast to crystal prefered orientations which which describe on the alignment of the atome lattices the shape prefered orientation (SPO) describes the algnment of the grains by shape in the bulk fabric.</p><p><b>Long Axis Distribution</b></p><p>The most direct way to analyse shape prefered orientations are rose diagrams of the distribution of the grain long axes. For those diagrams it is useful to weight the long axis by the grain area such that larger grains have a bigger impact on the distribution and by the aspect ratio as for grains with a small aspect ratio the long axis is not so well defined.</p><pre class="codeinput">numBin = 50;
+
+subplot(1,2,1)
+weights = grains(<span class="string">'forsterite'</span>).area .* (grains(<span class="string">'forsterite'</span>).aspectRatio-1);
+histogram(grains(<span class="string">'forsterite'</span>).longAxis,numBin, <span class="string">'weights'</span>, weights)
+title(<span class="string">'Forsterite'</span>)
+
+subplot(1,2,2)
+weights = grains(<span class="string">'enstatite'</span>).area .* (grains(<span class="string">'enstatite'</span>).aspectRatio - 1);
+histogram(grains(<span class="string">'enstatite'</span>).longAxis,numBin,<span class="string">'weights'</span>,weights)
+title(<span class="string">'Enstatite'</span>)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_04.png" alt=""> <p>Instead of the histogram we may also fit a circular density distribution to the to the long axes using the command <a href="calcDensity.thml"><tt>calcDensity</tt></a>.</p><pre class="codeinput">tdfForsterite = calcDensity(grains(<span class="string">'forsterite'</span>).longAxis,<span class="keyword">...</span>
+  <span class="string">'weights'</span>,norm(grains(<span class="string">'forsterite'</span>).longAxis),<span class="string">'halfwidth'</span>);
+
+tdfEnstatite = calcDensity(grains(<span class="string">'enstatite'</span>).longAxis,<span class="keyword">...</span>
+  <span class="string">'weights'</span>,norm(grains(<span class="string">'enstatite'</span>).longAxis));
+
+plotSection(tdfForsterite, vector3d.Z, <span class="string">'linewidth'</span>, 3)
+
+hold <span class="string">on</span>
+plotSection(tdfEnstatite, vector3d.Z, <span class="string">'linewidth'</span>, 3)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_05.png" alt=""> <pre class="codeinput">close <span class="string">all</span>
+[freq,bc] = calcTDF(grains(<span class="string">'fo'</span>),<span class="string">'binwidth'</span>,3*degree);
+plotTDF(bc,freq/sum(freq));
+
+[freq,bc] = calcTDF(grains(<span class="string">'en'</span>),<span class="string">'binwidth'</span>,3*degree);
+hold <span class="string">on</span>
+plotTDF(bc,freq/sum(freq));
+hold <span class="string">off</span>
+legend(<span class="string">'Forsterite'</span>,<span class="string">'Enstatite'</span>,<span class="string">'Location'</span>,<span class="string">'eastoutside'</span>)
+mtexTitle(<span class="string">'long axes'</span>)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_06.png" alt=""> <h2 id="8"><b>Shortest Caliper Distribution</b></h2><p>Alternatively, we may wonder if the common long axis of grains is does suitably represented by the direction normal to the shortest caliper of the grains. This can particularly be the case for aligned rectangular particles. The command <a href="calcTDF.html"><tt>calcTDF</tt></a> also takes a list of angles and a list of weights or lengths as input</p><pre class="codeinput">cPerpF = caliper(grains(<span class="string">'fo'</span>),<span class="string">'shortestPerp'</span>);
+cPerpE = caliper(grains(<span class="string">'en'</span>),<span class="string">'shortestPerp'</span>);
+
+[freqF,bcF] = calcTDF(cPerpF.rho, <span class="string">'weights'</span>,cPerpF.norm, <span class="string">'binwidth'</span>,3*degree);
+[freqE,bcE] = calcTDF(cPerpE.rho, <span class="string">'weights'</span>,cPerpE.norm, <span class="string">'binwidth'</span>,3*degree);
+
+plotTDF(bcF,freqF/sum(freqF));
+hold <span class="string">on</span>
+plotTDF(bcE,freqE/sum(freqE));
+hold <span class="string">off</span>
+legend(<span class="string">'Forsterite'</span>,<span class="string">'Enstatite'</span>,<span class="string">'Location'</span>,<span class="string">'eastoutside'</span>)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_07.png" alt=""> <p>We can also smooth the functions with a wrapped Gaussian</p><pre class="codeinput">pdfF = circdensity(bcF, freqF, 5*degree,<span class="string">'sum'</span>);
+pdfE = circdensity(bcE, freqE, 5*degree,<span class="string">'sum'</span>);
+
+plotTDF(bcF,pdfF);
+hold <span class="string">on</span>
+plotTDF(bcE,pdfE);
+hold <span class="string">off</span>
+mtexTitle(<span class="string">'n.t.s. density estimate'</span>)
+legend(<span class="string">'Forsterite'</span>,<span class="string">'Enstatite'</span>,<span class="string">'Location'</span>,<span class="string">'eastoutside'</span>)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_08.png" alt=""> <p>Because best fit ellipses are always symmetric and the projection function of an entire grain always only consider the convex hull, grain shape fabrics can also be characterized by the the length weighted rose diagram of the directions of grain boundary segments.</p><pre class="codeinput">[freqF,bcF] = calcTDF(grains(<span class="string">'fo'</span>).boundary);
+plotTDF(bcF,freqF/sum(freqF));
+pdfF = circdensity(bcF, freqF, 5*degree,<span class="string">'sum'</span>);
+hold <span class="string">on</span>
+plotTDF(bcF,pdfF);
+hold <span class="string">off</span>
+mtexTitle(<span class="string">'Forsterite grain boundaries'</span>)
+nextAxis
+[freqE,bcE] = calcTDF(grains(<span class="string">'en'</span>).boundary);
+plotTDF(bcE,freqE/sum(freqE));
+pdfE = circdensity(bcE, freqE, 5*degree,<span class="string">'sum'</span>);
+hold <span class="string">on</span>
+plotTDF(bcE,pdfE);
+hold <span class="string">off</span>
+mtexTitle(<span class="string">'Enstatite grain boundaries'</span>)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_09.png" alt=""> <h2 id="11">Characteristic Shape</h2><p>Note that this distribution is very prone to inherit artifacts based on the fact that most EBSD maps are sampled on a regular grid. We tried to overcome this problem by heavily smoothing the grain boundary. The little peaks at 0 and 90 degree are very likely still related to this sampling artifact.</p><p>If we just add up all the individual elements of the rose diagram in order of increasing angles, we derive the characteristic shape. It can be regarded as to represent the average grain shape.</p><pre class="codeinput">[csAngleF, csRadiusF] = characteristicShape(bcF,freqF);
+[csAngleE, csRadiusE] = characteristicShape(bcE,freqE);
+
+close <span class="string">all</span>
+plotTDF(csAngleF,csRadiusF,<span class="string">'nolabels'</span>);
+hold <span class="string">on</span>
+plotTDF(csAngleE,csRadiusE,<span class="string">'nolabels'</span>);
+hold <span class="string">off</span>
+legend(<span class="string">'Forsterite'</span>,<span class="string">'Enstatite'</span>,<span class="string">'Location'</span>,<span class="string">'eastoutside'</span>)
+</pre><img vspace="50" hspace="5" src="EllipseBasedParameters_10.png" alt=""> <p>We may wonder if these results are significantly different or not TODO: get deviation from an ellipse etc</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Ellipse Based Shape Parameters
+%
+%%
+% In this section we discuss geometric properties of grains that are
+% related to ellipses fitted to the grains. Additionally to the orientation
+% |omega|, and the lengths |a|, |b| of the long axis and short axes that
+% are computed by the command <grain2d.fitEllipse.html |[omega,a,b] =
+% grains.fitEllipse|>  the following properties based on the fitted
+% ellipses are avaiable.
+%
+% 
+% <html>
+%    <table class="usertable">
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="grain2d.longAxis.html">
+%                      <tt>longAxis</tt>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>long axis as <a href="vector3d.vector3d.html">vector3d</a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="grain2d.shortAxis.html">
+%                      <tt>shortAxis</tt>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>short axis as <a href="vector3d.vector3d.html">vector3d</a>
+%                </p>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td>
+%                <p>
+%                   <a href="grain2d.centroid.html">
+%                      <tt>centroid</tt>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>midpoint</p>
+%          </td>
+%          <td>
+%                <p>
+%                   <a href="grain2d.aspectRatio.html">
+%                      <tt>aspectRatio</tt>
+%                   </a>
+%                </p>
+%          </td>
+%          <td>
+%                <p>long axis / short axis</p>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%
+% In order to demonstrate these properties we start by reconstructing the
+% grain structure from a sample EBSD data set.
+
+% load sample EBSD data set
+mtexdata forsterite silent
+
+% reconstruct grains and smooth them 
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'angle',5*degree);
+ebsd(grains(grains.grainSize<10)) = [];
+[grains, ebsd.grainId] = calcGrains(ebsd('indexed'),'angle',5*degree);
+grains(grains.isBoundary) = [];
+
+grains=smooth(grains('indexed'),10,'moveTriplePoints');
+
+% plot the grains
+plot(grains,'micronbar','off','lineWidth',2)
+
+%% Fit Ellipses
+%
+% The basic command for fitting ellipses is <grain2d.fitEllipse
+% |fitEllipse|>
+
+[omega,a,b] = grains.fitEllipse;
+
+plotEllipse(grains.centroid,a,b,omega,'lineColor','w','linewidth',2)
+
+%%
+% The returned variable |omega| is the angle describing the rotation of the
+% ellipses and |a| and |b| are the length of the longest and shortest half
+% axis. The midpoints of the ellipses can be computed by the command
+% <grain2d.centroid.html |grains.centroid|>.  Note, that the ellipses are
+% scaled such that the area of the ellipse coincides with the actual grain
+% area. Alternatively, one can also scale the ellipse to fit the boundary
+% length by using the option |boundary|.
+%
+%% Long and Short Axes
+%
+% The direction of the long and the short axis of the fitted ellipse can be
+% obtained by the comands <grain2d.longAxis.html |grains.longAxis|> and
+% <grain2d.shortAxis.html |grains.shortAxis|>. These directions are only
+% well defined if the fitted ellipse is not to close to a perfect circle. A
+% measure for how distinct the ellipse is from a perfect circle is the
+% <grain2d.aspectRatio.html aspect ratio> which is defined as the quotient
+% $a/b$ between the longest and the shortest axis. For a perfect circle
+% the apect ratio is $1$ and increases to infinity when the ellipse becomes
+% more and more elongated.
+%
+% Lets colorize the grains by their apect ratio and plot on top the long
+% axis directions:
+
+% visualize the aspect ratio
+plot(grains,grains.aspectRatio,'linewidth',2,'micronbar','off')
+setColorRange([0,4])
+mtexColorbar('title','aspect ratio')
+
+% and on top the long axes
+hold on
+quiver(grains,grains.longAxis,'Color','white')
+hold off
+
+%% Shape perfered orientation
+%
+% If we look at grains, we might wonder if there is a characteristic
+% difference in the grain shape fabric between e.g. Forsterite and
+% Enstatite. In contrast to crystal prefered orientations which which
+% describe on the alignment of the atome lattices the shape prefered
+% orientation (SPO) describes the algnment of the grains by shape in the
+% bulk fabric. 
+%
+% *Long Axis Distribution*
+% 
+% The most direct way to analyse shape prefered orientations are rose
+% diagrams of the distribution of the grain long axes. For those diagrams
+% it is useful to weight the long axis by the grain area such that larger
+% grains have a bigger impact on the distribution and by the aspect ratio
+% as for grains with a small aspect ratio the long axis is not so well
+% defined.
+
+numBin = 50;
+
+subplot(1,2,1)
+weights = grains('forsterite').area .* (grains('forsterite').aspectRatio-1);
+histogram(grains('forsterite').longAxis,numBin, 'weights', weights)
+title('Forsterite')
+
+subplot(1,2,2)
+weights = grains('enstatite').area .* (grains('enstatite').aspectRatio - 1);
+histogram(grains('enstatite').longAxis,numBin,'weights',weights)
+title('Enstatite')
+
+%% 
+% Instead of the histogram we may also fit a circular density distribution
+% to the to the long axes using the command <calcDensity.thml
+% |calcDensity|>.
+
+tdfForsterite = calcDensity(grains('forsterite').longAxis,...
+  'weights',norm(grains('forsterite').longAxis),'halfwidth');
+
+tdfEnstatite = calcDensity(grains('enstatite').longAxis,...
+  'weights',norm(grains('enstatite').longAxis));
+
+plotSection(tdfForsterite, vector3d.Z, 'linewidth', 3)
+
+hold on
+plotSection(tdfEnstatite, vector3d.Z, 'linewidth', 3)
+hold off
+
+%%
+% 
+
+close all
+[freq,bc] = calcTDF(grains('fo'),'binwidth',3*degree);
+plotTDF(bc,freq/sum(freq));
+
+[freq,bc] = calcTDF(grains('en'),'binwidth',3*degree);
+hold on
+plotTDF(bc,freq/sum(freq));
+hold off
+legend('Forsterite','Enstatite','Location','eastoutside')
+mtexTitle('long axes')
+
+%% *Shortest Caliper Distribution*
+%
+% Alternatively, we may wonder if the common long axis of grains is does
+% suitably represented by the direction normal to the shortest caliper of
+% the grains. This can particularly be the case for aligned rectangular
+% particles. The command <calcTDF.html |calcTDF|> also takes a list of
+% angles and a list of weights or lengths as input
+
+cPerpF = caliper(grains('fo'),'shortestPerp');
+cPerpE = caliper(grains('en'),'shortestPerp');
+
+[freqF,bcF] = calcTDF(cPerpF.rho, 'weights',cPerpF.norm, 'binwidth',3*degree);
+[freqE,bcE] = calcTDF(cPerpE.rho, 'weights',cPerpE.norm, 'binwidth',3*degree);
+
+plotTDF(bcF,freqF/sum(freqF));
+hold on
+plotTDF(bcE,freqE/sum(freqE));
+hold off
+legend('Forsterite','Enstatite','Location','eastoutside')
+
+
+%%
+% We can also smooth the functions with a wrapped Gaussian
+
+pdfF = circdensity(bcF, freqF, 5*degree,'sum');
+pdfE = circdensity(bcE, freqE, 5*degree,'sum');
+
+plotTDF(bcF,pdfF);
+hold on
+plotTDF(bcE,pdfE);
+hold off
+mtexTitle('n.t.s. density estimate')
+legend('Forsterite','Enstatite','Location','eastoutside')
+
+%%
+% Because best fit ellipses are always symmetric and the projection
+% function of an entire grain always only consider the convex hull, grain
+% shape fabrics can also be characterized by the the length weighted rose
+% diagram of the directions of grain boundary segments.
+  
+[freqF,bcF] = calcTDF(grains('fo').boundary);
+plotTDF(bcF,freqF/sum(freqF));
+pdfF = circdensity(bcF, freqF, 5*degree,'sum');
+hold on
+plotTDF(bcF,pdfF);
+hold off
+mtexTitle('Forsterite grain boundaries')
+nextAxis
+[freqE,bcE] = calcTDF(grains('en').boundary);
+plotTDF(bcE,freqE/sum(freqE));
+pdfE = circdensity(bcE, freqE, 5*degree,'sum');
+hold on
+plotTDF(bcE,pdfE);
+hold off
+mtexTitle('Enstatite grain boundaries')
+
+%% Characteristic Shape
+%
+% Note that this distribution is very prone to inherit artifacts based on
+% the fact that most EBSD maps are sampled on a regular grid. We tried to
+% overcome this problem by heavily smoothing the grain boundary. The little 
+% peaks at 0 and 90 degree are very likely still related to this sampling
+% artifact.
+%
+% If we just add up all the individual elements of the rose diagram in
+% order of increasing angles, we derive the characteristic shape. It can be
+% regarded as to represent the average grain shape.
+
+[csAngleF, csRadiusF] = characteristicShape(bcF,freqF);
+[csAngleE, csRadiusE] = characteristicShape(bcE,freqE);
+
+close all
+plotTDF(csAngleF,csRadiusF,'nolabels');
+hold on
+plotTDF(csAngleE,csRadiusE,'nolabels');
+hold off
+legend('Forsterite','Enstatite','Location','eastoutside')
+
+%%
+% We may wonder if these results are significantly different or not
+% TODO: get deviation from an ellipse etc
+##### SOURCE END #####
+--></body></html>

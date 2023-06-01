@@ -1,0 +1,160 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Plotting in MTEX</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_Plotting.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Plotting in MTEX</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Plot Types</a></li><li><a href="#3">Spherical Projections</a></li><li><a href="#4">Color Coding</a></li><li><a href="#5">Plot Annotations</a></li><li><a href="#6">Combined Plots</a></li><li><a href="#7">Exporting Plots</a></li></ul></div><p>In MTEX you can plot almost any type data. Simply apply the <b>plot</b> command to any variable and MTEX tries to plot the content of the variable in the most intuitive way. In this way, you can plot three Miller indices, rotations, pole figures, or ODFs. MTEX also offers you a wide range of possibilities to customize your plots, e.g. by changing the <a href="PlotTypes.html">plot style</a>, the <a href="SphericalProjections.html">spherical projection</a>, the <a href="ColorMaps.html">color coding</a>, or by adding <a href="Annotations.html">colorbars or other annotations</a> to the plot. You can even <a href="CombinedPlots.html">combine plots</a> of different ODFs or EBSD data. This way MTEX allows you to create publication-ready plots which can be exported to almost any format using the commands <a href="saveFigure.html">saveFigure</a>.</p><h2 id="2">Plot Types</h2><p>In general, MTEX knows the following <a href="PlotTypes.html">plot types</a></p><div><ul><li>contour plots</li><li>filled contour plots</li><li>smoots plots</li><li>scatter plots</li><li>line plots</li></ul></div><p>Contour plots are plots consisting only of contour lines and mainly used for pole figure or ODF plots. For raw pole figure data, MTEX uses by default a plot where each datapoint is represented by a single dot colored accordingly to the intensity. Line plots are used by MTEX for one- dimensional ODF plots, plots of Fourier coefficients and plots of kernel functions</p><h2 id="3">Spherical Projections</h2><p>Whenever MTEX plots pole figures, ODFs, or crystal or specimen directions MTEX uses spherical projections to map the spherical data to the plane. By doing so MTEX supports a wide variety of <a href="SphericalProjections.html">spherical projections</a>, i.e.,</p><div><ul><li>equal area projection (Schmidt)</li><li>equal distance projection</li><li>equal angle projection (stereographic)</li><li>plain</li><li>3d plots</li></ul></div><h2 id="4">Color Coding</h2><p>A central issue when interpreting plots is to have a consistent <a href="ColorMaps.html">color coding</a> among all plots. In MTEX this can be achieved in two ways. If the minimum and maximum values are known then one can use one of the following syntaxes to have a consistent color coding.</p><div><ul><li>Specifying the colorrange</li><li>Setting a logarithmic color scale</li><li>Switching to a monochrome color scale * See also <a href="EBSDSpatialPlots">Spatial EBSD Plots</a>.</li></ul></div><h2 id="5">Plot Annotations</h2><p>After generating a plot with MTEX it is possible to modify it interactively using the MATLAB plotting tools in the plotting figure. This includes</p><div><ul><li>adding a colorbar</li><li>adding a legend</li><li>adding annotations</li><li>resizing / shifting parts of the plot</li></ul></div><p>This is described in more detail <a href="Annotations.html">here.</a></p><h2 id="6">Combined Plots</h2><p>Sometimes it is useful to combine several plots, e.g. plotting on the top of an inverse pole figure some important crystal directions. This can be performed by the command <a href="matlab:doc('hold')">hold all</a>, which preserves MATLAB from replacing the old plot by the new one. This technique is described in more detail <a href="CombinedPlots.html">here.</a></p><h2 id="7">Exporting Plots</h2><p>Plots generated by MTEX can be exported to a wide range of formats using the MATLAB function <b>save as</b> in the figure menu or using the command <a href="saveFigure.html">saveFigure</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Plotting in MTEX
+%
+%%
+% In MTEX you can plot almost any type data. Simply apply the *plot*
+% command to any variable and MTEX tries to plot the content of the
+% variable in the most intuitive way. In this way, you can plot three
+% Miller indices, rotations, pole figures, or ODFs. MTEX also offers you a
+% wide range of possibilities to customize your plots, e.g. by changing the
+% <PlotTypes.html plot style>, the <SphericalProjections.html spherical
+% projection>, the <ColorMaps.html color coding>, or by adding
+% <Annotations.html colorbars or other annotations> to the plot. You can
+% even <CombinedPlots.html combine plots> of different ODFs or EBSD
+% data. This way MTEX allows you to create publication-ready plots which
+% can be exported to almost any format using the commands <saveFigure.html
+% saveFigure>.
+%
+%% Plot Types
+%
+% In general, MTEX knows the following <PlotTypes.html plot types>
+%
+% * contour plots
+% * filled contour plots
+% * smoots plots
+% * scatter plots
+% * line plots
+%
+% Contour plots are plots consisting only of contour lines and mainly used
+% for pole figure or ODF plots. For raw pole figure data, MTEX uses by
+% default a plot where each datapoint is represented by a single dot colored
+% accordingly to the intensity. Line plots are used by MTEX for one-
+% dimensional ODF plots, plots of Fourier coefficients and plots of kernel
+% functions
+
+%% Spherical Projections
+% Whenever MTEX plots pole figures, ODFs, or crystal or specimen directions
+% MTEX uses spherical projections to map the spherical data to the plane. By
+% doing so MTEX supports a wide variety of <SphericalProjections.html
+% spherical projections>, i.e.,
+%
+% * equal area projection (Schmidt)
+% * equal distance projection
+% * equal angle projection (stereographic)
+% * plain
+% * 3d plots
+%
+%% Color Coding
+% A central issue when interpreting plots is to have a consistent
+% <ColorMaps.html color coding> among all plots. In MTEX this can be
+% achieved in two ways. If the minimum and maximum values are known then
+% one can use one of the following syntaxes to have a consistent color
+% coding.
+%
+% * Specifying the colorrange
+% * Setting a logarithmic color scale
+% * Switching to a monochrome color scale
+% *
+% See also <EBSDSpatialPlots Spatial EBSD Plots>.
+%
+%% Plot Annotations
+%
+% After generating a plot with MTEX it is possible to modify it
+% interactively using the MATLAB plotting tools in the plotting figure. This
+% includes
+%
+% * adding a colorbar
+% * adding a legend
+% * adding annotations
+% * resizing / shifting parts of the plot
+%
+% This is described in more detail <Annotations.html here.>
+%
+%% Combined Plots
+%
+% Sometimes it is useful to combine several plots, e.g. plotting on the
+% top of an inverse pole figure some important crystal directions. This
+% can be performed by the command <matlab:doc('hold') hold all>,
+% which preserves MATLAB from replacing the old plot by the new one. This
+% technique is described in more detail <CombinedPlots.html here.>
+%
+%% Exporting Plots
+%
+% Plots generated by MTEX can be exported to a wide range of formats using
+% the MATLAB function *save as* in the figure menu or using the command
+% <saveFigure.html saveFigure>
+%
+
+
+##### SOURCE END #####
+--></body></html>

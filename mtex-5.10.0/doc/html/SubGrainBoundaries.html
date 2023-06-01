@@ -1,0 +1,257 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Subgrain Boundaries</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SubGrainBoundaries.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Subgrain Boundaries</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#4">Subgrain Boundary Density</a></li><li><a href="#6">Misorientation at Subgrain Boundaries</a></li><li><a href="#8">Connected Components</a></li></ul></div><p>Low-angle grain boundaries (LAGB) or subgrain boundaries are those with a misorientation less than about 15 degrees. Generally speaking they are composed of an array of dislocations and their properties and structure are a function of the misorientation. In contrast the properties of high-angle grain boundaries, whose misorientation is greater than about 15 degrees, are normally found to be independent of the misorientation. However, there are special boundaries at particular orientations whose interfacial energies are markedly lower than those of general high-angle grain boundaries.</p><p>In order to demonstrate the analysis of subgrain boundaries in MTEX we start by importing an sample EBSD data set and preforming some polishing by removing all 5 pixel grains.</p><pre class="codeinput"><span class="comment">% load some test data</span>
+mtexdata <span class="string">ferrite</span> <span class="string">silent</span>
+
+<span class="comment">% remove one pixel grains</span>
+[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>));
+ebsd(grains(grains.grainSize&lt;5)) = [];
+</pre><p>For the computation of low-angle boundaries we specify two thresholds during grain reconstruction: the first value controls the low-angle grain boundaries whereas the second is used for the high-angle grain boundaries.</p><pre class="codeinput">[grains,ebsd.grainId] = calcGrains(ebsd(<span class="string">'indexed'</span>),<span class="string">'threshold'</span>,[1*degree, 10*degree]);
+
+<span class="comment">% lets smooth the grain boundaries a bit</span>
+grains = smooth(grains,5)
+</pre><pre class="codeoutput"> 
+grains = grain2d
+ 
+ Phase  Grains  Pixels  Mineral  Symmetry  Crystal reference frame
+     0     289   58967  Ferrite       432                         
+ 
+ boundary segments: 12324 (2559 &micro;m)
+ inner boundary segments: 28501 (3609 &micro;m)
+ triple points: 473
+ 
+ Properties: meanRotation, GOS
+ 
+</pre><p>We observe that we have 12314 high-angle boundary segments and 28501 low-angle boundary segments. In order to visualize the the subgrain boundaries we first plot the ebsd data colorized by orientation. On top we plot with solid lines the grain boundaries and with thinner lines the subgrain boundaries. We even make the misorientation angle at the subgrain boundaries visible by setting it as the transparency value of the segments.</p><pre class="codeinput"><span class="comment">% plot the ebsd data</span>
+plot(ebsd(<span class="string">'indexed'</span>),ebsd(<span class="string">'indexed'</span>).orientations,<span class="string">'faceAlpha'</span>,0.5,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+
+<span class="comment">% init override mode</span>
+hold <span class="string">on</span>
+
+<span class="comment">% plot grain boundares</span>
+plot(grains.boundary,<span class="string">'linewidth'</span>,2)
+
+<span class="comment">% compute transparency from misorientation angle</span>
+alpha = grains.innerBoundary.misorientation.angle / (5*degree);
+
+<span class="comment">% plot the subgrain boundaries</span>
+plot(grains.innerBoundary,<span class="string">'linewidth'</span>,1.5,<span class="string">'edgeAlpha'</span>,alpha,<span class="string">'linecolor'</span>,<span class="string">'b'</span>);
+
+<span class="comment">% stop override mode</span>
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="SubGrainBoundaries_01.png" alt=""> <h2 id="4">Subgrain Boundary Density</h2><p>The number of low-angle  boundary segments inside each grain can be computed by the command <a href="grain2d.subBoundarySize.html"><tt>subBoundarySize</tt></a>. In the following figure we use it to visualize the density of subgrain boundaries per grain pixel.</p><pre class="codeinput">plot(grains, grains.subBoundarySize ./ grains.grainSize)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="SubGrainBoundaries_02.png" alt=""> <p>We may compute also the density of low-angle boundaries per grain as the length of the subgrain boundaries divided by the grain area. This can be done using the commands <a href="grain2d.subBoundaryLength.html"><tt>subBoundaryLength</tt></a> and <a href="grain2d.area.html"><tt>area</tt></a></p><pre class="codeinput">plot(grains, grains.subBoundaryLength ./ grains.area)
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="SubGrainBoundaries_03.png" alt=""> <h2 id="6">Misorientation at Subgrain Boundaries</h2><p>Appart from the spatial distribution of the subgrain boundaries we may also analyse the distribution of their misorientations.</p><pre class="codeinput"><span class="comment">% extract all subgrain boundary misorientation</span>
+mori = grains.innerBoundary.misorientation;
+
+<span class="comment">% and visualize the distribution of the misorientation axes</span>
+plot(mori.axis,<span class="string">'fundamentalRegion'</span>,<span class="string">'contourf'</span>,<span class="string">'figSize'</span>,<span class="string">'small'</span>)
+
+mtexColorbar
+</pre><img vspace="50" hspace="5" src="SubGrainBoundaries_04.png" alt=""> <p>A more detailed analysis of the misorientation axes at subgrain boundaries can be found in the chapter <a href="TiltAndTwistBoundaries.html">Tild and Twist Boundaries</a>.</p><h2 id="8">Connected Components</h2><p>Sometimes one would like to distinguish between large connected networks of low-angle boundaries and singular disconected segments. This can be done using the command <a href="grainBoundary.componentSize.html"><tt>componentSize</tt></a>. This command return for each segment the total number of segments it is connected with. In the following figure we use this to plot all low-angle grain boundary networks with more then 50 segments in blue and all remaining segments in red.</p><pre class="codeinput"><span class="comment">% plot the ebsd data</span>
+plot(ebsd(<span class="string">'indexed'</span>),ebsd(<span class="string">'indexed'</span>).orientations,<span class="string">'faceAlpha'</span>,0.5,<span class="string">'figSize'</span>,<span class="string">'large'</span>)
+
+<span class="comment">% distinguish between large connected networks and single segments</span>
+ind = grains.innerBoundary.componentSize &gt; 50;
+
+<span class="comment">% plot the boundaries</span>
+hold <span class="string">on</span>
+plot(grains.boundary,<span class="string">'linewidth'</span>,2)
+plot(grains.innerBoundary(ind),<span class="string">'linewidth'</span>,1.5,<span class="string">'edgeAlpha'</span>,alpha(ind),<span class="string">'edgeColor'</span>,<span class="string">'b'</span>);
+plot(grains.innerBoundary(~ind),<span class="string">'linewidth'</span>,1.5,<span class="string">'edgeAlpha'</span>,alpha(~ind),<span class="string">'edgeColor'</span>,<span class="string">'r'</span>);
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="SubGrainBoundaries_05.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Subgrain Boundaries
+%
+%%
+% Low-angle grain boundaries (LAGB) or subgrain boundaries are those with a
+% misorientation less than about 15 degrees. Generally speaking they are
+% composed of an array of dislocations and their properties and structure
+% are a function of the misorientation. In contrast the properties of
+% high-angle grain boundaries, whose misorientation is greater than about
+% 15 degrees, are normally found to be independent of the misorientation.
+% However, there are special boundaries at particular orientations whose
+% interfacial energies are markedly lower than those of general high-angle
+% grain boundaries.
+%
+% In order to demonstrate the analysis of subgrain boundaries in MTEX we
+% start by importing an sample EBSD data set and preforming some polishing
+% by removing all 5 pixel grains.
+
+% load some test data
+mtexdata ferrite silent
+
+% remove one pixel grains
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'));
+ebsd(grains(grains.grainSize<5)) = [];
+
+%%
+% For the computation of low-angle boundaries we specify two thresholds
+% during grain reconstruction: the first value controls the low-angle grain
+% boundaries whereas the second is used for the high-angle grain
+% boundaries.
+
+[grains,ebsd.grainId] = calcGrains(ebsd('indexed'),'threshold',[1*degree, 10*degree]);
+
+% lets smooth the grain boundaries a bit
+grains = smooth(grains,5)
+
+%%
+% We observe that we have 12314 high-angle boundary segments and 28501
+% low-angle boundary segments. In order to visualize the the subgrain
+% boundaries we first plot the ebsd data colorized by orientation. On top
+% we plot with solid lines the grain boundaries and with thinner lines the
+% subgrain boundaries. We even make the misorientation angle at the
+% subgrain boundaries visible by setting it as the transparency value of
+% the segments.
+
+% plot the ebsd data
+plot(ebsd('indexed'),ebsd('indexed').orientations,'faceAlpha',0.5,'figSize','large')
+
+% init override mode
+hold on
+
+% plot grain boundares
+plot(grains.boundary,'linewidth',2)
+
+% compute transparency from misorientation angle
+alpha = grains.innerBoundary.misorientation.angle / (5*degree);
+
+% plot the subgrain boundaries
+plot(grains.innerBoundary,'linewidth',1.5,'edgeAlpha',alpha,'linecolor','b');
+
+% stop override mode
+hold off
+
+%% Subgrain Boundary Density
+%
+% The number of low-angle  boundary segments inside each grain can be
+% computed by the command <grain2d.subBoundarySize.html |subBoundarySize|>.
+% In the following figure we use it to visualize the density of subgrain
+% boundaries per grain pixel.
+
+plot(grains, grains.subBoundarySize ./ grains.grainSize)
+mtexColorbar
+
+%% 
+% We may compute also the density of low-angle boundaries per grain as the
+% length of the subgrain boundaries divided by the grain area. This can be
+% done using the commands <grain2d.subBoundaryLength.html
+% |subBoundaryLength|> and <grain2d.area.html |area|>
+
+plot(grains, grains.subBoundaryLength ./ grains.area)
+mtexColorbar
+
+%% Misorientation at Subgrain Boundaries
+%
+% Appart from the spatial distribution of the subgrain boundaries we may
+% also analyse the distribution of their misorientations. 
+
+% extract all subgrain boundary misorientation
+mori = grains.innerBoundary.misorientation;
+
+% and visualize the distribution of the misorientation axes
+plot(mori.axis,'fundamentalRegion','contourf','figSize','small')
+
+mtexColorbar
+
+%% 
+% A more detailed analysis of the misorientation axes at subgrain
+% boundaries can be found in the chapter <TiltAndTwistBoundaries.html Tild
+% and Twist Boundaries>.
+%
+%% Connected Components
+%
+% Sometimes one would like to distinguish between large connected networks
+% of low-angle boundaries and singular disconected segments. This can be
+% done using the command <grainBoundary.componentSize.html
+% |componentSize|>. This command return for each segment the total number
+% of segments it is connected with. In the following figure we use this to
+% plot all low-angle grain boundary networks with more then 50 segments in
+% blue and all remaining segments in red.
+
+% plot the ebsd data
+plot(ebsd('indexed'),ebsd('indexed').orientations,'faceAlpha',0.5,'figSize','large')
+
+% distinguish between large connected networks and single segments
+ind = grains.innerBoundary.componentSize > 50;
+
+% plot the boundaries
+hold on
+plot(grains.boundary,'linewidth',2)
+plot(grains.innerBoundary(ind),'linewidth',1.5,'edgeAlpha',alpha(ind),'edgeColor','b');
+plot(grains.innerBoundary(~ind),'linewidth',1.5,'edgeAlpha',alpha(~ind),'edgeColor','r');
+hold off
+
+##### SOURCE END #####
+--></body></html>

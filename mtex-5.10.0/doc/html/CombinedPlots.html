@@ -1,0 +1,280 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Combined Plots</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_CombinedPlots.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Combined Plots</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">General Principle</a></li><li><a href="#3">Combine Different EBSD Data</a></li><li><a href="#7">Combine countoured pole figures (smooth ODF plots) with EBSD Data Scatter Plots</a></li><li><a href="#9">Add Miller Indices to an Inverse Pole Figure Plot</a></li><li><a href="#10">Combining different plots in one figure</a></li></ul></div><p>Explains how to combine several plots, e.g. plotting on the top of an inverse pole figure some important crystal directions.</p><h2 id="2">General Principle</h2><p>In order to tell MATLAB to plot one plot right on the top of an older plot one has to use the commands <a href="matlab:doc('hold')">hold all</a> and <a href="matlab:doc('hold')">hold off</a>. Let's demonstrate this using a simple example.</p><pre class="codeinput">plot([2 2])
+
+hold <span class="string">all</span>
+
+plot([1 3])
+
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CombinedPlots_01.png" alt=""> <h2 id="3">Combine Different EBSD Data</h2><p>First, we want to show up two different EBSD data sets in one plot</p><p>let's simulate some EBSD data</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'-3m'</span>);
+odf = unimodalODF(orientation.byEuler(0,0,0,cs));
+ori = discreteSample(odf,100);
+ori_rotated = discreteSample(rotate(odf,rotation.byEuler(60*degree,60*degree,0*degree)),100);
+</pre><p>plot them as a scatter plot in axis / angle parametrized orientation space</p><pre class="codeinput">scatter(ori)
+hold <span class="string">all</span>
+scatter(ori_rotated);
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="CombinedPlots_02.png" alt=""> <p>a second way would be to superpose the pole figures of both EBSD data sets.</p><pre class="codeinput">h = [Miller(0,0,0,1,cs),Miller(1,0,-1,0,cs)];
+plotPDF(ori,h,<span class="string">'antipodal'</span>,<span class="string">'MarkerSize'</span>,4)
+hold <span class="string">all</span> <span class="comment">% keep plot</span>
+plotPDF(ori_rotated,h,<span class="string">'MarkerSize'</span>,4);
+hold <span class="string">off</span> <span class="comment">% next plot command deletes all plots</span>
+</pre><img vspace="50" hspace="5" src="CombinedPlots_03.png" alt=""> <h2 id="7">Combine countoured pole figures (smooth ODF plots) with EBSD Data Scatter Plots</h2><p>You can also combine a contour plot of a model ODF with a scatter plot of single orientations.</p><pre class="codeinput">plotPDF(odf,h,<span class="string">'antipodal'</span>,<span class="string">'contourf'</span>,<span class="string">'grid'</span>)
+mtexColorMap <span class="string">white2black</span>
+
+plot(ori,<span class="string">'DisplayName'</span>,<span class="string">'EBSD 1'</span>,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,5,<span class="string">'MarkerColor'</span>,<span class="string">'b'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'w'</span>,<span class="string">'add2all'</span>)
+
+plot(ori_rotated,<span class="string">'DisplayName'</span>,<span class="string">'EBSD 2'</span>,<span class="keyword">...</span>
+  <span class="string">'MarkerSize'</span>,5,<span class="string">'MarkerColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'add2all'</span>);
+
+legend(<span class="string">'show'</span>,<span class="string">'location'</span>,<span class="string">'northeast'</span>)
+</pre><img vspace="50" hspace="5" src="CombinedPlots_04.png" alt=""> <p>and, of course, you can do the same with ODF plots:</p><pre class="codeinput">plot(odf,<span class="string">'sections'</span>,8,<span class="string">'contourf'</span>,<span class="string">'sigma'</span>)
+mtexColorMap <span class="string">white2black</span>
+plot(ori,<span class="string">'MarkerSize'</span>,6,<span class="string">'MarkerColor'</span>,<span class="string">'b'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'w'</span>,<span class="string">'add2all'</span>)
+plot(ori_rotated,<span class="string">'MarkerSize'</span>,6,<span class="string">'MarkerColor'</span>,<span class="string">'r'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'add2all'</span>);
+</pre><img vspace="50" hspace="5" src="CombinedPlots_05.png" alt=""> <h2 id="9">Add Miller Indices to an Inverse Pole Figure Plot</h2><p>Next, we are going to add some Miller indices to an inverse pole figure plot.</p><pre class="codeinput">plotIPDF(odf,xvector,<span class="string">'noLabel'</span>);
+mtexColorMap <span class="string">white2black</span>
+
+hold <span class="string">all</span> <span class="comment">% keep plot</span>
+plot(Miller(0,0,0,1,cs),<span class="string">'symmetrised'</span>,<span class="string">'labeled'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+plot(Miller(1,1,-2,0,cs),<span class="string">'symmetrised'</span>,<span class="string">'labeled'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+plot(Miller(0,1,-1,0,cs),<span class="string">'symmetrised'</span>,<span class="string">'labeled'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+plot(Miller(0,1,-1,1,cs),<span class="string">'symmetrised'</span>,<span class="string">'labeled'</span>,<span class="string">'backgroundColor'</span>,<span class="string">'w'</span>)
+hold <span class="string">off</span> <span class="comment">% next plot command deletes all plots</span>
+</pre><img vspace="50" hspace="5" src="CombinedPlots_06.png" alt=""> <h2 id="10">Combining different plots in one figure</h2><p>The next example demonstrates how to arrange arbitrary plots into one figure</p><pre class="codeinput"><span class="comment">% let us import some pole figure data</span>
+mtexdata <span class="string">dubna</span>
+</pre><pre class="codeoutput"> 
+pf = PoleFigure (xyz)
+  crystal symmetry : Quartz (321, X||a*, Y||b, Z||c*)
+ 
+  h = (02-21), r = 72 x 19 points
+  h = (10-10), r = 72 x 19 points
+  h = (10-11)(01-11), r = 72 x 19 points
+  h = (10-12), r = 72 x 19 points
+  h = (11-20), r = 72 x 19 points
+  h = (11-21), r = 72 x 19 points
+  h = (11-22), r = 72 x 19 points
+</pre><p>next, we compute an ODF out of them</p><pre class="codeinput">odf = calcODF(pf)
+</pre><pre class="codeoutput"> 
+odf = SO3FunRBF (Quartz &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 5&deg;
+  center: 19848 orientations, resolution: 5&deg;
+  weight: 1
+ 
+</pre><p>now we want to plot the original data alongsite with the recalculated pole figures and with a difference plot</p><pre class="codeinput">figure(<span class="string">'position'</span>,[50 50 1200 500])
+
+<span class="comment">% set position 1 in a 1x3 matrix as the current plotting position</span>
+axesPos = subplot(1,3,1);
+
+<span class="comment">% plot pole figure 1 at this position</span>
+plot(pf({1}),<span class="string">'parent'</span>,axesPos)
+
+<span class="comment">% set position 2 in a 1x3 matrix as the current plotting position</span>
+axesPos = subplot(1,3,2);
+
+<span class="comment">% plot the recalculated pole figure at this position</span>
+plotPDF(odf,pf{1}.h,<span class="string">'antipodal'</span>,<span class="string">'parent'</span>,axesPos)
+
+<span class="comment">% set position 3 in a 1x3 matrix as the current plotting position</span>
+axesPos = subplot(1,3,3);
+
+<span class="comment">% plot the difference pole figure at this position</span>
+<span class="comment">%plotDiff(odf,pf({1}),'parent',axesPos)</span>
+</pre><img vspace="50" hspace="5" src="CombinedPlots_07.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Combined Plots
+%
+%%
+% Explains how to combine several plots, e.g. plotting on the
+% top of an inverse pole figure some important crystal directions.
+%
+%% General Principle
+% In order to tell MATLAB to plot one plot right on the top of an older
+% plot one has to use the commands <matlab:doc('hold') hold all> and
+% <matlab:doc('hold') hold off>. Let's demonstrate this using a simple
+% example.
+
+plot([2 2])
+
+hold all
+
+plot([1 3])
+
+hold off
+
+%% Combine Different EBSD Data
+% First, we want to show up two different EBSD data sets in one plot
+
+%%
+% let's simulate some EBSD data
+cs = crystalSymmetry('-3m');
+odf = unimodalODF(orientation.byEuler(0,0,0,cs));
+ori = discreteSample(odf,100);
+ori_rotated = discreteSample(rotate(odf,rotation.byEuler(60*degree,60*degree,0*degree)),100);
+
+%%
+% plot them as a scatter plot in axis / angle parametrized orientation
+% space
+
+scatter(ori)
+hold all
+scatter(ori_rotated);
+hold off
+
+
+%%
+% a second way would be to superpose the pole figures of both EBSD data sets.
+
+h = [Miller(0,0,0,1,cs),Miller(1,0,-1,0,cs)];
+plotPDF(ori,h,'antipodal','MarkerSize',4)
+hold all % keep plot
+plotPDF(ori_rotated,h,'MarkerSize',4);
+hold off % next plot command deletes all plots
+
+
+%% Combine countoured pole figures (smooth ODF plots) with EBSD Data Scatter Plots
+% You can also combine a contour plot of a model ODF with a scatter plot of single
+% orientations.
+
+plotPDF(odf,h,'antipodal','contourf','grid')
+mtexColorMap white2black
+
+plot(ori,'DisplayName','EBSD 1',...
+  'MarkerSize',5,'MarkerColor','b','MarkerEdgeColor','w','add2all')
+
+plot(ori_rotated,'DisplayName','EBSD 2',...
+  'MarkerSize',5,'MarkerColor','r','MarkerEdgeColor','k','add2all');
+
+legend('show','location','northeast')
+
+%%
+% and, of course, you can do the same with ODF plots:
+
+plot(odf,'sections',8,'contourf','sigma')
+mtexColorMap white2black
+plot(ori,'MarkerSize',6,'MarkerColor','b','MarkerEdgeColor','w','add2all')
+plot(ori_rotated,'MarkerSize',6,'MarkerColor','r','MarkerEdgeColor','k','add2all');
+
+%% Add Miller Indices to an Inverse Pole Figure Plot
+% Next, we are going to add some Miller indices to an inverse pole figure
+% plot.
+
+plotIPDF(odf,xvector,'noLabel');
+mtexColorMap white2black
+
+hold all % keep plot
+plot(Miller(0,0,0,1,cs),'symmetrised','labeled','backgroundColor','w')
+plot(Miller(1,1,-2,0,cs),'symmetrised','labeled','backgroundColor','w')
+plot(Miller(0,1,-1,0,cs),'symmetrised','labeled','backgroundColor','w')
+plot(Miller(0,1,-1,1,cs),'symmetrised','labeled','backgroundColor','w')
+hold off % next plot command deletes all plots
+
+
+
+%% Combining different plots in one figure
+% The next example demonstrates how to arrange arbitrary plots into one
+% figure
+
+% let us import some pole figure data
+mtexdata dubna
+
+%%
+% next, we compute an ODF out of them
+odf = calcODF(pf)
+
+%%
+% now we want to plot the original data alongsite with the recalculated
+% pole figures and with a difference plot
+figure('position',[50 50 1200 500])
+
+% set position 1 in a 1x3 matrix as the current plotting position
+axesPos = subplot(1,3,1);
+
+% plot pole figure 1 at this position
+plot(pf({1}),'parent',axesPos)
+
+% set position 2 in a 1x3 matrix as the current plotting position
+axesPos = subplot(1,3,2);
+
+% plot the recalculated pole figure at this position
+plotPDF(odf,pf{1}.h,'antipodal','parent',axesPos)
+
+% set position 3 in a 1x3 matrix as the current plotting position
+axesPos = subplot(1,3,3);
+
+% plot the difference pole figure at this position
+%plotDiff(odf,pf({1}),'parent',axesPos)
+
+##### SOURCE END #####
+--></body></html>

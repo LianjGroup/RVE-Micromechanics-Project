@@ -1,0 +1,206 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Wigner-D functions</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_WignerFunctions.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Wigner-D functions</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Theorie</a></li><li><a href="#4">Series Expansion</a></li><li><a href="#6">Some important formulas for Wigner-D functions</a></li><li><a href="#8">Symmetry properties of Wigner-d functions</a></li></ul></div><h2 id="1">Theorie</h2><p>The Wigner-D functions are special functions on the rotation group <img src="WignerFunctions_eq01113541437488883686.png" alt="$SO(3)$">.</p><p>In terms of Matthies (ZYZ-convention) Euler angles <img src="WignerFunctions_eq04962394925772762714.png" alt="${\bf R} = {\bf R}(\alpha,\beta,\gamma)$"> the <img src="WignerFunctions_eq00704031345446614743.png" alt="$L_2$">-normalized Wigner-D function of degree <img src="WignerFunctions_eq17555110721583917243.png" alt="$n$"> and orders <img src="WignerFunctions_eq17216648145921329462.png" alt="$k,l \in \{-n,\dots,n\}$"> is defined by</p><p><img src="WignerFunctions_eq08319730262709941102.png" alt="$$ D_n^{k,l}({\bf R}) = \sqrt{2n+1} \, \mathrm e^{-\mathrm i k\gamma}&#xA;\mathrm d_n^{k,l}(\cos\beta) \,e^{-\mathrm i l\alpha} $$"></p><p>where <img src="WignerFunctions_eq08262537383836032241.png" alt="$d_n^{k,l}$">, denote the real valued Wigner-d functions, which are defined in terms of Jacobi polynomial <img src="WignerFunctions_eq16402870971411718121.png" alt="$P_s^{a,b}$">  by</p><p><img src="WignerFunctions_eq10681128055586878059.png" alt="$$ d_n^{k,l}(x) = (-1)^{\nu} {2n-s \choose s+a}^{\frac12}&#xA;{s+b \choose b}^{-\frac12} \left(\frac{1-x}{2}\right)^{\frac{a}{2}}&#xA;\left(\frac{1+x}{2}\right)^{\frac{b}2} P_s^{a,b}(x)$$"></p><p>using the constants <img src="WignerFunctions_eq14791842378752265476.png" alt="$a =|k-l|$">, <img src="WignerFunctions_eq17545826478723921585.png" alt="$b =|k+l|$">, <img src="WignerFunctions_eq18010399361421525874.png" alt="$s = n - \max\{|k|,|l|\}$"> and <img src="WignerFunctions_eq13228406904716505780.png" alt="$\nu = \min\{0,k\}+\min\{0,l\}$"> if <img src="WignerFunctions_eq09950986177207339465.png" alt="$l \geq k$">; <img src="WignerFunctions_eq06714026747058362537.png" alt="$\nu = \min\{0,k\}+\min\{0,l\} + k+l$"> otherwise.</p><p>This definition is slightly different to other well known definitions, because the Wigner-D functions are defined compatible to the <a href="SphericalHarmonics.html">spherical harmonics</a> which form an orthonormal basis on the 2-sphere.</p><p>In MTEX the Wigner-D and Wigner-d functions are available through the command <a href="Wigner_D.html"><tt>Wigner_D</tt></a></p><pre class="codeinput"><span class="comment">% the Wigner-d function of degree 1</span>
+beta = 0.5;
+d = Wigner_D(1,beta)
+
+<span class="comment">% the Wigner-D function of degree 1</span>
+R = rotation.rand;
+D = sqrt(3) * Wigner_D(1,R)
+</pre><pre class="codeoutput">d =
+    0.9388   -0.3390   -0.0612
+    0.3390    0.8776    0.3390
+   -0.0612   -0.3390    0.9388
+D =
+  -0.0064 + 0.0317i   0.1861 - 0.2742i   1.4252 - 0.9263i
+   0.3054 - 0.1285i  -1.6675 + 0.0000i   0.3054 + 0.1285i
+   1.4252 + 0.9263i   0.1861 + 0.2742i  -0.0064 - 0.0317i
+</pre><p>Here the orders <img src="WignerFunctions_eq12829740475467572519.png" alt="$k$">, <img src="WignerFunctions_eq17216086743898025322.png" alt="$l$"> work as row and column indices.</p><h2 id="4">Series Expansion</h2><p>The Wigner-D functions form an orthonormal basis in <img src="WignerFunctions_eq01325732317235081823.png" alt="$L_2(SO(3))$">. Hence, we can describe functions on the rotation group <img src="WignerFunctions_eq01113541437488883686.png" alt="$SO(3)$"> by there harmonic representation using the class <a href="SO3FunHarmonicRepresentation.html"><tt>SO3FunHarmonic</tt></a>.</p><p>Hence we define the Wigner-D function <img src="WignerFunctions_eq06855173434024750141.png" alt="$D_1^{1,-1}$"> by</p><pre class="codeinput">D = SO3FunHarmonic([0;0;0;1])
+D.eval(R)
+</pre><pre class="codeoutput"> 
+D = SO3FunHarmonic (xyz &#8594; xyz)
+  antipodal: true
+  bandwidth: 1
+  weight: 0
+ 
+ans =
+   1.4252 + 0.9263i
+</pre><p>Various normalizations for the Wigner-D functions are common in the literature.</p><p>Here we define the <img src="WignerFunctions_eq00704031345446614743.png" alt="$L_2$">-norm by</p><p>$$ \| f \|_2 = \left(\frac1{8\pi^2}\,\int_{SO(3)} \lvert f(\bf R) \rvert^2 \,\mathrm d \bf R \right)^{1/2} $$</p><pre class="error">Error updating Text.
+
+ String scalar or character vector must have valid interpreter syntax: 
+$$ \| f \|_2 = \left(\frac1{8\pi^2}\,\int_{SO(3)} \lvert f(\bf R) \rvert^2 \,\mathrm d \bf R \right)^{1/2} $$
+</pre><p>such that the norm of the constant function <img src="WignerFunctions_eq00862639249737814323.png" alt="$f=1$"> is <img src="WignerFunctions_eq02136768035765927026.png" alt="$1$">. Take a look on the section <a href="SO3FunOperations.html#6">Integration of SO3Fun's</a>.</p><p>Using that definition the Wigner-D functions in MTEX are normalized, i.e. <img src="WignerFunctions_eq16203648586085246263.png" alt="$\| D_n^{k,l} \|_2 = 1$"> for all <img src="WignerFunctions_eq16432741107138008444.png" alt="$n,k,l$">.</p><pre class="codeinput">norm(D)
+</pre><pre class="codeoutput">ans =
+     1
+</pre><h2 id="6">Some important formulas for Wigner-D functions</h2><p>The Wigner-D functions are the matrix elements of the representations <img src="WignerFunctions_eq06885163435671444722.png" alt="$D_n \colon SO(3) \to C^{(2n+1)\times(2n+1)}$"> on <img src="WignerFunctions_eq01113541437488883686.png" alt="$SO(3)$">. Since representations are group homomorphisms, we have <img src="WignerFunctions_eq17832133646886696680.png" alt="$D_n(\bf{R} \, \bf{Q}) = \frac1{\sqrt{2n+1}} \, D_n(\bf{Q}) \, D_n(\bf{R}).$"> Hence we get</p><p><img src="WignerFunctions_eq02841897655859211604.png" alt="$$ D_n^{k,l}(\bf{R}\,\bf{Q}) = \frac1{2n+1} \sum_{j=-n}^n D_n^{k,j}(\bf{Q})\,D_n^{j,l}(\bf{R}). $$"></p><p>Some symmetry properties of Wigner-D functions yields</p><p><img src="WignerFunctions_eq00466863490548008975.png" alt="$$ D_n^{k,l}(\bf{R}) = \overline{D_n^{l,k}(\bf{R}^{-1})}. $$"></p><h2 id="8">Symmetry properties of Wigner-d functions</h2><p>The Wigner-d functions by construction fulfill a lot of symmetry properties. Some importants are</p><p><img src="WignerFunctions_eq14449470166393884609.png" alt="$$ d_n^{k,l}(x) = d_n^{-k,-l}(x) = (-1)^{k+l}\, d_n^{l,k}(x) = (-1)^{k+l}\, d_n^{-l,-k}(x)$$"></p><p><img src="WignerFunctions_eq14866375820982178833.png" alt="$$ d_n^{k,l}(x) = (-1)^{n+k+l}\,d_n^{-k,l}(-x) = (-1)^{n+k+l}\,d_n^{k,-l}(-x) $$"></p><p><img src="WignerFunctions_eq05519231397337269610.png" alt="$$d_n^{k,l}(\cos\beta) = (-1)^{k+l}\,d_n^{k,l}(\cos(-\beta))$$"></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Wigner-D functions
+%
+%% Theorie
+%
+% The Wigner-D functions are special functions on the rotation group
+% $SO(3)$.
+%
+% In terms of Matthies (ZYZ-convention) Euler angles ${\bf R} = {\bf
+% R}(\alpha,\beta,\gamma)$ the $L_2$-normalized Wigner-D function of degree
+% $n$ and orders $k,l \in \{-n,\dots,n\}$ is defined by
+%
+% $$ D_n^{k,l}({\bf R}) = \sqrt{2n+1} \, \mathrm e^{-\mathrm i k\gamma}
+% \mathrm d_n^{k,l}(\cos\beta) \,e^{-\mathrm i l\alpha} $$
+%
+% where $d_n^{k,l}$, denote the real valued Wigner-d functions, which are
+% defined in terms of Jacobi polynomial $P_s^{a,b}$  by
+% 
+% $$ d_n^{k,l}(x) = (-1)^{\nu} {2n-s \choose s+a}^{\frac12}
+% {s+b \choose b}^{-\frac12} \left(\frac{1-x}{2}\right)^{\frac{a}{2}}
+% \left(\frac{1+x}{2}\right)^{\frac{b}2} P_s^{a,b}(x)$$
+% 
+% using the constants $a =|k-l|$, $b =|k+l|$, $s = n - \max\{|k|,|l|\}$ and
+% $\nu = \min\{0,k\}+\min\{0,l\}$ if $l \geq k$; $\nu =
+% \min\{0,k\}+\min\{0,l\} + k+l$ otherwise.
+%
+% This definition is slightly different to other well known definitions,
+% because the Wigner-D functions are defined compatible to the
+% <SphericalHarmonics.html spherical harmonics> which form an orthonormal
+% basis on the 2-sphere.
+%
+%% 
+% In MTEX the Wigner-D and Wigner-d functions are available through the
+% command <Wigner_D.html |Wigner_D|>
+
+% the Wigner-d function of degree 1
+beta = 0.5;
+d = Wigner_D(1,beta)
+
+% the Wigner-D function of degree 1
+R = rotation.rand;
+D = sqrt(3) * Wigner_D(1,R)
+
+%%
+% Here the orders $k$, $l$ work as row and column indices.
+%
+%% Series Expansion
+%
+% The Wigner-D functions form an orthonormal basis in $L_2(SO(3))$. Hence,
+% we can describe functions on the rotation group $SO(3)$ by there harmonic
+% representation using the class <SO3FunHarmonicRepresentation.html |SO3FunHarmonic|>.
+%
+% Hence we define the Wigner-D function $D_1^{1,-1}$ by
+
+D = SO3FunHarmonic([0;0;0;1])
+D.eval(R)
+
+%%
+% Various normalizations for the Wigner-D functions are common in the
+% literature.
+%
+% Here we define the $L_2$-norm by
+%
+% $$ \| f \|_2 = \left(\frac1{8\pi^2}\,\int_{SO(3)} \lvert f(\bf R) \rvert^2 \,\mathrm d \bf R \right)^{1/2} $$
+%
+% such that the norm of the constant function $f=1$ is $1$. Take a look on the section 
+% <SO3FunOperations.html#6 Integration of SO3Fun's>.
+%
+% Using that definition the Wigner-D functions in MTEX are normalized, i.e. $\|
+% D_n^{k,l} \|_2 = 1$ for all $n,k,l$.
+
+
+norm(D)
+
+%% Some important formulas for Wigner-D functions
+%
+% The Wigner-D functions are the matrix elements of the representations
+% $D_n \colon SO(3) \to C^{(2n+1)\times(2n+1)}$ on $SO(3)$. 
+% Since representations are group homomorphisms, we have
+% $D_n(\bf{R} \, \bf{Q}) = \frac1{\sqrt{2n+1}} \, D_n(\bf{Q}) \, D_n(\bf{R}).$
+% Hence we get
+% 
+% $$ D_n^{k,l}(\bf{R}\,\bf{Q}) = \frac1{2n+1} \sum_{j=-n}^n D_n^{k,j}(\bf{Q})\,D_n^{j,l}(\bf{R}). $$
+%
+%%
+% Some symmetry properties of Wigner-D functions yields
+%
+% $$ D_n^{k,l}(\bf{R}) = \overline{D_n^{l,k}(\bf{R}^{-1})}. $$
+%
+
+%% Symmetry properties of Wigner-d functions
+% 
+% The Wigner-d functions by construction fulfill a lot of symmetry 
+% properties. Some importants are
+%  
+% $$ d_n^{k,l}(x) = d_n^{-k,-l}(x) = (-1)^{k+l}\, d_n^{l,k}(x) = (-1)^{k+l}\, d_n^{-l,-k}(x)$$
+% 
+% $$ d_n^{k,l}(x) = (-1)^{n+k+l}\,d_n^{-k,l}(-x) = (-1)^{n+k+l}\,d_n^{k,-l}(-x) $$
+%
+% $$d_n^{k,l}(\cos\beta) = (-1)^{k+l}\,d_n^{k,l}(\cos(-\beta))$$
+%
+
+##### SOURCE END #####
+--></body></html>

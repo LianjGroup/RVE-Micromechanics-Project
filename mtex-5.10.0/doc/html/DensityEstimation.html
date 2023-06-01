@@ -1,0 +1,512 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Density Estimation</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_DensityEstimation.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Density Estimation</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#3">The Histogram</a></li><li><a href="#5">Kernel Density Estimation</a></li><li><a href="#10">Optimal Halfwidth Selection</a></li><li><a href="#11">Kernel Density Estimation in d-Dimensions</a></li><li><a href="#13">Density Estimation for Directional Data</a></li><li><a href="#16">Density Estimation for Orientation Data</a></li><li><a href="#19">Parametric Density Estimation</a></li><li><a href="#20">Density Estimtation with Weights</a></li></ul></div><p>In many cases texture measurements are acquired in the form of a series of points or intensities. EBSD measurements are usually a grid of measurement points, while pole figure measurements are often angular positions combined with intensity values. However, in many cases we want to do analysis that requires a continuous function, in which case we want to determine the continuous function that best represents our data points.  This section discusses the mathematical basis of this calculation and how it is affected by some of the parameters involved.</p><p>In mathematical terms, density estimation is a concept that describes estimation of a probability density function <img src="DensityEstimation_eq14915095679918276977.png" alt="$f_N$"> from given random samples <img src="DensityEstimation_eq02234183564580719597.png" alt="$x_n$">, <img src="DensityEstimation_eq00680662500553684899.png" alt="$n=1,\ldots,N$">. In the simplest case the random samples <img src="DensityEstimation_eq02234183564580719597.png" alt="$x_n$"> are real numbers and come from an unknown distribution function <img src="DensityEstimation_eq02527148203711597490.png" alt="$f$">. The goal is to ensure that <img src="DensityEstimation_eq14915095679918276977.png" alt="$f_N$"> approximates <img src="DensityEstimation_eq02527148203711597490.png" alt="$f$"> as well as possible.</p><p>Lets illustrate this starting with the example of a mixed Gaussian distribution</p><pre class="codeinput"><span class="comment">% Define the true density function, in this case made by combining two</span>
+<span class="comment">% Gaussians</span>
+f = @(x) Gaussian(0.2,0.05,x) + Gaussian(0.5,0.2,x);
+
+<span class="comment">% generate 1000 points linearly spaced between 0 and 1</span>
+x = linspace(0,1,1000);
+<span class="comment">% use these points to plot the true density function as blue lines</span>
+plot(x,f(x),<span class="string">'linewidth'</span>,2)
+xlabel(<span class="string">'x'</span>);ylabel(<span class="string">'f(x)'</span>)
+
+<span class="comment">% generate a random sample of points from the function f(x)</span>
+N = 20;
+xN = discreteSample(f,N,<span class="string">'range'</span>,[0,1]);
+
+<span class="comment">% plot the random sample as red circles</span>
+hold <span class="string">on</span>
+plot(xN,zeros(size(xN)),<span class="string">'o'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_01.png" alt=""> <p>Note that the higher the peak of the original function, the more points randomly generated. Because the red points are randomly generated, your plot will look slightly different.</p><h2 id="3">The Histogram</h2><p>The easiest way to estimate a density function from the sample <img src="DensityEstimation_eq02234183564580719597.png" alt="$x_n$"> is with a histogram</p><pre class="codeinput">histogram(xN,10)
+hold <span class="string">on</span>
+plot(x,f(x),<span class="string">'linewidth'</span>,2)
+plot(xN,zeros(size(xN)),<span class="string">'o'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_02.png" alt=""> <p>However, since the histogram always leads to a piecewise constant function (step function) the fit to the true density function <img src="DensityEstimation_eq02527148203711597490.png" alt="$f$"> is usually not so good. A better alternative is kernel density estimation.</p><h2 id="5">Kernel Density Estimation</h2><p>The idea of kernel density estimation is to pick some kernel function <img src="DensityEstimation_eq03702555302202684472.png" alt="$\psi$">, e.g. a Gaussian with mean <img src="DensityEstimation_eq11318174275339748612.png" alt="$0$"> and stadard deviation <img src="DensityEstimation_eq09322537192434797870.png" alt="$0.05$">,</p><pre class="codeinput">psi = Gaussian(0,0.05);
+</pre><p>shift its center to the position of each sample points <img src="DensityEstimation_eq02234183564580719597.png" alt="$x_n$"></p><pre class="codeinput"><span class="comment">% plot the random sample</span>
+plot(xN,zeros(size(xN)),<span class="string">'o'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'r'</span>)
+hold <span class="string">on</span>
+
+<span class="comment">% for each random sample plot a centered Gaussian</span>
+<span class="keyword">for</span> n = 1:N, plot(x,psi(x-xN(n)),<span class="string">'k'</span>); <span class="keyword">end</span>
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_03.png" alt=""> <p>and take the mean</p><p><img src="DensityEstimation_eq13042960617581576331.png" alt="$$ f(x) = \frac{1}{N} \sum_{n=1}^N \psi(x-x_n) $$"></p><p>of all the these shifted kernel functions</p><pre class="codeinput"><span class="comment">% take the mean over all shifted kernel functions</span>
+fN = @(x) mean(psi(x-xN),1);
+
+hold <span class="string">on</span>
+<span class="comment">% plot the resulting estimate of the original function</span>
+plot(x,fN(x),<span class="string">'linewidth'</span>,3,<span class="string">'Color'</span>,ind2color(2))
+
+<span class="comment">% plot the "true" density function</span>
+plot(x,f(x),<span class="string">'linewidth'</span>,3,<span class="string">'Color'</span>,ind2color(1))
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_04.png" alt=""> <p>We observe that this gives a much better approximation to true density function <img src="DensityEstimation_eq02527148203711597490.png" alt="$f$">. The most important parameter when computing the kernel density estimate of a random sample is the halfwidth or standard deviation of the corresponding kernel function. Lets repeat the above density estimation with three different standard deviations</p><pre class="codeinput"><span class="comment">% plot the true density function</span>
+plot(x,f(x),<span class="string">'linewidth'</span>,3)
+hold <span class="string">on</span>
+
+<span class="comment">% and on top the kernel density estimates with different halfwidth</span>
+delta = [0.01 0.05 0.25];
+<span class="keyword">for</span> d = delta
+
+  psi = Gaussian(0,d);
+  fN = @(x) mean(psi(x-xN),1);
+  plot(x,fN(x),<span class="string">'linewidth'</span>,3)
+
+<span class="keyword">end</span>
+hold <span class="string">off</span>
+legend(<span class="string">'$f$'</span>,<span class="string">'$f_{0.01}$'</span>,<span class="string">'$f_{0.05}$'</span>,<span class="string">'$f_{0.25}$'</span>,<span class="string">'interpreter'</span>,<span class="string">'Latex'</span>),
+</pre><img vspace="50" hspace="5" src="DensityEstimation_05.png" alt=""> <p>In general a too small halfwidth leads to heavily oscillating functions, while a too large halfwdith will result in excessively smooth functions. In the case of one dimensional data kernel density estimation MTEX includes automatic optomization of the halfwidth when using the command <a href="calcDensity.html"><tt>calcDensity</tt></a>.</p><pre class="codeinput">fN = calcDensity(xN,<span class="string">'range'</span>,[0;1]);
+
+<span class="comment">% Optionally, we may control the halfwidth by the option 'bandwidth'</span>
+<span class="comment">%fN = calcDensity(xN,'range',[0;1],'bandwidth',0.004);</span>
+
+plot(x,f(x),<span class="string">'linewidth'</span>,2)
+hold <span class="string">on</span>
+plot(x,fN(x),<span class="string">'linewidth'</span>,2)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">t_star =
+    0.0021
+</pre><img vspace="50" hspace="5" src="DensityEstimation_06.png" alt=""> <h2 id="10">Optimal Halfwidth Selection</h2><p>Selecting an optimal kernel halfwidth is a tough problem. MTEX provides a couple of methods for this purpose which are explained in detail in the section <a href="OptimalKernel.html">Optimal Kernel Selection</a>.</p><h2 id="11">Kernel Density Estimation in d-Dimensions</h2><p>The command <a href="calcDensity.html">calcDensity</a> may also be applied to <img src="DensityEstimation_eq10517210026693618754.png" alt="$d$">-dimenional data. For simplicity lets consider a two-dimensional example where both <img src="DensityEstimation_eq16247206711595679522.png" alt="$x$"> and <img src="DensityEstimation_eq14521328786523663806.png" alt="$y$"> coordinates are distributed according to the distribution <img src="DensityEstimation_eq02527148203711597490.png" alt="$f$"> defined at the very beginning of this section.</p><pre class="codeinput"><span class="comment">% Get a number of random sample points from the function.</span>
+N = 100;
+xN = discreteSample(f,N);
+yN = discreteSample(f,N);
+
+<span class="comment">% plot the random sample as red circles</span>
+scatter(xN,yN,<span class="string">'o'</span>,<span class="string">'LineWidth'</span>,2,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'r'</span>)
+axis <span class="string">equal</span> <span class="string">tight</span>
+<span class="comment">%xlabel('x');ylabel('f(x)')</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_07.png" alt=""> <p>Similarly to the one dimensional example we need to specify the range of the <img src="DensityEstimation_eq16247206711595679522.png" alt="$x$"> and <img src="DensityEstimation_eq14521328786523663806.png" alt="$y$"> coordinates for the estimated density function. The format is <tt>[xMin yMin; xMax yMax]</tt>.</p><pre class="codeinput"><span class="comment">% compute the two dimensional density function based on the random points</span>
+fN = calcDensity([xN,yN],<span class="string">'range'</span>,[0 0;1 1]);
+
+<span class="comment">% plot the two dimensional density function</span>
+[x,y] = ndgrid(linspace(0,1));
+contourf(x,y,fN(x,y),<span class="string">'LevelStep'</span>,2)
+mtexColorMap <span class="string">LaboTeX</span>
+shading <span class="string">interp</span>
+axis <span class="string">equal</span> <span class="string">tight</span>
+
+<span class="comment">% plot the original random sample on top</span>
+hold <span class="string">on</span>
+scatter(xN,yN,<span class="string">'.'</span>,<span class="string">'r'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_08.png" alt=""> <h2 id="13">Density Estimation for Directional Data</h2><p>Kernel density for directional (misorientation/ crystallographic axis) data works analogously as for real valued data. Again we have to choose a kernel function <img src="DensityEstimation_eq03702555302202684472.png" alt="$\psi$"> with a certain halfwidth <img src="DensityEstimation_eq12492974332187978896.png" alt="$\delta$">. Than the kernel functions are centered at each direction of our random sampling and summed up. Lets us demonstrate this procedure for misorientation axes between two phases in an EBSD map</p><pre class="codeinput"><span class="comment">% import ebsd data</span>
+mtexdata <span class="string">forsterite</span> <span class="string">silent</span>
+
+<span class="comment">% reconstruct grains</span>
+grains = calcGrains(ebsd(<span class="string">'indexed'</span>));
+
+<span class="comment">% extract Forsterite to Enstatite grain boundaries</span>
+gB = grains.boundary(<span class="string">'Forsterite'</span>,<span class="string">'Enstatite'</span>);
+
+<span class="comment">% plot misorientation axes of the data over the fundamental region of orientation space</span>
+plot(gB.misorientation.axis,<span class="string">'fundamentalRegion'</span>,<span class="string">'MarkerFaceAlpha'</span>,0.1)
+</pre><img vspace="50" hspace="5" src="DensityEstimation_09.png" alt=""> <p>The distribution of the misorientation axes may be analyzed in more detail by computing the misorientation axis distribution function</p><pre class="codeinput"><span class="comment">% compute the misorientation axis distribution function</span>
+axisDensity = calcDensity(gB.misorientation.axis);
+
+<span class="comment">% plot the density function</span>
+contourf(axisDensity)
+mtexColorMap <span class="string">LaboTeX</span>
+mtexColorbar
+
+<span class="comment">% and on top of it the misorientation axes</span>
+hold <span class="string">on</span>
+plot(gB.misorientation.axis,<span class="string">'MarkerEdgeAlpha'</span>,0.25,<span class="keyword">...</span>
+  <span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_10.png" alt=""> <p>Note that the resulting variable <tt>axisDensity</tt> is of type <a href="S2FunHarmonicSym.S2FunHarmonicSym.html">S2FunHarmonicSym</a> and allows for all the operations as explained in the section <a href="S2FunOperations.html">Operations on Spherical Functions</a>. In order to stress once again the importance of the choice of the halfwidth of the kernel function we perform the same calculation as above but with the halfwidth set to 5 degree</p><pre class="codeinput">axisDensity = calcDensity(gB.misorientation.axis,<span class="string">'halfwidth'</span>,5*degree);
+
+contourf(axisDensity)
+mtexColorMap <span class="string">LaboTeX</span>
+mtexColorbar
+
+hold <span class="string">on</span>
+plot(gB.misorientation.axis,<span class="string">'MarkerEdgeAlpha'</span>,0.25,<span class="keyword">...</span>
+  <span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="DensityEstimation_11.png" alt=""> <h2 id="16">Density Estimation for Orientation Data</h2><p>Density estimation from orientations sets the connection between individal crystal orientations, as e.g. measured by EBSD, and the orientation distribution function of a specimen. Considering the Forsterite orientations from the above EBSD map the corresponding ODF computes to</p><pre class="codeinput">odf = calcDensity(ebsd(<span class="string">'Forsterite'</span>).orientations,<span class="string">'halfwidth'</span>,10*degree)
+</pre><pre class="codeoutput"> 
+odf = SO3FunHarmonic (Forsterite &#8594; xyz)
+  isReal: true
+  bandwidth: 25
+  weight: 1
+ 
+</pre><p>Lets visualize the ODF in phi2 sections and plot on top of it the individual orientation measurements from the EBSD map</p><pre class="codeinput">plotSection(odf,<span class="string">'contourf'</span>)
+mtexColorMap <span class="string">LaboTeX</span>
+
+hold <span class="string">on</span>
+plot(ebsd(<span class="string">'Forsterite'</span>).orientations,<span class="string">'MarkerEdgeAlpha'</span>,0.25,<span class="keyword">...</span>
+  <span class="string">'MarkerFaceColor'</span>,<span class="string">'none'</span>,<span class="string">'MarkerEdgeColor'</span>,<span class="string">'k'</span>,<span class="string">'MarkerSize'</span>,10)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">  plotting 2000 random orientations out of 152345 given orientations
+</pre><img vspace="50" hspace="5" src="DensityEstimation_12.png" alt=""> <p>A more detailed describtion of ODF estimation from individual orientation measurements can be found in the section <a href="EBSD2ODF.html">ODF Estimation from EBSD data</a>.</p><h2 id="19">Parametric Density Estimation</h2><p>In contrast to kernel density estimation, parametric density estimation makes the assumption that the true distribution function belongs to a parametric distribution family, e.g. the Gaussian. In this case it estimates the parameters of this distribution from the random sample. In the case of the Gaussian distribution these parameters are the mean value and the standard deviation. On spheres and in orientation space, the analogous functions to the Gaussian are the Bingham distributions. The estimation of Bingham parameters from directional and rotational data is explained in the sections <a href="S2FunBingham.html">The Spherical Bingham Distribution</a> and <a href="BinghamODFs.html">The Rotational Bingham Distribution</a>.</p><h2 id="20">Density Estimtation with Weights</h2><p>In many use cases one has a weighted random sample. A typical example is if one wants to estimate a orientation distribution function from grain orientations. In this cases big grains should contribute more to the ODF than small grains. For that reason the functions <tt>calcDensity</tt> allow for an additional option <tt>'weights'</tt> which will pass weights to the density estimation.</p><pre class="codeinput">mtexdata <span class="string">titanium</span> <span class="string">silent</span>
+grains = calcGrains(ebsd);
+
+odf = calcDensity(grains.meanOrientation,<span class="string">'weights'</span>,grains.grainSize)
+</pre><pre class="codeoutput"> 
+odf = SO3FunRBF (Titanium (Alpha) &#8594; xyz)
+ 
+  &lt;strong&gt;multimodal components&lt;/strong&gt;
+  kernel: de la Vallee Poussin, halfwidth 10&deg;
+  center: 85 orientations
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Density Estimation
+%
+%%
+% In many cases texture measurements are acquired in the form of a series
+% of points or intensities. EBSD measurements are usually a grid of
+% measurement points, while pole figure measurements are often angular
+% positions combined with intensity values. However, in many cases we want
+% to do analysis that requires a continuous function, in which case we want
+% to determine the continuous function that best represents our data
+% points.  This section discusses the mathematical basis of this
+% calculation and how it is affected by some of the parameters involved.
+% 
+% In mathematical terms, density estimation is a concept that describes
+% estimation of a probability density function $f_N$ from given random
+% samples $x_n$, $n=1,\ldots,N$. In the simplest case the random samples
+% $x_n$ are real numbers and come from an unknown distribution function
+% $f$. The goal is to ensure that $f_N$ approximates $f$ as well as
+% possible.
+%
+% Lets illustrate this starting with the example of a mixed Gaussian
+% distribution
+
+% Define the true density function, in this case made by combining two
+% Gaussians
+f = @(x) Gaussian(0.2,0.05,x) + Gaussian(0.5,0.2,x);
+
+% generate 1000 points linearly spaced between 0 and 1
+x = linspace(0,1,1000);
+% use these points to plot the true density function as blue lines
+plot(x,f(x),'linewidth',2)
+xlabel('x');ylabel('f(x)')
+
+% generate a random sample of points from the function f(x)
+N = 20;
+xN = discreteSample(f,N,'range',[0,1]);
+
+% plot the random sample as red circles
+hold on
+plot(xN,zeros(size(xN)),'o','LineWidth',2,'MarkerEdgeColor','r')
+hold off
+
+%%
+% Note that the higher the peak of the original function, the more points
+% randomly generated. Because the red points are randomly generated, your
+% plot will look slightly different.
+%
+%% The Histogram
+% The easiest way to estimate a density function from the sample $x_n$ is
+% with a histogram
+
+histogram(xN,10)
+hold on
+plot(x,f(x),'linewidth',2)
+plot(xN,zeros(size(xN)),'o','LineWidth',2,'MarkerEdgeColor','r')
+hold off
+
+%%
+% However, since the histogram always leads to a piecewise constant
+% function (step function) the fit to the true density function $f$ is
+% usually not so good. A better alternative is kernel density estimation.
+%
+%% Kernel Density Estimation 
+%
+% The idea of kernel density estimation is to pick some kernel function
+% $\psi$, e.g. a Gaussian with mean $0$ and stadard deviation $0.05$,
+
+psi = Gaussian(0,0.05);
+
+%%
+% shift its center to the position of each sample points $x_n$
+
+% plot the random sample
+plot(xN,zeros(size(xN)),'o','LineWidth',2,'MarkerEdgeColor','r')
+hold on
+
+% for each random sample plot a centered Gaussian
+for n = 1:N, plot(x,psi(x-xN(n)),'k'); end
+hold off
+  
+%%
+% and take the mean 
+%
+% $$ f(x) = \frac{1}{N} \sum_{n=1}^N \psi(x-x_n) $$
+%
+% of all the these shifted kernel functions
+
+% take the mean over all shifted kernel functions
+fN = @(x) mean(psi(x-xN),1);
+
+hold on
+% plot the resulting estimate of the original function
+plot(x,fN(x),'linewidth',3,'Color',ind2color(2))
+
+% plot the "true" density function
+plot(x,f(x),'linewidth',3,'Color',ind2color(1))
+hold off
+
+%%
+% We observe that this gives a much better approximation to true density
+% function $f$. The most important parameter when computing the kernel
+% density estimate of a random sample is the halfwidth or standard
+% deviation of the corresponding kernel function. Lets repeat the above
+% density estimation with three different standard deviations
+
+% plot the true density function
+plot(x,f(x),'linewidth',3)
+hold on
+
+% and on top the kernel density estimates with different halfwidth
+delta = [0.01 0.05 0.25];
+for d = delta
+
+  psi = Gaussian(0,d);
+  fN = @(x) mean(psi(x-xN),1);
+  plot(x,fN(x),'linewidth',3)
+  
+end
+hold off
+legend('$f$','$f_{0.01}$','$f_{0.05}$','$f_{0.25}$','interpreter','Latex'), 
+
+%%
+% In general a too small halfwidth leads to heavily oscillating functions,
+% while a too large halfwdith will result in excessively smooth functions.
+% In the case of one dimensional data kernel density estimation MTEX
+% includes automatic optomization of the halfwidth when using the command
+% <calcDensity.html |calcDensity|>.
+
+fN = calcDensity(xN,'range',[0;1]);
+
+% Optionally, we may control the halfwidth by the option 'bandwidth'
+%fN = calcDensity(xN,'range',[0;1],'bandwidth',0.004);
+
+plot(x,f(x),'linewidth',2)
+hold on
+plot(x,fN(x),'linewidth',2)
+hold off
+
+%% Optimal Halfwidth Selection
+% Selecting an optimal kernel halfwidth is a tough problem. MTEX provides a
+% couple of methods for this purpose which are explained in detail in the
+% section <OptimalKernel.html Optimal Kernel Selection>.
+%
+%% Kernel Density Estimation in d-Dimensions
+% The command <calcDensity.html calcDensity> may also be applied to
+% $d$-dimenional data. For simplicity lets consider a two-dimensional
+% example where both $x$ and $y$ coordinates are distributed according to
+% the distribution $f$ defined at the very beginning of this section.
+
+% Get a number of random sample points from the function.
+N = 100;
+xN = discreteSample(f,N);
+yN = discreteSample(f,N);
+
+% plot the random sample as red circles
+scatter(xN,yN,'o','LineWidth',2,'MarkerEdgeColor','r')
+axis equal tight
+%xlabel('x');ylabel('f(x)')
+
+%%
+% Similarly to the one dimensional example we need to specify the range of
+% the $x$ and $y$ coordinates for the estimated density function. The
+% format is |[xMin yMin; xMax yMax]|.
+
+% compute the two dimensional density function based on the random points
+fN = calcDensity([xN,yN],'range',[0 0;1 1]);
+
+% plot the two dimensional density function
+[x,y] = ndgrid(linspace(0,1));
+contourf(x,y,fN(x,y),'LevelStep',2)
+mtexColorMap LaboTeX
+shading interp
+axis equal tight
+
+% plot the original random sample on top
+hold on
+scatter(xN,yN,'.','r')
+hold off
+
+%% Density Estimation for Directional Data
+%
+% Kernel density for directional (misorientation/ crystallographic axis)
+% data works analogously as for real valued data. Again we have to choose a
+% kernel function $\psi$ with a certain halfwidth $\delta$. Than the kernel
+% functions are centered at each direction of our random sampling and
+% summed up. Lets us demonstrate this procedure for misorientation axes
+% between two phases in an EBSD map
+
+% import ebsd data
+mtexdata forsterite silent
+
+% reconstruct grains
+grains = calcGrains(ebsd('indexed'));
+
+% extract Forsterite to Enstatite grain boundaries
+gB = grains.boundary('Forsterite','Enstatite');
+
+% plot misorientation axes of the data over the fundamental region of orientation space
+plot(gB.misorientation.axis,'fundamentalRegion','MarkerFaceAlpha',0.1)
+
+%%
+% The distribution of the misorientation axes may be analyzed in more
+% detail by computing the misorientation axis distribution function
+
+% compute the misorientation axis distribution function
+axisDensity = calcDensity(gB.misorientation.axis);
+
+% plot the density function 
+contourf(axisDensity)
+mtexColorMap LaboTeX
+mtexColorbar
+
+% and on top of it the misorientation axes
+hold on
+plot(gB.misorientation.axis,'MarkerEdgeAlpha',0.25,...
+  'MarkerFaceColor','none','MarkerEdgeColor','k')
+hold off
+
+%%
+% Note that the resulting variable |axisDensity| is of type
+% <S2FunHarmonicSym.S2FunHarmonicSym.html S2FunHarmonicSym> and allows for all the operations as explained in the
+% section <S2FunOperations.html Operations on Spherical Functions>. In
+% order to stress once again the importance of the choice of the halfwidth
+% of the kernel function we perform the same calculation as above but with
+% the halfwidth set to 5 degree
+
+axisDensity = calcDensity(gB.misorientation.axis,'halfwidth',5*degree);
+
+contourf(axisDensity)
+mtexColorMap LaboTeX
+mtexColorbar
+
+hold on
+plot(gB.misorientation.axis,'MarkerEdgeAlpha',0.25,...
+  'MarkerFaceColor','none','MarkerEdgeColor','k')
+hold off
+
+
+%% Density Estimation for Orientation Data
+%
+% Density estimation from orientations sets the connection between
+% individal crystal orientations, as e.g. measured by EBSD, and the
+% orientation distribution function of a specimen. Considering the
+% Forsterite orientations from the above EBSD map the corresponding ODF
+% computes to
+
+odf = calcDensity(ebsd('Forsterite').orientations,'halfwidth',10*degree)
+
+%%
+% Lets visualize the ODF in phi2 sections and plot on top of it the
+% individual orientation measurements from the EBSD map
+
+plotSection(odf,'contourf')
+mtexColorMap LaboTeX
+
+hold on
+plot(ebsd('Forsterite').orientations,'MarkerEdgeAlpha',0.25,...
+  'MarkerFaceColor','none','MarkerEdgeColor','k','MarkerSize',10)
+hold off
+
+%%
+% A more detailed describtion of ODF estimation from individual orientation
+% measurements can be found in the section <EBSD2ODF.html ODF Estimation
+% from EBSD data>.
+%
+%% Parametric Density Estimation
+% 
+% In contrast to kernel density estimation, parametric density estimation
+% makes the assumption that the true distribution function belongs to a
+% parametric distribution family, e.g. the Gaussian. In this case it
+% estimates the parameters of this distribution from the random sample. In
+% the case of the Gaussian distribution these parameters are the mean value
+% and the standard deviation. On spheres and in orientation space, the
+% analogous functions to the Gaussian are the Bingham distributions. The
+% estimation of Bingham parameters from directional and rotational data is
+% explained in the sections <S2FunBingham.html The Spherical Bingham
+% Distribution> and <BinghamODFs.html The Rotational Bingham Distribution>.
+%
+%% Density Estimtation with Weights
+% In many use cases one has a weighted random sample. A typical example is
+% if one wants to estimate a orientation distribution function from grain
+% orientations. In this cases big grains should contribute more to the ODF
+% than small grains. For that reason the functions |calcDensity| allow for
+% an additional option |'weights'| which will pass weights to the density
+% estimation.
+
+mtexdata titanium silent
+grains = calcGrains(ebsd);
+
+odf = calcDensity(grains.meanOrientation,'weights',grains.grainSize)
+
+##### SOURCE END #####
+--></body></html>

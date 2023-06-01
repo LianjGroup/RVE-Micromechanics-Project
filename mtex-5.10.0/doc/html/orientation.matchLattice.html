@@ -1,0 +1,231 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>matchLattice</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_orientation__matchLattice.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>matchLattice</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">View Code</a></li><li><a href="#3">Description</a></li><li><a href="#4">Syntax</a></li><li><a href="#5">Input</a></li><li><a href="#6">Output</a></li><li><a href="#7">Example</a></li><li><a href="#10">See also</a></li></ul></div><p>find lattice alignements for arbitrary misorientations</p><h2 id="2">View Code</h2><h2 id="3">Description</h2><p>Given a misorientation mori find all face normals n1, n2 and crystal directions d1, d2, such that mori * n1 = n2 and mori * d1 = d2.</p><h2 id="4">Syntax</h2><pre class="language-matlab">matchLattice(mori)
+</pre><pre class="language-matlab">[n1,n2,d1,d2] = matchLattice(mori)
+[n1,n2,d1,d2] = matchLattice(mori,<span class="string">'threshold'</span>,1*degree)
+[n1,n2,d1,d2] = matchLattice(mori,<span class="string">'maxIndex'</span>,3)
+</pre><h2 id="5">Input</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>mori</tt>
+         </td>
+         <td>
+            <tt>mis<a href="orientation.orientation.html">orientation</a></tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="6">Output</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>uvw,hkl</tt>
+         </td>
+         <td>
+            <tt><a href="Miller.Miller.html">Miller</a></tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>n1,n2,d1,d2</tt>
+         </td>
+         <td>
+            <tt><a href="Miller.Miller.html">Miller</a></tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="7">Example</h2><pre class="codeinput"><span class="comment">% revert sigma3 misorientation relationship</span>
+[n1,n2,d1,d2] = round2Miller(CSL(3,crystalSymmetry(<span class="string">'432'</span>)))
+</pre><pre class="codeoutput"> 
+n1 = Miller (432)
+  h k l
+  1 1 1
+ 
+n2 = Miller (432)
+  h k l
+  1 1 1
+ 
+d1 = Miller (432)
+  u  v  w
+  0  1 -1
+ 
+d2 = Miller (432)
+   u  v  w
+  -1  1  0
+</pre><pre class="codeinput"><span class="comment">% revert back Bain misorientation ship</span>
+cs_alpha = crystalSymmetry(<span class="string">'m-3m'</span>, [2.866 2.866 2.866], <span class="string">'mineral'</span>, <span class="string">'Ferrite'</span>);
+cs_gamma = crystalSymmetry(<span class="string">'m-3m'</span>, [3.66 3.66 3.66], <span class="string">'mineral'</span>, <span class="string">'Austenite'</span>);
+mori = orientation.Bain(cs_alpha,cs_gamma)
+[n_gamma,n_alpha,d_gamma,d_alpha] = round2Miller(mori)
+</pre><pre class="codeoutput"> 
+mori = misorientation (Ferrite &#8594; Austenite)
+ 
+ (100) || (100)   [010] || [011]
+ 
+ 
+n_gamma = Miller (Ferrite)
+  h k l
+  1 0 0
+ 
+n_alpha = Miller (Austenite)
+  h k l
+  1 0 0
+ 
+d_gamma = Miller (Ferrite)
+  u v w
+  0 1 0
+ 
+d_alpha = Miller (Austenite)
+  u v w
+  0 1 1
+</pre><h2 id="10">See also</h2><p><a href="round2Miller.html">round2Miller</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% matchLattice
+%% 
+% find lattice alignements for arbitrary misorientations
+% 
+%
+%% View Code
+% 
+%% Description
+% 
+% Given a misorientation mori find all face normals n1, n2 and crystal
+% directions d1, d2, such that mori * n1 = n2 and mori * d1 = d2.
+% 
+%
+%% Syntax
+% 
+%   matchLattice(mori)
+% 
+%   [n1,n2,d1,d2] = matchLattice(mori)
+%   [n1,n2,d1,d2] = matchLattice(mori,'threshold',1*degree)
+%   [n1,n2,d1,d2] = matchLattice(mori,'maxIndex',3)
+% 
+
+%% Input
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>mori</tt>
+%          </td>
+%          <td>
+%             <tt>mis<a href="orientation.orientation.html">orientation</a></tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Output
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>uvw,hkl</tt>
+%          </td>
+%          <td>
+%             <tt><a href="Miller.Miller.html">Miller</a></tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>n1,n2,d1,d2</tt>
+%          </td>
+%          <td>
+%             <tt><a href="Miller.Miller.html">Miller</a></tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Example
+
+% revert sigma3 misorientation relationship
+[n1,n2,d1,d2] = round2Miller(CSL(3,crystalSymmetry('432')))
+
+%% 
+% 
+
+% revert back Bain misorientation ship
+cs_alpha = crystalSymmetry('m-3m', [2.866 2.866 2.866], 'mineral', 'Ferrite');
+cs_gamma = crystalSymmetry('m-3m', [3.66 3.66 3.66], 'mineral', 'Austenite');
+mori = orientation.Bain(cs_alpha,cs_gamma)
+[n_gamma,n_alpha,d_gamma,d_alpha] = round2Miller(mori)
+
+%% 
+% 
+
+%% See also
+% <round2Miller.html round2Miller>
+%
+##### SOURCE END #####
+--></body></html>

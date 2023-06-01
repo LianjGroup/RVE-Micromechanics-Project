@@ -1,0 +1,376 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>calcODF</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_PoleFigure__calcODF.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>calcODF</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">View Code</a></li><li><a href="#3">Syntax</a></li><li><a href="#4">Input</a></li><li><a href="#5">Output</a></li><li><a href="#6">Options</a></li><li><a href="#7">Flags</a></li><li><a href="#8">References</a></li><li><a href="#9">See also</a></li></ul></div><p>PDF to ODF inversion</p><p><b>calcODF</b> is one of the main function of the MTEX toolbox. It estimates an ODF from given Polefigure intensities by <a href="PoleFigure2ODF.html">fitting an ODF that consists of a large number of unimodal ODFs to the data</a>. It does so by minimizing a least squares functional. The command <b>calcODF</b> supports <a href="PoleFigure2ODFGhostCorrection.html">automatic ghost correction</a> and <a href="PoleFigureDubna.html">the zero range method</a>. The function <b>calcODF</b> has several options to control convergence, resolution, smoothing, etc. See below for a complete description.</p><h2 id="2">View Code</h2><h2 id="3">Syntax</h2><pre class="language-matlab">odf = calcODF(pf)
+odf = calcODF(pf,<span class="string">'halfwidth'</span>,5*degree)
+odf = calcODF(pf,<span class="string">'zeroRange'</span>)
+odf = calcODF(pf,<span class="string">'resolution'</span>,2.5*degree)
+</pre><h2 id="4">Input</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>pf</tt>
+         </td>
+         <td>
+            <tt><a href="PoleFigure.PoleFigure.html">PoleFigure</a></tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="5">Output</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>odf</tt>
+         </td>
+         <td>
+            <tt>reconstructed <a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>alpha</tt>
+         </td>
+         <td>
+            <tt>scaling factors, calculated during reconstruction</tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="6">Options</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>kernel</tt>
+         </td>
+         <td>
+            <tt>the ansatz functions (default = de la Vallee Poussin)</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>halfwidth</tt>
+         </td>
+         <td>
+            <tt>halfwidth of the ansatz functions (default = 2/3 * resolution)</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>resolution</tt>
+         </td>
+         <td>
+            <tt>localization grid for the ansatz fucntions (default = 3/2 resolution(pf))</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>iterMax</tt>
+         </td>
+         <td>
+            <tt>maximum number of iterations (default = 11)</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>iterMin</tt>
+         </td>
+         <td>
+            <tt>minimum number of iterations (default = 5)</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>c0</tt>
+         </td>
+         <td>
+            <tt>initial guess (default = [1 1 1 1 ... 1])</tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="7">Flags</h2><p>
+   <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+      <tr>
+         <td width="100px">
+            <tt>zeroRange</tt>
+         </td>
+         <td>
+            <tt>apply zero range method (default = )</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>noGhostCorrection</tt>
+         </td>
+         <td>
+            <tt>omit ghost correction</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>ensure_descent</tt>
+         </td>
+         <td>
+            <tt>stop iteration whenever no procress if observed</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>force_iter_max</tt>
+         </td>
+         <td>
+            <tt>allway go until ITER_MAX</tt>
+         </td>
+      </tr>
+      <tr>
+         <td width="100px">
+            <tt>silent</tt>
+         </td>
+         <td>
+            <tt>no output</tt>
+         </td>
+      </tr>
+   </table>
+</p><h2 id="8">References</h2><div><ul><li><a href="http://dx.doi.org/10.1107/S0021889808030112">A novel pole figure inversion method: specification of the MTEX algorithm</a>, J. Appl. Cryst. 41, 2008.</li></ul></div><h2 id="9">See also</h2><p><a href="PoleFigure2odf.html">PoleFigure2odf</a> <a href="ODF_demo.html">ODF_demo</a> <a href="PoleFigureSimulation_demo.html">PoleFigureSimulation_demo</a> <a href="PoleFigure.load.html">PoleFigure.load</a> <a href="ImportPoleFigureData.html">ImportPoleFigureData</a> <a href="examples_index.html">examples_index</a></p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% calcODF
+%% 
+% PDF to ODF inversion
+% 
+% *calcODF* is one of the main function of the MTEX toolbox. It estimates
+% an ODF from given Polefigure intensities by <PoleFigure2ODF.html fitting
+% an ODF that consists of a large number of unimodal ODFs to the data>. It
+% does so by minimizing a least squares functional. The command *calcODF*
+% supports <PoleFigure2ODFGhostCorrection.html automatic ghost correction> and
+% <PoleFigureDubna.html the zero range method>. The function *calcODF* has
+% several options to control convergence, resolution, smoothing, etc. See
+% below for a complete description.
+% 
+%
+%% View Code
+% 
+%% Syntax
+% 
+%   odf = calcODF(pf)
+%   odf = calcODF(pf,'halfwidth',5*degree)
+%   odf = calcODF(pf,'zeroRange')
+%   odf = calcODF(pf,'resolution',2.5*degree)
+% 
+
+%% Input
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>pf</tt>
+%          </td>
+%          <td>
+%             <tt><a href="PoleFigure.PoleFigure.html">PoleFigure</a></tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Output
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>odf</tt>
+%          </td>
+%          <td>
+%             <tt>reconstructed <a href="SO3Fun.SO3Fun.html">SO3Fun</a></tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>alpha</tt>
+%          </td>
+%          <td>
+%             <tt>scaling factors, calculated during reconstruction</tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Options
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>kernel</tt>
+%          </td>
+%          <td>
+%             <tt>the ansatz functions (default = de la Vallee Poussin)</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>halfwidth</tt>
+%          </td>
+%          <td>
+%             <tt>halfwidth of the ansatz functions (default = 2/3 * resolution)</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>resolution</tt>
+%          </td>
+%          <td>
+%             <tt>localization grid for the ansatz fucntions (default = 3/2 resolution(pf))</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>iterMax</tt>
+%          </td>
+%          <td>
+%             <tt>maximum number of iterations (default = 11)</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>iterMin</tt>
+%          </td>
+%          <td>
+%             <tt>minimum number of iterations (default = 5)</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>c0</tt>
+%          </td>
+%          <td>
+%             <tt>initial guess (default = [1 1 1 1 ... 1])</tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% Flags
+% 
+% <html>
+%    <table cellpadding="4" cellspacing="0" class="funcref" width="100%">
+%       <tr>
+%          <td width="100px">
+%             <tt>zeroRange</tt>
+%          </td>
+%          <td>
+%             <tt>apply zero range method (default = )</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>noGhostCorrection</tt>
+%          </td>
+%          <td>
+%             <tt>omit ghost correction</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>ensure_descent</tt>
+%          </td>
+%          <td>
+%             <tt>stop iteration whenever no procress if observed</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>force_iter_max</tt>
+%          </td>
+%          <td>
+%             <tt>allway go until ITER_MAX</tt>
+%          </td>
+%       </tr>
+%       <tr>
+%          <td width="100px">
+%             <tt>silent</tt>
+%          </td>
+%          <td>
+%             <tt>no output</tt>
+%          </td>
+%       </tr>
+%    </table>
+% </html>
+% 
+%% References
+% 
+% * <http://dx.doi.org/10.1107/S0021889808030112 A novel pole figure
+% inversion method: specification of the MTEX algorithm>, J. Appl. Cryst.
+% 41, 2008.
+% 
+%
+%% See also
+% <PoleFigure2odf.html PoleFigure2odf> <ODF_demo.html ODF_demo> <PoleFigureSimulation_demo.html PoleFigureSimulation_demo>
+% <PoleFigure.load.html PoleFigure.load> <ImportPoleFigureData.html ImportPoleFigureData> <examples_index.html examples_index>
+%
+##### SOURCE END #####
+--></body></html>

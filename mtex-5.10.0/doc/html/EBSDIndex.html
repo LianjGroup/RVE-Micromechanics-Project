@@ -1,0 +1,266 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>The Index of EBSD data</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_EBSDIndex.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>The Index of EBSD data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#7">Square Grids</a></li><li><a href="#10">Hexagonal Grid</a></li><li><a href="#13">Cube Coordinates</a></li></ul></div><p>In previous chapters we have discussed how to select EBSD data by properties. In this chapter we are intested in the order the EBSD are stored within MTEX. Lets start by importing some sample data</p><pre class="codeinput">mtexdata <span class="string">twins</span>
+</pre><pre class="codeoutput"> 
+ebsd = EBSD
+ 
+ Phase  Orientations     Mineral         Color  Symmetry  Crystal reference frame
+     0     46 (0.2%)  notIndexed                                                 
+     1  22833 (100%)   Magnesium  LightSkyBlue     6/mmm       X||a*, Y||b, Z||c*
+ 
+ Properties: bands, bc, bs, error, mad, x, y
+ Scan unit : um
+ 
+</pre><p>and restricting it to very small rectangular subset</p><pre class="codeinput">poly = [44 0 4 2];
+ebsd = ebsd(inpolygon(ebsd,poly));
+
+plot(ebsd,ebsd.orientations,<span class="string">'micronbar'</span>,<span class="string">'off'</span>,<span class="string">'edgecolor'</span>,<span class="string">'k'</span>)
+</pre><img vspace="50" hspace="5" src="EBSDIndex_01.png" alt=""> <p>In the above plot each square corresponds to one entry in the variable <tt>ebsd</tt>. Lets visualize the order</p><pre class="codeinput">text(ebsd,1:length(ebsd))
+</pre><img vspace="50" hspace="5" src="EBSDIndex_02.png" alt=""> <p>We may easily select specific measurement pixels by specifying their indeces</p><pre class="codeinput">hold <span class="string">on</span>
+plot(ebsd(16:18),<span class="string">'edgeColor'</span>,<span class="string">'red'</span>,<span class="string">'facecolor'</span>,<span class="string">'none'</span>,<span class="string">'linewidth'</span>,4)
+legend <span class="string">off</span>
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EBSDIndex_03.png" alt=""> <p>Whether lines or columns run first is not related to MTEX but inherits from the ordering of the imported EBSD data. Since, we have restricted our large EBSD map to the small subset the indece of restricted data does not coincide with the indece of the imported data anymore. However, the original indeces are still stored in <tt>ebsd.id</tt>. Lets visualize them</p><pre class="codeinput">plot(ebsd,ebsd.orientations,<span class="string">'micronbar'</span>,<span class="string">'off'</span>,<span class="string">'edgecolor'</span>,<span class="string">'k'</span>)
+text(ebsd,ebsd.id)
+</pre><img vspace="50" hspace="5" src="EBSDIndex_04.png" alt=""> <p>In order to select EBSD data according to their original id use the option <tt>'id'</tt>, i.e.,</p><pre class="codeinput">hold <span class="string">on</span>
+plot(ebsd(<span class="string">'id'</span>,316:318),<span class="string">'edgeColor'</span>,<span class="string">'red'</span>,<span class="string">'facecolor'</span>,<span class="string">'none'</span>,<span class="string">'linewidth'</span>,4)
+legend <span class="string">off</span>
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EBSDIndex_05.png" alt=""> <h2 id="7">Square Grids</h2><p>In the cases of gridded data it is often useful to convert them into a matrix form.</p><pre class="codeinput">ebsd = ebsd.gridify;
+
+plot(ebsd,ebsd.orientations,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+
+[i,j] = ndgrid(1:size(ebsd,1),1:size(ebsd,2));
+str = arrayfun(@(a,b) [<span class="string">'('</span> int2str(a) <span class="string">','</span> int2str(b) <span class="string">')'</span>],i,j,<span class="string">'UniformOutput'</span>,false);
+text(ebsd,str)
+</pre><img vspace="50" hspace="5" src="EBSDIndex_06.png" alt=""> <p>This allows to select EBSD data simply by their coordinates within the grid, e.g., by</p><pre class="codeinput">hold <span class="string">on</span>
+plot(ebsd(2,2:4),<span class="string">'edgeColor'</span>,<span class="string">'red'</span>,<span class="string">'facecolor'</span>,<span class="string">'none'</span>,<span class="string">'linewidth'</span>,4)
+legend <span class="string">off</span>
+hold <span class="string">off</span>
+</pre><img vspace="50" hspace="5" src="EBSDIndex_07.png" alt=""> <p>Note that the <a href="EBSD.gridify.html"><tt>gridify</tt></a> command changes the order of measurements. They are now sort such that rows runs first and columns second, as this is the default convention how Matlab indexes matrices.</p><pre class="codeinput">plot(ebsd,ebsd.orientations,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+text(ebsd,1:length(ebsd))
+</pre><img vspace="50" hspace="5" src="EBSDIndex_08.png" alt=""> <h2 id="10">Hexagonal Grid</h2><p>The command <a href="EBSD.gridify.html"><tt>gridify</tt></a> may also be applied to EBSD data measured on a hexagonal grid.</p><pre class="codeinput">mtexdata <span class="string">titanium</span> <span class="string">silent</span>
+
+ebsd = ebsd.gridify
+</pre><pre class="codeoutput"> 
+ebsd = EBSDhex
+ 
+ Phase  Orientations           Mineral         Color  Symmetry  Crystal reference frame
+     0    8100 (99%)  Titanium (Alpha)  LightSkyBlue       622       X||a, Y||b*, Z||c*
+ 
+ Properties: ci, grainid, iq, sem_signal, x, y, oldId
+ Scan unit : um
+ Grid size (hex): 97 x 84
+ 
+</pre><p>This rearranges the measurements in a matrix form which can be indexed similarly as in the square case.</p><pre class="codeinput">ebsd = ebsd(10:16,68:79);
+</pre><p>Lets visualize the matrix coordinates for the hexagonal grid</p><pre class="codeinput">plot(ebsd,ebsd.orientations,<span class="string">'edgeColor'</span>,<span class="string">'k'</span>,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+axis <span class="string">off</span>
+
+[i,j] = ndgrid(1:size(ebsd,1),1:size(ebsd,2));
+str = arrayfun(@(a,b) [<span class="string">'('</span> int2str(a) <span class="string">','</span> int2str(b) <span class="string">')'</span>],i,j,<span class="string">'UniformOutput'</span>,false);
+text(ebsd,str)
+</pre><img vspace="50" hspace="5" src="EBSDIndex_09.png" alt=""> <h2 id="13">Cube Coordinates</h2><p>In hexognal grids it is sometimes advantageous to use three digit cube coordinates to index the cell. This can be done using the commands <a href="EBSDhex.hex2cube.html"><tt>hex2cube</tt></a> and <a href="EBSDhex.cube2hex.html"><tt>cube2hex</tt></a>. Much more details on indexing hex grids can be found at <a href="https://www.redblobgames.com/grids/hexagons/">here</a>.</p><pre class="codeinput">plot(ebsd,ebsd.orientations,<span class="string">'edgeColor'</span>,<span class="string">'k'</span>,<span class="string">'micronbar'</span>,<span class="string">'off'</span>)
+axis <span class="string">off</span>
+
+[i,j] = ndgrid(1:size(ebsd,1),1:size(ebsd,2));
+[x,y,z] = ebsd.hex2cube(i,j);
+str = arrayfun(@(a,b,c) [<span class="string">'('</span> int2str(a) <span class="string">','</span> int2str(b) <span class="string">','</span> int2str(c) <span class="string">')'</span>],x,y,z,<span class="string">'UniformOutput'</span>,false);
+text(ebsd,str)
+</pre><img vspace="50" hspace="5" src="EBSDIndex_10.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% The Index of EBSD data
+%
+%%
+% In previous chapters we have discussed how to select EBSD data by
+% properties. In this chapter we are intested in the order the EBSD are
+% stored within MTEX. Lets start by importing some sample data
+
+mtexdata twins
+
+%%
+% and restricting it to very small rectangular subset
+
+poly = [44 0 4 2];
+ebsd = ebsd(inpolygon(ebsd,poly));
+
+plot(ebsd,ebsd.orientations,'micronbar','off','edgecolor','k')
+
+%%
+% In the above plot each square corresponds to one entry in the variable
+% |ebsd|. Lets visualize the order
+
+text(ebsd,1:length(ebsd))
+
+%%
+% We may easily select specific measurement pixels by specifying their
+% indeces
+
+hold on
+plot(ebsd(16:18),'edgeColor','red','facecolor','none','linewidth',4)
+legend off
+hold off
+
+%%
+% Whether lines or columns run first is not related to MTEX but inherits
+% from the ordering of the imported EBSD data. Since, we have restricted
+% our large EBSD map to the small subset the indece of restricted data does
+% not coincide with the indece of the imported data anymore. However, the
+% original indeces are still stored in |ebsd.id|. Lets visualize them
+
+plot(ebsd,ebsd.orientations,'micronbar','off','edgecolor','k')
+text(ebsd,ebsd.id)
+
+%%
+% In order to select EBSD data according to their original id use the
+% option |'id'|, i.e.,
+
+hold on
+plot(ebsd('id',316:318),'edgeColor','red','facecolor','none','linewidth',4)
+legend off
+hold off
+
+
+%% Square Grids
+% 
+% In the cases of gridded data it is often useful to convert them into a
+% matrix form.
+
+ebsd = ebsd.gridify;
+
+plot(ebsd,ebsd.orientations,'micronbar','off')
+
+[i,j] = ndgrid(1:size(ebsd,1),1:size(ebsd,2));
+str = arrayfun(@(a,b) ['(' int2str(a) ',' int2str(b) ')'],i,j,'UniformOutput',false);
+text(ebsd,str)
+
+%%
+% This allows to select EBSD data simply by their coordinates within the
+% grid, e.g., by
+
+hold on
+plot(ebsd(2,2:4),'edgeColor','red','facecolor','none','linewidth',4)
+legend off
+hold off
+
+%%
+% Note that the <EBSD.gridify.html |gridify|> command changes the order of
+% measurements. They are now sort such that rows runs first and columns
+% second, as this is the default convention how Matlab indexes matrices.
+
+plot(ebsd,ebsd.orientations,'micronbar','off')
+text(ebsd,1:length(ebsd))
+
+
+%% Hexagonal Grid
+% 
+% The command <EBSD.gridify.html |gridify|> may also be applied to EBSD
+% data measured on a hexagonal grid.
+
+mtexdata titanium silent
+
+ebsd = ebsd.gridify
+
+
+%%
+% This rearranges the measurements in a matrix form which can be indexed
+% similarly as in the square case. 
+
+ebsd = ebsd(10:16,68:79);
+
+%%
+% Lets visualize the matrix coordinates for the hexagonal grid
+
+plot(ebsd,ebsd.orientations,'edgeColor','k','micronbar','off')
+axis off
+
+[i,j] = ndgrid(1:size(ebsd,1),1:size(ebsd,2));
+str = arrayfun(@(a,b) ['(' int2str(a) ',' int2str(b) ')'],i,j,'UniformOutput',false);
+text(ebsd,str)
+
+%% Cube Coordinates
+% In hexognal grids it is sometimes advantageous to use three digit cube
+% coordinates to index the cell. This can be done using the commands
+% <EBSDhex.hex2cube.html |hex2cube|> and <EBSDhex.cube2hex.html
+% |cube2hex|>. Much more details on indexing hex grids can be found at
+% <https://www.redblobgames.com/grids/hexagons/ here>.
+
+plot(ebsd,ebsd.orientations,'edgeColor','k','micronbar','off')
+axis off
+
+[i,j] = ndgrid(1:size(ebsd,1),1:size(ebsd,2));
+[x,y,z] = ebsd.hex2cube(i,j);
+str = arrayfun(@(a,b,c) ['(' int2str(a) ',' int2str(b) ',' int2str(c) ')'],x,y,z,'UniformOutput',false);
+text(ebsd,str)
+
+
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,545 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Spin Tensors as Ininitesimal Changes of Rotations</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_RotationSpinTensor.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Spin Tensors as Ininitesimal Changes of Rotations</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#7">The Functions Exp and Log</a></li><li><a href="#10">The other way round</a></li><li><a href="#12">Disorientations under the presence of crystal symmetry</a></li><li><a href="#14">make it a vector</a></li><li><a href="#15">logarithm to vector3d</a></li><li><a href="#16">logarithm to skew symmetric matrix</a></li><li><a href="#17">The other way round</a></li></ul></div><p>Spin tensors are skew symmetric tensors that can be used to describe small rotational changes. Lets consider an arbitrary reference rotation</p><pre class="codeinput">rot_ref = rotation.byEuler(10*degree,20*degree,30*degree);
+</pre><p>and pertube it by a rotation about the axis (123) and angle delta. Since multiplication of rotations is not communatativ we have to distinguish between left and right pertubations</p><pre class="codeinput">delta = 0.01*degree;
+rot_123 = rotation.byAxisAngle(vector3d(1,2,3),delta);
+rot_right = rot_123 * rot_ref;
+rot_left = rot_ref * rot_123;
+</pre><p>We may now ask for the first order Taylor coefficients of the pertubation as delta goes to zero which we find by the formula</p><p><img src="RotationSpinTensor_eq09422719487863419175.png" alt="$$ T = \lim_{\delta \to 0} \frac{\tilde R - R}{\delta} $$"></p><pre class="codeinput">T_right = (rot_right.matrix - rot_ref.matrix)./delta
+T_left = (rot_left.matrix - rot_ref.matrix)./delta
+</pre><pre class="codeoutput">T_right =
+   -0.4002   -0.4146    0.7724
+    0.5727   -0.5873   -0.2035
+   -0.2484    0.5297   -0.1218
+T_left =
+   -0.5399   -0.6025    0.5816
+    0.7530   -0.5816    0.1368
+   -0.2648    0.1140    0.0122
+</pre><p>Both matrices <tt>T_right</tt> and <tt>T_left</tt> are elements of the tangential space attached to the reference rotation rot_ref. Those matrices are characterized by the fact that they becomes scew symmetric matrices when multiplied from the left or from the right with the inverse of the reference rotation</p><pre class="codeinput">S_right_L =  matrix(inv(rot_ref)) * T_right
+S_right_R = T_right * matrix(inv(rot_ref))
+
+S_left_L =  matrix(inv(rot_ref)) * T_left
+S_left_R = T_left * matrix(inv(rot_ref))
+</pre><pre class="codeoutput">S_right_L =
+   -0.0000   -0.5892    0.4501
+    0.5893   -0.0001   -0.6709
+   -0.4501    0.6710   -0.0001
+S_right_R =
+   -0.0001   -0.8018    0.5345
+    0.8018   -0.0001   -0.2672
+   -0.5345    0.2673   -0.0000
+S_left_L =
+   -0.0001   -0.8018    0.5345
+    0.8018   -0.0001   -0.2672
+   -0.5345    0.2673   -0.0000
+S_left_R =
+   -0.0001   -0.9575    0.2758
+    0.9575   -0.0001    0.0850
+   -0.2758   -0.0850   -0.0000
+</pre><p>A scew symmetric 3x3 matrix <tt>S</tt> is essentially determined by its entries <img src="RotationSpinTensor_eq01114310428846397258.png" alt="$S_{21}$">, <img src="RotationSpinTensor_eq18117664382421743291.png" alt="$S_{31}$"> and <img src="RotationSpinTensor_eq05696360233159772450.png" alt="$S_{32}$">. Writing these values as a vector <img src="RotationSpinTensor_eq01420670388509251884.png" alt="$(S_32,-S_{31},S_{21})$"> we obtain for the matrices <tt>S_right_R</tt> and <tt>S_left_L</tt> exactly the rotational axis of our pertubation</p><pre class="codeinput">vector3d(spinTensor(S_right_R)) * sqrt(14)
+
+vector3d(spinTensor(S_left_L))  *sqrt(14)
+</pre><pre class="codeoutput"> 
+ans = vector3d
+ 
+ans = vector3d
+</pre><p>For the other two matrices those vectors are related to the rotational axis by the reference rotation <tt>rot_ref</tt></p><pre class="codeinput">rot_ref * vector3d(spinTensor(S_right_L)) * sqrt(14)
+
+inv(rot_ref) * vector3d(spinTensor(S_left_R)) * sqrt(14)
+</pre><pre class="codeoutput"> 
+ans = vector3d
+ 
+ans = vector3d
+</pre><h2 id="7">The Functions Exp and Log</h2><p>The above definition of the spin tensor works only well if the pertupation rotation has small rotational angle. For large pertubations the <a href="quaternion.logm.html">matrix logarithm</a> provides the correct way to translate rotational changes into skew symmetric matrices</p><pre class="codeinput">S = logm(rot_ref * rot_123,rot_ref)
+
+S = logm(rot_123 * rot_ref,rot_ref,<span class="string">'left'</span>)
+</pre><pre class="codeoutput"> 
+S = spinTensor (xyz)
+  rank: 2 (3 x 3)
+ 
+ *10^-5
+       0 -13.994   9.329
+  13.994       0  -4.665
+  -9.329   4.665       0
+ 
+S = spinTensor (xyz)
+  rank: 2 (3 x 3)
+ 
+ *10^-5
+       0 -13.994   9.329
+  13.994       0  -4.665
+  -9.329   4.665       0
+</pre><p>Again the entries <img src="RotationSpinTensor_eq01114310428846397258.png" alt="$S_{21}$">, <img src="RotationSpinTensor_eq18117664382421743291.png" alt="$S_{31}$"> and <img src="RotationSpinTensor_eq05696360233159772450.png" alt="$S_{32}$"> exactly coincide with the rotional axis multiplied with the rotational angle</p><pre class="codeinput">vector3d(S) * sqrt(14)
+</pre><pre class="codeoutput"> 
+ans = vector3d
+</pre><p>More directly this disorientation vector may be computed from two rotations by the command <a href="quaternion.log.html">log</a></p><pre class="codeinput">rot_123 = rotation.byAxisAngle(vector3d(1,2,3),1)
+log(rot_ref * rot_123,rot_ref) * sqrt(14)
+
+log(rot_123 * rot_ref,rot_ref,<span class="string">'left'</span>) * sqrt(14)
+</pre><pre class="codeoutput"> 
+rot_123 = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  87.0892 33.2984 320.219
+ 
+ 
+ans = vector3d
+ 
+ans = vector3d
+</pre><h2 id="10">The other way round</h2><p>Given a skew symmetric matrix <b>S</b> or a disorientation vector <b>v</b> we may use the command <a href="vector3d.exp.html">exp</a> to apply this rotational pertubation to a reference rotation <b>rot_ref</b></p><pre class="codeinput">S = logm(rot_ref * rot_123,rot_ref);
+rot_ref * rot_123
+exp(S,rot_ref)
+
+v = log(rot_ref * rot_123,rot_ref);
+exp(v,rot_ref)
+</pre><pre class="codeoutput"> 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  94.0497 29.4341 358.508
+ 
+ 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  94.0497 29.4341 358.508
+ 
+ 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  94.0497 29.4341 358.508
+ 
+</pre><pre class="codeinput">S = logm(rot_123 * rot_ref,rot_ref,<span class="string">'left'</span>);
+rot_123 * rot_ref
+exp(S,rot_ref,<span class="string">'left'</span>)
+
+v = log(rot_123 * rot_ref,rot_ref,<span class="string">'left'</span>);
+exp(v,rot_ref,<span class="string">'left'</span>)
+</pre><pre class="codeoutput"> 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  74.5535 51.5051 9.61062
+ 
+ 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  74.5535 51.5051 9.61062
+ 
+ 
+ans = rotation
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  74.5535 51.5051 9.61062
+ 
+</pre><h2 id="12">Disorientations under the presence of crystal symmetry</h2><p>Under the presence of crystal symmetry the order whether a rotational pertupation is applied from the left or from the right. Lets perform the above calculations step by step in the presence of trigonal crystal symmetry</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'321'</span>);
+
+<span class="comment">% consider an arbitrary rotation</span>
+ori_ref = orientation.byEuler(10*degree,20*degree,30*degree,cs);
+
+<span class="comment">% next we disturb rot_ref by a rotation about the axis (123)</span>
+mori_123 = orientation.byAxisAngle(Miller(1,2,-3,3,cs),1)
+
+<span class="comment">% first we multiply from the right</span>
+ori = ori_ref * mori_123
+</pre><pre class="codeoutput"> 
+mori_123 = misorientation (321 &#8594; 321)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  61.8386 40.0064 340.052
+ 
+ 
+ori = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  79.3156 43.3785  9.9013
+ 
+</pre><p>and compute the scew symmetric pertubation matrices</p><pre class="codeinput">S_right_L =  matrix(inv(rot_ref)) * T_right
+S_right_R = T_right * matrix(inv(rot_ref))
+
+S_left_L =  matrix(inv(rot_ref)) * T_left
+S_left_R = T_left * matrix(inv(rot_ref))
+</pre><pre class="codeoutput">S_right_L =
+   -0.0000   -0.5892    0.4501
+    0.5893   -0.0001   -0.6709
+   -0.4501    0.6710   -0.0001
+S_right_R =
+   -0.0001   -0.8018    0.5345
+    0.8018   -0.0001   -0.2672
+   -0.5345    0.2673   -0.0000
+S_left_L =
+   -0.0001   -0.8018    0.5345
+    0.8018   -0.0001   -0.2672
+   -0.5345    0.2673   -0.0000
+S_left_R =
+   -0.0001   -0.9575    0.2758
+    0.9575   -0.0001    0.0850
+   -0.2758   -0.0850   -0.0000
+</pre><h2 id="14">make it a vector</h2><pre class="codeinput">vR1 = vector3d(spinTensor(S_right_L))  *sqrt(14)
+vR2 = inv(rot_ref) * vector3d(spinTensor(S_right_R)) * sqrt(14)
+
+lR1 = rot_ref * vector3d(spinTensor(S_left_L))  *sqrt(14)
+lR2 = vector3d(spinTensor(S_left_R)) * sqrt(14)
+</pre><pre class="codeoutput"> 
+vR1 = vector3d
+ 
+vR2 = vector3d
+ 
+lR1 = vector3d
+ 
+lR2 = vector3d
+</pre><h2 id="15">logarithm to vector3d</h2><pre class="codeinput">log(ori_ref * mori_123,ori_ref)
+
+log(rot_123 * ori_ref,ori_ref,<span class="string">'left'</span>) * sqrt(14)
+</pre><pre class="codeoutput"> 
+ans = Miller (321)
+       h       k       i       l
+  0.2335  0.4671 -0.7006  0.7006
+ 
+ans = vector3d
+</pre><h2 id="16">logarithm to skew symmetric matrix</h2><pre class="codeinput">S = logm(ori_ref * mori_123,ori_ref)
+round(vector3d(S))
+
+S = logm(rot_123 * ori_ref,ori_ref,<span class="string">'left'</span>)
+vector3d(S) * sqrt(14)
+</pre><pre class="codeoutput"> 
+S = spinTensor (321)
+  rank: 2 (3 x 3)
+ 
+ *10^-2
+      0 -70.06  46.71
+  70.06      0 -53.94
+ -46.71  53.94      0
+ 
+ans = Miller (321)
+  h  k  i  l
+  1  2 -3  3
+ 
+S = spinTensor (xyz)
+  rank: 2 (3 x 3)
+ 
+ *10^-2
+      0 -80.18  53.45
+  80.18      0 -26.73
+ -53.45  26.73      0
+ 
+ans = vector3d
+</pre><h2 id="17">The other way round</h2><pre class="codeinput">S = logm(ori_ref * mori_123,ori_ref);
+ori_ref * mori_123
+exp(S,ori_ref)
+
+v = log(ori_ref * mori_123,ori_ref);
+exp(v,ori_ref)
+</pre><pre class="codeoutput"> 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  79.3156 43.3785  9.9013
+ 
+ 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  79.3156 43.3785  9.9013
+ 
+ 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  79.3156 43.3785  9.9013
+ 
+</pre><pre class="codeinput">S = logm(rot_123 * ori_ref,ori_ref,<span class="string">'left'</span>);
+rot_123 * ori_ref
+exp(S,ori_ref,<span class="string">'left'</span>)
+
+v = log(rot_123 * ori_ref,ori_ref,<span class="string">'left'</span>);
+exp(v,ori_ref,<span class="string">'left'</span>)
+</pre><pre class="codeoutput"> 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  74.5535 51.5051 9.61062
+ 
+ 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  74.5535 51.5051 9.61062
+ 
+ 
+ans = orientation (321 &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  74.5535 51.5051 9.61062
+ 
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Spin Tensors as Ininitesimal Changes of Rotations
+%
+%%
+% Spin tensors are skew symmetric tensors that can be used to describe
+% small rotational changes. Lets consider an arbitrary reference rotation
+
+rot_ref = rotation.byEuler(10*degree,20*degree,30*degree);
+
+%%
+% and pertube it by a rotation about the axis (123) and angle delta. Since
+% multiplication of rotations is not communatativ we have to distinguish
+% between left and right pertubations
+
+delta = 0.01*degree;
+rot_123 = rotation.byAxisAngle(vector3d(1,2,3),delta);
+rot_right = rot_123 * rot_ref;
+rot_left = rot_ref * rot_123;
+
+%%
+% We may now ask for the first order Taylor coefficients of the pertubation
+% as delta goes to zero which we find by the formula
+%
+% $$ T = \lim_{\delta \to 0} \frac{\tilde R - R}{\delta} $$
+%
+
+T_right = (rot_right.matrix - rot_ref.matrix)./delta
+T_left = (rot_left.matrix - rot_ref.matrix)./delta
+
+%%
+% Both matrices |T_right| and |T_left| are elements of the tangential space
+% attached to the reference rotation rot_ref. Those matrices are
+% characterized by the fact that they becomes scew symmetric matrices when
+% multiplied from the left or from the right with the inverse of the
+% reference rotation
+
+S_right_L =  matrix(inv(rot_ref)) * T_right
+S_right_R = T_right * matrix(inv(rot_ref))
+
+S_left_L =  matrix(inv(rot_ref)) * T_left
+S_left_R = T_left * matrix(inv(rot_ref))
+
+
+%%
+% A scew symmetric 3x3 matrix |S| is essentially determined by its entries
+% $S_{21}$, $S_{31}$ and $S_{32}$. Writing these values as a vector
+% $(S_32,-S_{31},S_{21})$ we obtain for the matrices |S_right_R| and
+% |S_left_L| exactly the rotational axis of our pertubation
+
+vector3d(spinTensor(S_right_R)) * sqrt(14)
+
+vector3d(spinTensor(S_left_L))  *sqrt(14)
+
+
+%%
+% For the other two matrices those vectors are related to the rotational
+% axis by the reference rotation |rot_ref|
+
+rot_ref * vector3d(spinTensor(S_right_L)) * sqrt(14)
+
+inv(rot_ref) * vector3d(spinTensor(S_left_R)) * sqrt(14)
+
+%% The Functions Exp and Log
+%
+% The above definition of the spin tensor works only well if the
+% pertupation rotation has small rotational angle. For large pertubations
+% the <quaternion.logm.html matrix logarithm> provides the correct way to
+% translate rotational changes into skew symmetric matrices
+
+S = logm(rot_ref * rot_123,rot_ref)
+
+S = logm(rot_123 * rot_ref,rot_ref,'left')
+
+%%
+% Again the entries $S_{21}$, $S_{31}$ and $S_{32}$ exactly coincide with
+% the rotional axis multiplied with the rotational angle
+
+vector3d(S) * sqrt(14)
+
+%%
+% More directly this disorientation vector may be computed from two
+% rotations by the command <quaternion.log.html log>
+
+
+rot_123 = rotation.byAxisAngle(vector3d(1,2,3),1)
+log(rot_ref * rot_123,rot_ref) * sqrt(14)
+
+log(rot_123 * rot_ref,rot_ref,'left') * sqrt(14)
+
+
+%% The other way round
+% Given a skew symmetric matrix *S* or a disorientation vector *v* we may
+% use the command <vector3d.exp.html exp> to apply this rotational
+% pertubation to a reference rotation *rot_ref*
+
+S = logm(rot_ref * rot_123,rot_ref);
+rot_ref * rot_123
+exp(S,rot_ref)
+
+v = log(rot_ref * rot_123,rot_ref);
+exp(v,rot_ref)
+
+%%
+
+S = logm(rot_123 * rot_ref,rot_ref,'left');
+rot_123 * rot_ref
+exp(S,rot_ref,'left')
+
+v = log(rot_123 * rot_ref,rot_ref,'left');
+exp(v,rot_ref,'left')
+
+
+%% Disorientations under the presence of crystal symmetry
+% Under the presence of crystal symmetry the order whether a rotational
+% pertupation is applied from the left or from the right. Lets perform the
+% above calculations step by step in the presence of trigonal crystal
+% symmetry
+
+cs = crystalSymmetry('321');
+
+% consider an arbitrary rotation
+ori_ref = orientation.byEuler(10*degree,20*degree,30*degree,cs);
+
+% next we disturb rot_ref by a rotation about the axis (123)
+mori_123 = orientation.byAxisAngle(Miller(1,2,-3,3,cs),1)
+
+% first we multiply from the right
+ori = ori_ref * mori_123
+
+%%
+% and compute the scew symmetric pertubation matrices
+
+S_right_L =  matrix(inv(rot_ref)) * T_right
+S_right_R = T_right * matrix(inv(rot_ref))
+
+S_left_L =  matrix(inv(rot_ref)) * T_left
+S_left_R = T_left * matrix(inv(rot_ref))
+
+
+%% make it a vector
+
+vR1 = vector3d(spinTensor(S_right_L))  *sqrt(14)
+vR2 = inv(rot_ref) * vector3d(spinTensor(S_right_R)) * sqrt(14)
+
+lR1 = rot_ref * vector3d(spinTensor(S_left_L))  *sqrt(14)
+lR2 = vector3d(spinTensor(S_left_R)) * sqrt(14)
+
+
+%% logarithm to vector3d
+
+log(ori_ref * mori_123,ori_ref)
+
+log(rot_123 * ori_ref,ori_ref,'left') * sqrt(14)
+
+%% logarithm to skew symmetric matrix
+
+S = logm(ori_ref * mori_123,ori_ref)
+round(vector3d(S))
+
+S = logm(rot_123 * ori_ref,ori_ref,'left')
+vector3d(S) * sqrt(14)
+
+
+%% The other way round
+
+S = logm(ori_ref * mori_123,ori_ref);
+ori_ref * mori_123
+exp(S,ori_ref)
+
+v = log(ori_ref * mori_123,ori_ref);
+exp(v,ori_ref)
+
+%%
+
+S = logm(rot_123 * ori_ref,ori_ref,'left');
+rot_123 * ori_ref
+exp(S,ori_ref,'left')
+
+v = log(rot_123 * ori_ref,ori_ref,'left');
+exp(v,ori_ref,'left')
+
+%%
+
+
+##### SOURCE END #####
+--></body></html>

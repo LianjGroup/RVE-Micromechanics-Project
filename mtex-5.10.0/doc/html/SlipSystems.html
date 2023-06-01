@@ -1,0 +1,225 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Slip Systems</title><meta name="generator" content="MATLAB 9.14"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2023-05-21"><meta name="DC.source" content="script_SlipSystems.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Slip Systems</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#8">Displacement</a></li><li><a href="#10">Rotating slip systems</a></li></ul></div><p>Plastic deformation in crystaline materials almost exclusively appears as dislocation along lattice planes. Such deformations are described by the normal vector <b>n</b> of the lattice plane and direction <b>b</b> of the slip. In the case of hexagonal alpha-Titanium with</p><pre class="codeinput">cs = crystalSymmetry(<span class="string">'622'</span>,[3,3,4.7],<span class="string">'x||a'</span>,<span class="string">'mineral'</span>,<span class="string">'Titanium (Alpha)'</span>)
+</pre><pre class="codeoutput"> 
+cs = crystalSymmetry
+ 
+  mineral        : Titanium (Alpha)  
+  symmetry       : 622               
+  elements       : 12                
+  a, b, c        : 3, 3, 4.7         
+  reference frame: X||a, Y||b*, Z||c*
+ 
+</pre><p>basal slip is defined by the Burgers vector (or slip direction)</p><pre class="codeinput">b = Miller(2,-1,-1,0,cs,<span class="string">'UVTW'</span>)
+</pre><pre class="codeoutput"> 
+b = Miller (Titanium (Alpha))
+  U  V  T  W
+  2 -1 -1  0
+</pre><p>and the slip plane normal</p><pre class="codeinput">n = Miller(0,1,-1,0,cs,<span class="string">'HKIL'</span>)
+</pre><pre class="codeoutput"> 
+n = Miller (Titanium (Alpha))
+  h  k  i  l
+  0  1 -1  0
+</pre><p>Putting both incredience together we can define a slip system in MTEX by</p><pre class="codeinput">sSBasal = slipSystem(b,n)
+</pre><pre class="codeoutput"> 
+sSBasal = slipSystem (Titanium (Alpha))
+ 
+  U    V    T    W  | H    K    I    L CRSS
+  2   -1   -1    0    0    1   -1    0    1
+</pre><p>The most important slip systems for cubic, hexagonal and trigonal crystal lattices are already implemented into MTEX. Those can be accessed by</p><pre class="codeinput">sSBasal = slipSystem.basal(cs)
+</pre><pre class="codeoutput"> 
+sSBasal = slipSystem (Titanium (Alpha))
+ 
+  U    V    T    W  | H    K    I    L CRSS
+  1    1   -2    0    0    0    0    1    1
+</pre><p>Obviously, this is not the only basal slip system in hexagonal lattices. There are also symmetrically equivalent ones, which can be computed by</p><pre class="codeinput">sSBasalSym = sSBasal.symmetrise(<span class="string">'antipodal'</span>)
+</pre><pre class="codeoutput"> 
+sSBasalSym = slipSystem (Titanium (Alpha))
+ size: 3 x 1
+ 
+   U    V    T    W  | H    K    I    L CRSS
+   1    1   -2    0    0    0    0    1    1
+   1   -2    1    0    0    0    0    1    1
+  -2    1    1    0    0    0    0    1    1
+</pre><p>The length of the burgers vector, i.e., the amount of displacment is</p><pre class="codeinput">sSBasalSym.b.norm
+</pre><pre class="codeoutput">ans =
+    3.0000
+    3.0000
+    3.0000
+</pre><h2 id="8">Displacement</h2><p>In linear theory the displacement of a slip system is described by the strain tensor</p><pre class="codeinput">sSBasal.deformationTensor
+</pre><pre class="codeoutput"> 
+ans = tensor (Titanium (Alpha))
+  rank: 2 (3 x 3)
+ 
+ *10^-2
+    0    0   50
+    0    0 86.6
+    0    0    0
+</pre><p>This displacement tensor is exactly the same as the so called Schmid tensor</p><pre class="codeinput">sSBasal.SchmidTensor
+</pre><pre class="codeoutput"> 
+ans = velocityGradientTensor (Titanium (Alpha))
+  rank: 2 (3 x 3)
+ 
+ *10^-2
+    0    0   50
+    0    0 86.6
+    0    0    0
+</pre><h2 id="10">Rotating slip systems</h2><p>By definition the slip system and accordingly the deformation tensor are with the respect to the crystal coordinate system. In order to transform the quantities into specimen coordinates we have to multiply with some grain orientation</p><pre class="codeinput"><span class="comment">% some random grain orientation</span>
+ori = orientation.rand(cs)
+
+<span class="comment">% transfer slip system into specimen coordinates</span>
+ori * sSBasal
+</pre><pre class="codeoutput"> 
+ori = orientation (Titanium (Alpha) &#8594; xyz)
+ 
+  Bunge Euler angles in degree
+     phi1     Phi    phi2
+  348.276 151.874 41.3464
+ 
+ 
+ans = slipSystem (xyz)
+ 
+      x      y      z  |   x      y      z
+  -1.11  -2.42   1.39  -0.02   -0.1  -0.19
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2023a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Slip Systems
+%
+%%
+% Plastic deformation in crystaline materials almost exclusively appears as
+% dislocation along lattice planes. Such deformations are described by the
+% normal vector *n* of the lattice plane and direction *b* of the slip. In
+% the case of hexagonal alpha-Titanium with 
+
+cs = crystalSymmetry('622',[3,3,4.7],'x||a','mineral','Titanium (Alpha)')
+
+%%
+% basal slip is defined by the Burgers vector (or slip direction)
+
+b = Miller(2,-1,-1,0,cs,'UVTW')
+
+%%
+% and the slip plane normal
+
+n = Miller(0,1,-1,0,cs,'HKIL')
+
+%%
+% Putting both incredience together we can define a slip system in MTEX by
+
+sSBasal = slipSystem(b,n)
+
+%%
+% The most important slip systems for cubic, hexagonal and trigonal crystal
+% lattices are already implemented into MTEX. Those can be accessed by
+
+sSBasal = slipSystem.basal(cs)
+
+%%
+% Obviously, this is not the only basal slip system in hexagonal lattices.
+% There are also symmetrically equivalent ones, which can be computed by
+
+sSBasalSym = sSBasal.symmetrise('antipodal')
+
+%%
+% The length of the burgers vector, i.e., the amount of displacment is
+
+sSBasalSym.b.norm
+
+%% Displacement
+% In linear theory the displacement of a slip system is described by the
+% strain tensor 
+
+sSBasal.deformationTensor
+
+%%
+% This displacement tensor is exactly the same as the so called Schmid
+% tensor
+
+sSBasal.SchmidTensor
+
+
+%% Rotating slip systems
+% By definition the slip system and accordingly the deformation tensor are
+% with the respect to the crystal coordinate system. In order to transform
+% the quantities into specimen coordinates we have to multiply with some
+% grain orientation
+
+% some random grain orientation
+ori = orientation.rand(cs)
+
+% transfer slip system into specimen coordinates
+ori * sSBasal
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>
