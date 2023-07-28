@@ -1,0 +1,69 @@
+Loading SIMPLib Plugins.
+Adding Folder  "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/bin"
+Adding Folder  "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/Plugins"
+Adding Folder  "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib"
+SIMPL_PLUGIN_PATH: ""
+Removed  0  duplicate Plugin Paths
+Plugin Directory being Searched:  "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/bin"
+Plugin Directory being Searched:  "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/Plugins"
+Plugin Directory being Searched:  "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib"
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libAnisotropy.plugin"
+    Pointer:  AnisotropyPlugin(0x55a18db8ae10) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libDDDAnalysisToolbox.plugin"
+    Pointer:  DDDAnalysisToolboxPlugin(0x55a18dcb9510) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libDREAM3DReview.plugin"
+    Pointer:  DREAM3DReviewPlugin(0x55a18de94a80) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libEMMPM.plugin"
+    Pointer:  EMMPMPlugin(0x55a18de99870) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libGeneric.plugin"
+    Pointer:  GenericPlugin(0x55a18dedf430) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libHEDMAnalysis.plugin"
+    Pointer:  HEDMAnalysisPlugin(0x55a18de96fb0) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libImportExport.plugin"
+    Pointer:  ImportExportPlugin(0x55a18de96cf0) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libITKImageProcessing.plugin"
+    Pointer:  ITKImageProcessingPlugin(0x55a18e2e1800) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libMASSIFUtilities.plugin"
+    Pointer:  MASSIFUtilitiesPlugin(0x55a18e8ad310) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libOrientationAnalysis.plugin"
+    Pointer:  OrientationAnalysisPlugin(0x55a18e8d7910) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libProcessing.plugin"
+    Pointer:  ProcessingPlugin(0x55a18edd19f0) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libReconstruction.plugin"
+    Pointer:  ReconstructionPlugin(0x55a18edd1cf0) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libSampling.plugin"
+    Pointer:  SamplingPlugin(0x55a18eeec450) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libSimulationIO.plugin"
+    Pointer:  SimulationIOPlugin(0x55a18f012e30) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libStatistics.plugin"
+    Pointer:  StatisticsPlugin(0x55a18f1a1930) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libSurfaceMeshing.plugin"
+    Pointer:  SurfaceMeshingPlugin(0x55a18f1a37a0) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libSyntheticBuilding.plugin"
+    Pointer:  SyntheticBuildingPlugin(0x55a18f015d20) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libTransformationPhase.plugin"
+    Pointer:  TransformationPhasePlugin(0x55a18f408f90) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libUCSBUtilities.plugin"
+    Pointer:  UCSBUtilitiesPlugin(0x55a18f58a680) 
+
+Plugin Being Loaded: "/projappl/project_2004956/DREAM3D-6.5.171-Linux-x86_64/lib/libZeissImport.plugin"
+    Pointer:  ZeissImportPlugin(0x55a18db55670) 
+
